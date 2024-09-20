@@ -77,11 +77,11 @@ CSV.read(joinpath(dataDir45, "jw02491_20240709t022838_pool.csv"), DataFrame)
 # ╔═╡ fb652b42-e455-46b8-abfd-5bc9740bf9ec
 begin
 	imageFile1 = joinpath(dataDir45, "jw02491-o005_t002_miri_f1130w_i2d.fits")
-	miri45 = AstroImage(imageFile1)
+	miri45_1 = AstroImage(imageFile1)
 end
 
 # ╔═╡ f02870ae-775d-46bb-90da-a78fe321c95b
-size(miri45)
+size(miri45_1)
 
 # ╔═╡ 1968e607-a020-4eeb-b19e-608390d80d8a
 f = FITS(imageFile1) # "Header Data Unit" is the HDU
@@ -94,6 +94,15 @@ f[9]
 
 # ╔═╡ 3cec201d-3e38-4a2b-b572-4a51c5e23101
 AstroImage(imageFile1, 2:8) # note that 3, "Err," is a 1059×1030×1 AstroImage{Int32,3}  "image" that prints as a table
+
+# ╔═╡ 86ce6c24-40f3-4912-91d5-8f8795d7a512
+begin
+	imageFile2 = joinpath(dataDir45, "jw02491-o005_t002_miri_f1130w_segm.fits")
+	miri45_2 = AstroImage(imageFile2)
+end
+
+# ╔═╡ 78a7ae03-8e74-4c73-ae15-39be972f9711
+FITS(imageFile2)
 
 # ╔═╡ c0caff24-d5dc-46c3-8370-220e979c9f91
 md" # Bottom Cell"
@@ -115,4 +124,6 @@ md" # Bottom Cell"
 # ╠═48a0fdbb-95cc-4803-a0bb-74385fc4a6a2
 # ╠═5d79efb1-0055-49f2-a821-b19ab53c9108
 # ╠═3cec201d-3e38-4a2b-b572-4a51c5e23101
+# ╠═86ce6c24-40f3-4912-91d5-8f8795d7a512
+# ╠═78a7ae03-8e74-4c73-ae15-39be972f9711
 # ╠═c0caff24-d5dc-46c3-8370-220e979c9f91
