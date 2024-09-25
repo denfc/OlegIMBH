@@ -15,6 +15,7 @@ begin
 	using Revise
 	using Plots
 	using CSV, DataFrames
+	using NearestNeighbors
 	using AstroImages, FITSIO
 	# using Cosmology, Unitful, UnitfulAstro, Measurements 
 	# using Suppressor
@@ -33,6 +34,9 @@ begin
 	using PlutoUI
 	TableOfContents(title = "P22_JWST", depth = 6)
 end
+
+# ╔═╡ 6cabc13b-9bb7-4f74-b7b6-f98435e94d5e
+include(srcdir("crossmatches.jl"));
 
 # ╔═╡ 0141542b-a0f5-44dd-9f59-8000501df935
 md"""
@@ -83,7 +87,104 @@ dataDir_T45_f1130 = joinpath(datadir(), "exp_raw/MAST_2024-09-20T1145")
 six_f1130 = readdir(dataDir_T45_f1130)
 
 # ╔═╡ 2aae1677-8961-4d22-815e-cea8abd6e21b
-csv_f1130 = CSV.read(joinpath(dataDir_T45_f1130, "jw02491_20240709t022838_pool.csv"), DataFrame)
+csv_f1130 = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[6]), DataFrame)
+
+# ╔═╡ 83cb5d5a-ab00-409a-8046-17b86a5cb5fa
+six_f1130[6]
+
+# ╔═╡ 5ad9dee6-6281-4b84-9f80-92da1a4e16a7
+md"### Reading ESCV file "
+
+# ╔═╡ d937eb69-92fc-443b-8cac-d3fb33b787b8
+md"""
+!!! note "Can read ESCV file either by denoting commenting symbol directly or or by going to header line directly."
+	- This note belongs in the notebook to be set up for this project.
+	- Can exclude the "label" column, but might need it for the cross matching.
+!!! note " This file is the "Source Catalog Table" "
+    - [Definitions of column headings can be found here.](https://jwst-pipeline.readthedocs.io/en/stable/jwst/source_catalog/main.html)
+"""
+
+# ╔═╡ f370c1b5-47f2-4af4-b2ff-eb1aac682d4c
+# test = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#",  drop=[:label], normalizenames=true) # [1, :]
+test = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#", normalizenames=true) # :label included
+
+# ╔═╡ ac6f1aa1-9da3-419d-8ce9-2e2a07c2deb1
+six_f1130[3]
+
+# ╔═╡ 9b2a1904-04a1-42cf-8922-c8efe651c4fa
+md"""!!! note "Sure looks like "label" is the same as the Julia index." """
+
+# ╔═╡ 6c9456af-8ea3-4255-b345-2954204c0b9f
+for i in 1:length(test.label)
+	if test.label[i] != i println(i, " not the same?!") else print("+") end
+end	
+
+# ╔═╡ 7bf9cc16-5b19-41f6-81e2-17afcf44b519
+t = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; header = 263,  drop=[:label], normalizenames=true)[1, :]
+
+# ╔═╡ 1e0ef00a-72f1-4186-ac18-aaac7cb21a00
+t == test
+
+# ╔═╡ af220e1d-a938-4bf7-aeba-089e4b31d367
+typeof(test.sky_centroid_ra)
+
+# ╔═╡ ab588ecd-b4ad-49bb-8643-f331bbec5ede
+names(test)
+
+# ╔═╡ 18eb700a-7af4-40fe-97c7-1a16344dfebb
+length(findall(x -> x ==1, test[!, 34]))
+
+# ╔═╡ 082f725d-f19f-411e-a8e2-9afee3714883
+extrema(test.nn_dist)
+
+# ╔═╡ e69c8ef9-368e-443f-ad48-bc4a3a06fc30
+md" #### Test `crossmatch`"
+
+# ╔═╡ 69b9ca1c-86c0-403b-a017-cd7385930839
+begin
+	X1 = [1.0 2.0 3.0 8.0; 4.0 5.0 6.0 7.0]
+	X2 = [1.0 2.0 3.0 8.0; 4.0 5.0 6.0 9.0]
+end
+
+# ╔═╡ 4bab6517-0675-449b-bc43-db2c5408674f
+typeof(X1)
+
+# ╔═╡ fb6e663b-c630-469f-9e35-ebd517aeecf4
+idxs, dists = crossmatch(X1, X2)
+
+# ╔═╡ 48a5e49f-6943-4275-9073-d8447714283d
+md" #### Building 2 Cols"
+
+# ╔═╡ cbefd73d-affd-4ea7-834f-1d4c04997005
+function reshapeCoords(RA, Dec)
+	v = vcat(collect(RA), collect(Dec))
+	len_vS2 = div(length(v), 2)
+	return reshape(v, 2, len_vS2)
+end
+
+# ╔═╡ 32ef56b3-e695-4c3b-b254-19c3e6aaf7c2
+RA_Dec = reshapeCoords(test.sky_centroid_ra, test.sky_centroid_dec)
+
+# ╔═╡ 2d90a063-361f-4c97-836d-f45f2d21e921
+md"### INCLUDE "
+
+# ╔═╡ 91aa9c95-eb65-4edb-a7cf-fe19b22414b6
+begin
+	xs, dist = crossmatch(RA_Dec, RA_Dec)
+	xsA, distA = crossmatch_angular(RA_Dec, RA_Dec)
+end
+
+# ╔═╡ e070368f-c478-4d26-a533-5fc680ccf842
+xs == xsA, dist == distA
+
+# ╔═╡ 4627b530-0d74-48d3-bfb3-fb905300073a
+xs
+
+# ╔═╡ 7caf05eb-cdcc-4274-ab16-d1fbb6592503
+Matrix(xs)
+
+# ╔═╡ bd6bd1f2-9d65-47bf-95f2-13d97fe110c3
+six_f1130[3]
 
 # ╔═╡ 7fefe23a-62bf-4b6e-8fc9-adeadb6c41dc
 # eData = AstroIO.read(joinpath(dataDir_f1130_T45, "jw02491-o005_t002_miri_f1130w_cat.ecsv"))
@@ -135,12 +236,12 @@ AstroImage(imageFile_f1130_1, 2:8) # note that 3, "Err," is a 1059×1030×1 Astr
 
 # ╔═╡ 86ce6c24-40f3-4912-91d5-8f8795d7a512
 begin
-	imageFile_f1130_2 = joinpath(dataDir_T45_f1130, six_f1130[5])
+	imageFile_f1130_2 = joinpath(dataDir_T45_f1130, six_f1130[4])
 	miri_f1130_2 = AstroImage(imageFile_f1130_2)
 end
 
 # ╔═╡ d0fcb65d-104e-485d-bd1c-c9bc38665467
-six_f1130[5]
+six_f1130[4]
 
 # ╔═╡ 78a7ae03-8e74-4c73-ae15-39be972f9711
 FITS(imageFile_f1130_2)
@@ -187,6 +288,17 @@ six_f770[4]
 # ╔═╡ 0d57fb79-32b9-4288-aede-463c51730b43
 FITS(imageFIle_f770_1)
 
+# ╔═╡ 6a70f92f-4028-4c24-a2b6-3d728ece3931
+test_f770 = CSV.read(joinpath(dataDir_T47_f770, six_f770[3]), DataFrame; comment = "#", normalizenames=true)
+
+# ╔═╡ 5b7193ce-8cc3-4b9b-bdc4-88f418a55f4b
+md" #### label = index?"
+
+# ╔═╡ 73baf97a-7782-4840-ba88-44b850d8a3cf
+for i in 1:length(test_f770.label)
+	if test_f770.label[i] != i println(i, " not the same?!") else print("+") end
+end	
+
 # ╔═╡ 3930d0f2-dfba-40c2-8267-104345ba7a9a
 md" ### dataDir\_T01\_f560"
 
@@ -229,6 +341,35 @@ keys(miri_f560_1)
 # ╔═╡ feb17ae4-924a-408d-b308-9e987bd48db6
 f_f560_1 = FITS(imageFile_f560_1)
 
+# ╔═╡ b4b6dc27-3862-4eb4-9a63-a4f9306690d7
+test_f560 = CSV.read(joinpath(dataDir_T01_f560, six_f560[3]), DataFrame; comment = "#", normalizenames=true)
+
+# ╔═╡ 818d3661-d207-463e-95f8-806d17206cc2
+md" #### label = index?"
+
+# ╔═╡ a9259808-c4d4-42b1-ab5f-967070602dce
+size(test_f560)
+
+# ╔═╡ 22353da5-d63f-4e45-934e-181e64ee91eb
+md"""!!! note "use `size(df)[1]` to get number of sources" """
+
+# ╔═╡ 2f8a8c76-2770-4442-a2bb-23da1fc15bb0
+length(findall(x -> x >= 0, test_f560.sky_centroid_ra)) == size(test_f560)[1]
+
+# ╔═╡ 365811f1-0530-4b0e-9a94-e90a272c0260
+for i in 1:length(test_f560.label)
+	if test_f560.label[i] != i println(i, " not the same?!") else print("+") end
+end	
+
+# ╔═╡ bd8195c4-ae94-405e-9536-9f7b9883a4c9
+md"""
+!!! note ""
+# notes start
+#### should go to a new notebook exclusively dedicated to notes
+
+  - [AB vs Vega Magnitudes](https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-performance/nircam-absolute-flux-calibration-and-zeropoints#gsc.tab=0)
+"""
+
 # ╔═╡ c0caff24-d5dc-46c3-8370-220e979c9f91
 md" # Bottom Cell"
 
@@ -245,6 +386,33 @@ md" # Bottom Cell"
 # ╠═38a15a7b-5a81-4db1-968e-0312f703ab10
 # ╠═df744749-bf44-4c80-ae3b-982103f938c9
 # ╠═2aae1677-8961-4d22-815e-cea8abd6e21b
+# ╠═83cb5d5a-ab00-409a-8046-17b86a5cb5fa
+# ╠═5ad9dee6-6281-4b84-9f80-92da1a4e16a7
+# ╠═d937eb69-92fc-443b-8cac-d3fb33b787b8
+# ╠═f370c1b5-47f2-4af4-b2ff-eb1aac682d4c
+# ╠═ac6f1aa1-9da3-419d-8ce9-2e2a07c2deb1
+# ╠═9b2a1904-04a1-42cf-8922-c8efe651c4fa
+# ╠═6c9456af-8ea3-4255-b345-2954204c0b9f
+# ╠═7bf9cc16-5b19-41f6-81e2-17afcf44b519
+# ╠═1e0ef00a-72f1-4186-ac18-aaac7cb21a00
+# ╠═af220e1d-a938-4bf7-aeba-089e4b31d367
+# ╠═ab588ecd-b4ad-49bb-8643-f331bbec5ede
+# ╠═18eb700a-7af4-40fe-97c7-1a16344dfebb
+# ╠═082f725d-f19f-411e-a8e2-9afee3714883
+# ╠═e69c8ef9-368e-443f-ad48-bc4a3a06fc30
+# ╠═69b9ca1c-86c0-403b-a017-cd7385930839
+# ╠═4bab6517-0675-449b-bc43-db2c5408674f
+# ╠═fb6e663b-c630-469f-9e35-ebd517aeecf4
+# ╠═48a5e49f-6943-4275-9073-d8447714283d
+# ╠═cbefd73d-affd-4ea7-834f-1d4c04997005
+# ╠═32ef56b3-e695-4c3b-b254-19c3e6aaf7c2
+# ╠═2d90a063-361f-4c97-836d-f45f2d21e921
+# ╠═6cabc13b-9bb7-4f74-b7b6-f98435e94d5e
+# ╠═91aa9c95-eb65-4edb-a7cf-fe19b22414b6
+# ╠═e070368f-c478-4d26-a533-5fc680ccf842
+# ╠═4627b530-0d74-48d3-bfb3-fb905300073a
+# ╠═7caf05eb-cdcc-4274-ab16-d1fbb6592503
+# ╠═bd6bd1f2-9d65-47bf-95f2-13d97fe110c3
 # ╠═7fefe23a-62bf-4b6e-8fc9-adeadb6c41dc
 # ╠═fb652b42-e455-46b8-abfd-5bc9740bf9ec
 # ╠═937704db-0ff9-47cf-bd01-38328b85f373
@@ -275,6 +443,9 @@ md" # Bottom Cell"
 # ╠═2036f9fa-47d2-413a-bc9c-f03d79d4acc1
 # ╠═d20750f1-89dc-4583-9642-d3a6c6742ea6
 # ╠═0d57fb79-32b9-4288-aede-463c51730b43
+# ╠═6a70f92f-4028-4c24-a2b6-3d728ece3931
+# ╠═5b7193ce-8cc3-4b9b-bdc4-88f418a55f4b
+# ╠═73baf97a-7782-4840-ba88-44b850d8a3cf
 # ╠═3930d0f2-dfba-40c2-8267-104345ba7a9a
 # ╠═d8c760d5-4bbe-43aa-842e-f3a1bed43f2b
 # ╠═30c0377a-48cf-4457-853f-24f2c90d11ce
@@ -288,4 +459,11 @@ md" # Bottom Cell"
 # ╠═0988f267-8588-42da-9f75-86b6c31c2810
 # ╠═b3d7d55a-cafc-42a5-9884-e3e115aff31a
 # ╠═feb17ae4-924a-408d-b308-9e987bd48db6
+# ╠═b4b6dc27-3862-4eb4-9a63-a4f9306690d7
+# ╠═818d3661-d207-463e-95f8-806d17206cc2
+# ╠═a9259808-c4d4-42b1-ab5f-967070602dce
+# ╠═22353da5-d63f-4e45-934e-181e64ee91eb
+# ╠═2f8a8c76-2770-4442-a2bb-23da1fc15bb0
+# ╠═365811f1-0530-4b0e-9a94-e90a272c0260
+# ╠═bd8195c4-ae94-405e-9536-9f7b9883a4c9
 # ╠═c0caff24-d5dc-46c3-8370-220e979c9f91
