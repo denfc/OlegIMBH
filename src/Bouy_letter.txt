@@ -1,0 +1,17 @@
+Dear Dr. Bouy,
+
+I want to thank you for your `crossmatch_angular` Julia code and also ask why (the old Julia) `crossmatch` code had no difficulty with the transposed arrays in the call from `crossmatch_angular`, which I changed to ind, dist = crossmatch(Matrix(Y1), Matrix(Y2), max_y) to get it to work (along with adding a few dots).
+
+Also, what criterion do you like for a match of coordinates?
+
+Again, thanks!
+
+-- Denis
+
+Denis F. Cioffi
+Research Professor
+Physics Department, The George Washington University
+
+dcioffi@gwu.edu
+
+P.S.  I was a postdoc at Berkeley in 1985.

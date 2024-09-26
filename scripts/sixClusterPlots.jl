@@ -15,7 +15,8 @@ for dir in 1:3
 	fName = threeDataDirs[dir]*"/jw02491-o005_t002_miri_"*threeFrequencies[dir]*"_cat.ecsv"
 	push!(threeSourceCats, CSV.read(fName, DataFrame; comment = "#",  drop=[:label], normalizenames=true))
 end
-RA_Dec = [reshapeCoords(threeSourceCats[i].sky_centroid_ra, threeSourceCats[i].sky_centroid_dec) for i in 1:3]
+
+RA_Dec = [vcat(collect(threeSourceCats[i].sky_centroid_ra)', collect(threeSourceCats[i].sky_centroid_dec)') for i in 1:3]
 println("Sizes of RA_Dec: ", size.(RA_Dec))
 # Initialize arrays to store indices and distances
 three_idxs = []
