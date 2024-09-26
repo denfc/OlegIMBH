@@ -151,17 +151,13 @@ typeof(X1)
 idxs, dists = crossmatch(X1, X2)
 
 # ╔═╡ 48a5e49f-6943-4275-9073-d8447714283d
-md" #### Building 2 Cols"
+md" #### Building 2 Cols
+##### `reshapeCoords`
+"
 
-# ╔═╡ cbefd73d-affd-4ea7-834f-1d4c04997005
-"""
-!!! tip "dfc 25 Sept 2024"
-    - built orginally in /home/dfc123/Gitted/OlegIMBH/notebooks/P22\\_JWST.jl, this function takes the RA and Dec coordinates `sky_centroid_ra` and `sky_centroid_dec`,  that are read from the JWST ECSV file and puts them into a (2 X their length) Matrix(Float64) that the functions `crossmatch` and `crossmatch_angular` want.
-"""
+# ╔═╡ 83e37440-249f-4658-aaf3-9a98f3478e9b
 function reshapeCoords(RA, Dec)
-	v = vcat(collect(RA), collect(Dec))
-	len_vS2 = div(length(v), 2)
-	return reshape(v, 2, len_vS2)
+	return vcat( (collect(RA))', (collect(Dec))' )
 end
 
 # ╔═╡ 32ef56b3-e695-4c3b-b254-19c3e6aaf7c2
@@ -334,6 +330,9 @@ test_f560 = CSV.read(joinpath(dataDir_T01_f560, six_f560[3]), DataFrame; comment
 # ╔═╡ 9683205c-642b-4921-99df-0d9d5317ad0e
 RA_Dec2 = reshapeCoords(test_f560.sky_centroid_ra, test_f560.sky_centroid_dec)
 
+# ╔═╡ b65aed3b-cb88-4635-b673-a10ca312339f
+tmp = RA_Dec2
+
 # ╔═╡ 5e438b34-6523-48a0-87ee-df8cc446382d
 let
 	println(typeof(RA_Dec))
@@ -416,9 +415,10 @@ md" # Bottom Cell"
 # ╠═4bab6517-0675-449b-bc43-db2c5408674f
 # ╠═fb6e663b-c630-469f-9e35-ebd517aeecf4
 # ╠═48a5e49f-6943-4275-9073-d8447714283d
-# ╠═cbefd73d-affd-4ea7-834f-1d4c04997005
+# ╠═83e37440-249f-4658-aaf3-9a98f3478e9b
 # ╠═32ef56b3-e695-4c3b-b254-19c3e6aaf7c2
 # ╠═9683205c-642b-4921-99df-0d9d5317ad0e
+# ╠═b65aed3b-cb88-4635-b673-a10ca312339f
 # ╠═2d90a063-361f-4c97-836d-f45f2d21e921
 # ╠═6cabc13b-9bb7-4f74-b7b6-f98435e94d5e
 # ╠═5e438b34-6523-48a0-87ee-df8cc446382d

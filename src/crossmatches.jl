@@ -32,7 +32,6 @@ function crossmatch(X1::Array{Float64}, X2::Array{Float64}, max_distance::Float6
     return idxs, dists
 end
 
-
 """Cross-match angular values between X1 and X2
 using a KD Tree for speed.  Because the
 KD Tree only handles cartesian distances, the angles
