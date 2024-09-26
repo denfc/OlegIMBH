@@ -1,11 +1,12 @@
+"""
+!!! tip "dfc 25 September 2024"
+    - copied (with tiny updates) from https://github.com/hbouy/JuliaAstroToolBox/blob/master/Crossmatch.jl
 # Astronomical catalogues cross-matching
 # J. Vanderplas Python code ported to Julia:
 # https://github.com/astroML/astroML/blob/master/astroML/crossmatch.py
+# using NearestNeighbors
 
-#Pkg.add("NearestNeighbors")
-using NearestNeighbors
-
-"""Cross-match the values between X1 and X2
+Cross-match the values between X1 and X2
 By default, this uses a KD Tree for speed.
 
 # Arguments
@@ -21,12 +22,8 @@ Locations with no match are indicated by
 If no point is within the given radius, then inf will be returned.
 """
 function crossmatch(X1::Array{Float64}, X2::Array{Float64}, max_distance::Float64=Inf)
-# function crossmatch(X1, X2, max_distance::Float64=Inf)
     tree = KDTree(X2)
     idxs, dists = knn(tree, X1, 1, true)
-	# idxs, dists = knn(kdtree, point, k, true)
-    # idxs, dists = nn(tree, X1)
-    # Convert Array{Array{Float64,1},1} to Array{Float64,2}
     dists=hcat(dists...)' ; idxs=hcat(idxs...)'
     # Replace NN further away than max_distance
     away=(dists.>max_distance)
@@ -60,6 +57,7 @@ function crossmatch_angular(X1::Array{Float64}, X2::Array{Float64}, max_distance
     max_distance = max_distance * (π / 180)
 
     # Convert 2D RA/DEC to 3D cartesian coordinates
+	# CoPilot doesn't think I need the transpose() functions
     Y1 = transpose(hcat(cos.(X1[1,:]) .* cos.(X1[2,:]),
                     sin.(X1[1,:]) .* cos.(X1[2,:]),
                     sin.(X1[2,:])))
@@ -69,8 +67,8 @@ function crossmatch_angular(X1::Array{Float64}, X2::Array{Float64}, max_distance
 
     # law of cosines to compute 3D distance
     isinf(max_distance) ? max_y = Inf : max_y = sqrt(2 - 2 * cos(max_distance))
-    ind, dist = crossmatch(Y1, Y2, max_y)
-	# dist = Matrix(dist) # truns it from an ajoint into a regular matrix
+    # ind, dist = crossmatch(Y1, Y2, max_y) # ORIGINAL
+    ind, dist = crossmatch(Matrix(Y1), Matrix(Y2), max_y) # Matrix() turns it from an ajoint into a regular matrix
 
     # convert distances back to angles using the law of tangents
     matched = isfinite.(dist)

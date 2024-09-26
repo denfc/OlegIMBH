@@ -38,13 +38,9 @@ end
 # ╔═╡ 6cabc13b-9bb7-4f74-b7b6-f98435e94d5e
 include(srcdir("crossmatches.jl"));
 
-# ╔═╡ 0141542b-a0f5-44dd-9f59-8000501df935
-md"""
-dfc 20 September 2024: P22_JWST.jl
-"""
-
 # ╔═╡ 7b98ed8c-7a38-463d-91e9-9915901a0047
 md"""
+dfc 20 September 2024: P22_JWST.jl
 !!! note "MAST stands for Mikulski Archive Space Telescopes"
     - Mid-InfraRed Instrument: 4.9 to 28.8 μm
 !!! note " "i2d" means "that this is a rectified and calibrated image mosaic" "
@@ -61,7 +57,7 @@ html"""
 		max-width: 2000px;
     	padding-left: min(50px, 10%);
     	# padding-right: max(160px, 10%);
-    	padding-right: max(160px, 10%); 
+    	padding-right: max(313px, 10%); 
         # 383px to accomodate TableOfContents(aside=true)
         # 313px on vertical display
 		# 160px on vertical display overlaps but gives sufficient space
@@ -105,8 +101,10 @@ md"""
 """
 
 # ╔═╡ f370c1b5-47f2-4af4-b2ff-eb1aac682d4c
-# test = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#",  drop=[:label], normalizenames=true) # [1, :]
-test = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#", normalizenames=true) # :label included
+begin
+	sourceCat_f1130 = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#",  drop=[:label], normalizenames=true) # [1, :]
+	test = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#", normalizenames=true) # :label included
+end
 
 # ╔═╡ ac6f1aa1-9da3-419d-8ce9-2e2a07c2deb1
 six_f1130[3]
@@ -156,6 +154,10 @@ idxs, dists = crossmatch(X1, X2)
 md" #### Building 2 Cols"
 
 # ╔═╡ cbefd73d-affd-4ea7-834f-1d4c04997005
+"""
+!!! tip "dfc 25 Sept 2024"
+    - built orginally in /home/dfc123/Gitted/OlegIMBH/notebooks/P22\\_JWST.jl, this function takes the RA and Dec coordinates `sky_centroid_ra` and `sky_centroid_dec`,  that are read from the JWST ECSV file and puts them into a (2 X their length) Matrix(Float64) that the functions `crossmatch` and `crossmatch_angular` want.
+"""
 function reshapeCoords(RA, Dec)
 	v = vcat(collect(RA), collect(Dec))
 	len_vS2 = div(length(v), 2)
@@ -163,25 +165,10 @@ function reshapeCoords(RA, Dec)
 end
 
 # ╔═╡ 32ef56b3-e695-4c3b-b254-19c3e6aaf7c2
-RA_Dec = reshapeCoords(test.sky_centroid_ra, test.sky_centroid_dec)
+RA_Dec = reshapeCoords(sourceCat_f1130.sky_centroid_ra, sourceCat_f1130.sky_centroid_dec)
 
 # ╔═╡ 2d90a063-361f-4c97-836d-f45f2d21e921
 md"### INCLUDE "
-
-# ╔═╡ 91aa9c95-eb65-4edb-a7cf-fe19b22414b6
-begin
-	xs, dist = crossmatch(RA_Dec, RA_Dec)
-	xsA, distA = crossmatch_angular(RA_Dec, RA_Dec)
-end
-
-# ╔═╡ e070368f-c478-4d26-a533-5fc680ccf842
-xs == xsA, dist == distA
-
-# ╔═╡ 4627b530-0d74-48d3-bfb3-fb905300073a
-xs
-
-# ╔═╡ 7caf05eb-cdcc-4274-ab16-d1fbb6592503
-Matrix(xs)
 
 # ╔═╡ bd6bd1f2-9d65-47bf-95f2-13d97fe110c3
 six_f1130[3]
@@ -344,6 +331,32 @@ f_f560_1 = FITS(imageFile_f560_1)
 # ╔═╡ b4b6dc27-3862-4eb4-9a63-a4f9306690d7
 test_f560 = CSV.read(joinpath(dataDir_T01_f560, six_f560[3]), DataFrame; comment = "#", normalizenames=true)
 
+# ╔═╡ 9683205c-642b-4921-99df-0d9d5317ad0e
+RA_Dec2 = reshapeCoords(test_f560.sky_centroid_ra, test_f560.sky_centroid_dec)
+
+# ╔═╡ 5e438b34-6523-48a0-87ee-df8cc446382d
+let
+	println(typeof(RA_Dec))
+	#bxs, dist = crossmatch(RA_Dec, RA_Dec2)
+	xsA, distA = crossmatch_angular(RA_Dec2, RA_Dec2)
+end
+
+# ╔═╡ 91aa9c95-eb65-4edb-a7cf-fe19b22414b6
+begin
+	println(typeof(RA_Dec2))
+	xs, dist = crossmatch(RA_Dec, RA_Dec)
+	xsA, distA = crossmatch_angular(RA_Dec, RA_Dec)
+end
+
+# ╔═╡ e070368f-c478-4d26-a533-5fc680ccf842
+xs == xsA, dist == distA
+
+# ╔═╡ 4627b530-0d74-48d3-bfb3-fb905300073a
+xs
+
+# ╔═╡ 7caf05eb-cdcc-4274-ab16-d1fbb6592503
+Matrix(xs)
+
 # ╔═╡ 818d3661-d207-463e-95f8-806d17206cc2
 md" #### label = index?"
 
@@ -374,9 +387,8 @@ md"""
 md" # Bottom Cell"
 
 # ╔═╡ Cell order:
-# ╠═0141542b-a0f5-44dd-9f59-8000501df935
-# ╠═7b98ed8c-7a38-463d-91e9-9915901a0047
-# ╠═4bbf22dd-2776-4e17-9abb-960b19add303
+# ╟─7b98ed8c-7a38-463d-91e9-9915901a0047
+# ╟─4bbf22dd-2776-4e17-9abb-960b19add303
 # ╠═37681186-6c21-4e86-8ad2-f199c2cdefe4
 # ╠═514abf01-c730-4753-a153-d3c83f1a6086
 # ╠═82aa8219-8d97-4103-970d-6a89ada5e9f4
@@ -406,8 +418,10 @@ md" # Bottom Cell"
 # ╠═48a5e49f-6943-4275-9073-d8447714283d
 # ╠═cbefd73d-affd-4ea7-834f-1d4c04997005
 # ╠═32ef56b3-e695-4c3b-b254-19c3e6aaf7c2
+# ╠═9683205c-642b-4921-99df-0d9d5317ad0e
 # ╠═2d90a063-361f-4c97-836d-f45f2d21e921
 # ╠═6cabc13b-9bb7-4f74-b7b6-f98435e94d5e
+# ╠═5e438b34-6523-48a0-87ee-df8cc446382d
 # ╠═91aa9c95-eb65-4edb-a7cf-fe19b22414b6
 # ╠═e070368f-c478-4d26-a533-5fc680ccf842
 # ╠═4627b530-0d74-48d3-bfb3-fb905300073a
