@@ -17,17 +17,32 @@ for dir in 1:3
 end
 
 RA_Dec = [vcat((collect(threeSourceCats[i].sky_centroid_ra))', (collect(threeSourceCats[i].sky_centroid_dec))') for i in 1:3]
-println("Sizes of RA_Dec: ", size.(RA_Dec))
-# Initialize arrays to store indices and distances
-three_idxs = []
-three_dists = []
+print("Sizes of RA_Dec: ")
+for i in 1:3
+	print(size(RA_Dec[i]), " $(threeFrequencies[i]); ", )
+end
+println()
+
+# Initialize array to store combined indices and distances
+idxs_dists = Vector{Matrix{Float64}}()
+
 # Crossmatch the three catalogs
 for i in 1:2
     for j in (i+1):3
-        print("Crossmatching catalog $i with catalog $j: ")
+        print("Crossmatching catalog $i ($(threeFrequencies[i])) with catalog $j ($(threeFrequencies[j])): ")
         idxs, dists = crossmatch_angular(RA_Dec[i], RA_Dec[j])
-		println(length(idxs), " ", length(dists))
-		push!(three_idxs, idxs)
-        push!(three_dists, dists)
+        println(length(idxs), " ", length(dists))
+        combined_matrix = hcat(idxs, dists) # when you `hcat` them, their adjoint is removedd and they become regular column vectors ('cause you're stacking their individual elements horizontally)
+        push!(idxs_dists, combined_matrix)
     end
 end
+
+# Determine the unique indices
+unique_idxs = Vector{Vector{Int64}}()
+for i in 1:3
+	idxs = idxs_dists[i][:, 1]
+	push!(unique_idxs, unique(idxs))
+end
+
+# Print length of unique indices
+println("Number of unique indices: ", length.(unique_idxs))

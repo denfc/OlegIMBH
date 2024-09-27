@@ -67,7 +67,7 @@ function crossmatch_angular(X1::Array{Float64}, X2::Array{Float64}, max_distance
     # law of cosines to compute 3D distance
     isinf(max_distance) ? max_y = Inf : max_y = sqrt(2 - 2 * cos(max_distance))
     # ind, dist = crossmatch(Y1, Y2, max_y) # ORIGINAL
-    ind, dist = crossmatch(Matrix(Y1), Matrix(Y2), max_y) # Matrix() turns it from an ajoint into a regular matrix
+    ind, dist = crossmatch(Matrix(Y1), Matrix(Y2), max_y) # Matrix() turns it from an ajoint into a regular matrix so that `crossmatch()` doesn't gag
 
     # convert distances back to angles using the law of tangents
     matched = isfinite.(dist)
