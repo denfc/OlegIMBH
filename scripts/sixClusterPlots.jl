@@ -63,3 +63,5 @@ for i in 1:2
     end
 end
 # uniqueIDs = [unique(idxs_dists[i][:, 1]) for i in 1:6]
+#  plt = plot(y_fit, yaxis=:log10, ylims = yL, yminorticks = 9, xminorticks = 10, yticks = yT, xlims = xL, xticks = xT, label = label, seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
+# xT, xL, yends, yT, yL, y_fit = logXFitHisto(idxs_dists[3][:, 2], 0.1, false)
