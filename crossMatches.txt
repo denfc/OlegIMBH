@@ -1,0 +1,12 @@
+Currently active project is: OlegIMBH
+Path of active project: /home/dfc123/Gitted/OlegIMBH
+
+Sizes of RA_Dec: (2, 97) f1130w; (2, 242) f770w; (2, 1029) f560w; 
+Number of extended sources in each catalog: 25, 79, 275
+
+Crossmatching catalog 1 f1130w with catalog 2 f770w: 97 matches found; unique indices: 67
+Crossmatching catalog 2 f770w with catalog 1 f1130w: 242 matches found; unique indices: 67
+Crossmatching catalog 1 f1130w with catalog 3 f560w: 97 matches found; unique indices: 91
+Crossmatching catalog 3 f560w with catalog 1 f1130w: 1029 matches found; unique indices: 96
+Crossmatching catalog 2 f770w with catalog 3 f560w: 242 matches found; unique indices: 192
+Crossmatching catalog 3 f560w with catalog 2 f770w: 1029 matches found; unique indices: 203

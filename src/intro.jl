@@ -5,12 +5,15 @@ using DrWatson
 # include(srcdir("dummy_src_file.jl"))
 include(srcdir("crossmatches.jl"))
 # include(srcdir("reshapeCoords.jl"))
+include(srcdir("logXFitHisto.jl"))
 
 using Base.Threads
 using Revise
 using Plots
 using CSV, DataFrames
 using NearestNeighbors
+using JLD2
+using StatsBase
 using Plots
 # using Unitful, UnitfulAstro
 # using AstroImages, FITSIO
