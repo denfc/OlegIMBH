@@ -74,11 +74,3 @@ df = DataFrame(ind_DistsUniqueIDs)
 
 # JLD2.save("crossMatches_df.jld2", "crossMatches_df" => df) DOES NOT WORK!
 JLD2.@save joinpath(projectdir(), "crossMatches_df.jld2") crossMatches_df = df
-
-
-Not working; make a separate plotting program anyway
-# allDistances = [df[i, "dists"] for i in 1:size(df)[1]]
-allDistances = vcat([df[i, "dists"] for i in 1:size(df, 1)]...)
-allDistances = collect(allDistances)
-xT, xL, yends, yT, yL, y_fit = logXFitHisto(allDistances, 0.1, false)
-plt = plot(y_fit, yaxis=:log10, ylims = yL, yminorticks = 9, xminorticks = 10, yticks = yT, xlims = xL, xticks = xT, label = label, seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
