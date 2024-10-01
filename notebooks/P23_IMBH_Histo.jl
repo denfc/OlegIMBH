@@ -165,7 +165,7 @@ end
 names(df)
 
 # ╔═╡ 074d8f67-a981-45db-8720-7648b1257ea8
-df[1, ["twoCats", "ids", "N_unique", "N Ext"]]
+df[1:6, ["twoCats", "N_unique", "N Ext"]], df[1:6, "N_unique"] .- df[1:6, "N Ext"]
 
 # ╔═╡ 642a46b9-70fd-4605-a160-d5a058404dae
 begin
@@ -233,10 +233,10 @@ pltt[6]
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╠═11ed019b-d12b-4a31-8251-a14feaec35a5
 # ╟─88f7b44a-c8b7-43e0-bac2-4e45647af4aa
-# ╟─8ee2a9d7-add8-44cd-82da-8905f12105cc
 # ╟─8bfc5476-3fed-42b1-9894-38d65d0af1ca
 # ╠═074d8f67-a981-45db-8720-7648b1257ea8
 # ╟─642a46b9-70fd-4605-a160-d5a058404dae
+# ╟─8ee2a9d7-add8-44cd-82da-8905f12105cc
 # ╠═e1a2234d-5f45-4b01-a3e8-bbbe4a58aaf7
 # ╠═7e1156a2-f6fe-4df5-add7-e353f6671680
 # ╠═f84eb1ce-a852-4b7d-9977-2f636f0770e2
