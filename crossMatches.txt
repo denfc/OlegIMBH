@@ -1,6 +1,3 @@
-Currently active project is: OlegIMBH
-Path of active project: /home/dfc123/Gitted/OlegIMBH
-
 Sizes of RA_Dec: (2, 97) f1130w; (2, 242) f770w; (2, 1029) f560w; 
 Number of extended sources in each catalog: 25, 79, 275
 

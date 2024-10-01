@@ -1,10 +1,15 @@
+""""
+dfc 1 October 2024
+- worked out code for Pluto notebook plotting
+"""
+
 # compact enough to not need an intro?
 using DrWatson
 @quickactivate "OlegIMBH"
 
-include(srcdir("logXFitHisto.jl"))
 using JLD2, DataFrames, StatsBase, Plots
 using LinearAlgebra # for `normalize`
+include(srcdir("logXFitHisto.jl"))
 
 df = jldopen(projectdir("crossMatches_df.jld2"))
 df = df["crossMatches_df"]
