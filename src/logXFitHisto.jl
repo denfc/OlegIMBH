@@ -33,7 +33,7 @@ function logXFitHisto(X::Array, binSize::Float64, x_nolog::Bool)
 	y_fit = fit(Histogram, logX, EdgeRange) # fit on Histogram keeps binSize fixed as given 
 	# h = normalize(y_fit, mode=:probability)
 	h = normalize(y_fit, mode=:pdf) # consider a switch between the two modes 
-	Yends = extrema(y_fit.weights) #tuples are immutable
+	Yends = extrema(y_fit.weights) # tuples are immutable
 	# println("Y extrema: ", Yends)
 	if Yends[1]<=1 # necessary to see the 1s (10^0)
 		# ORIGINAL logYTintervals = collect(-1:1:ceil(log10(Yends[2]))) -- why should y ever be less than 1?

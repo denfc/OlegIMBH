@@ -142,6 +142,18 @@ end
 # ╔═╡ 9a46221b-68f7-4101-b30a-13cc6d87f213
 md" ###### Begin New Coding Here."
 
+# ╔═╡ 8ee2a9d7-add8-44cd-82da-8905f12105cc
+begin
+    # df = jldopen(projectdir("crossMatches_df.jld2"))["crossMatches_df"]
+	df = jldopen(projectdir("crossMat5ra_df.jld2"))["crossMatches5ra_df"]
+	
+	allDistancesMatrix = [df[i, :dists] for i in 1:6]
+	allDistances = vec(vcat([allDistancesMatrix[i] for i in 1:6]...))
+end
+
+# ╔═╡ 10f970ac-3c78-48b0-b7f0-65c344f738f3
+jldopen(projectdir("crossMat5ra_df.jld2"))
+
 # ╔═╡ 88f7b44a-c8b7-43e0-bac2-4e45647af4aa
 begin
 	# Define the file path
@@ -153,19 +165,11 @@ begin
 	end
 end
 
-# ╔═╡ 8ee2a9d7-add8-44cd-82da-8905f12105cc
-begin
-	df = jldopen(projectdir("crossMatches_df.jld2"))["crossMatches_df"]
-	
-	allDistancesMatrix = [df[i, :dists] for i in 1:6]
-	allDistances = vec(vcat([allDistancesMatrix[i] for i in 1:6]...))
-end
+# ╔═╡ 074d8f67-a981-45db-8720-7648b1257ea8
+df[1:6, ["twoCats", "N_unique", "N Ext"]], df[1:6, "N_unique"] .- df[1:6, "N Ext"]
 
 # ╔═╡ 8bfc5476-3fed-42b1-9894-38d65d0af1ca
 names(df)
-
-# ╔═╡ 074d8f67-a981-45db-8720-7648b1257ea8
-df[1:6, ["twoCats", "N_unique", "N Ext"]], df[1:6, "N_unique"] .- df[1:6, "N Ext"]
 
 # ╔═╡ 642a46b9-70fd-4605-a160-d5a058404dae
 begin
@@ -185,20 +189,26 @@ md"Select bin size $(@bind binSize Slider(0.01:0.01:0.5, default = 0.1, show_val
 begin
 	label = "all six distances"
 	xT, xL, yends, yT, yL, y_fit = logXFitHisto(allDistances, binSize, false)
-	plt = plot(y_fit, yaxis=:log10, ylims = yL, yminorticks = 9, xminorticks = 10, yticks = yT, xlims = xL, xticks = xT, label = label, seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
+	plt = plot(y_fit, yaxis=:log10, ylims = yL, yminorticks = 9, xminorticks = 10, yticks = yT, xlims = xlims = (-7, -2), xticks = xT, label = label, seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
 	# println("to avoid showing plot")
 end
+
+# ╔═╡ 6a01d75e-7560-4134-ab0e-603c132a3b02
+xT
 
 # ╔═╡ bb0b8fd1-715c-4748-b887-a210e293fd22
 begin
 	pltt = []
 	for i in 1:6
-		xT, xL, yends, yT, yL, y_fit = logXFitHisto(vec(allDistancesMatrix[i]), binSize, false)
-		plt = plot(y_fit, yaxis=:log10, ylims = (1.0, 1000.0), yminorticks = 9, xminorticks = 10, yticks = [1.0, 10.0, 100.0, 1000.0], xlims = xL, xticks = xT, label = df[i, :twoCats], seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
+		xT, xL, yends, yT, yL, y_fit, h = logXFitHisto(vec(allDistancesMatrix[i]), binSize, false)
+		# plt = plot(y_fit, yaxis=:log10, ylims = (1.0, 10_000.0), yminorticks = 9, xminorticks = 10, yticks = [1.0, 10.0, 100.0, 1000.0], xlims = (-7, -2), xticks = [-7.0, -6.0, -5.0, -4.0, -3.0, -2.0], label = df[i, :twoCats], seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
+		plt = plot(y_fit, yaxis=:log10, ylims = (1.0, 10_000.0), yminorticks = 9, xminorticks = 10, yticks = yT, xlims = xL, xticks = xT, label = df[i, :twoCats]) # , seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
 		push!(pltt, plt)
 		# `yticks` and `ylims` hard-coded so they're the same in all six
+		println(y_fit.weights, yends, h)
 	end	
 end
+# seriestype=:steppost,
 
 # ╔═╡ bd41e50c-5907-4d41-8d6b-72ffca5f524f
 pltt[1]
@@ -219,31 +229,33 @@ pltt[5]
 pltt[6]
 
 # ╔═╡ Cell order:
-# ╟─754dbb34-631a-4aea-8660-443f70f11ea9
-# ╟─e85f9903-c869-416a-bf86-cb85a80b065b
+# ╠═754dbb34-631a-4aea-8660-443f70f11ea9
+# ╠═e85f9903-c869-416a-bf86-cb85a80b065b
 # ╠═4d9eb5bd-0759-4499-bd42-621834ae7f67
-# ╟─2016b7c9-df0f-4f48-95a7-96d31ed199e4
+# ╠═2016b7c9-df0f-4f48-95a7-96d31ed199e4
 # ╠═572dbcee-cb58-4b21-8993-5d159f02228b
-# ╟─ace018d2-003c-496f-b8aa-69eb71fb9057
-# ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
-# ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
-# ╟─43981055-f016-46e6-a019-9ac4501db0ad
-# ╟─a7f8f920-5ee8-420a-bcb2-fcd30dde7d28
-# ╟─94062cd4-b278-444d-b93e-694d26d30b50
+# ╠═ace018d2-003c-496f-b8aa-69eb71fb9057
+# ╠═dce8dbce-c8b4-11ed-3263-65232dc16f8d
+# ╠═0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
+# ╠═43981055-f016-46e6-a019-9ac4501db0ad
+# ╠═a7f8f920-5ee8-420a-bcb2-fcd30dde7d28
+# ╠═94062cd4-b278-444d-b93e-694d26d30b50
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
+# ╠═8ee2a9d7-add8-44cd-82da-8905f12105cc
+# ╠═10f970ac-3c78-48b0-b7f0-65c344f738f3
 # ╠═11ed019b-d12b-4a31-8251-a14feaec35a5
-# ╟─88f7b44a-c8b7-43e0-bac2-4e45647af4aa
+# ╠═88f7b44a-c8b7-43e0-bac2-4e45647af4aa
 # ╠═074d8f67-a981-45db-8720-7648b1257ea8
-# ╟─8bfc5476-3fed-42b1-9894-38d65d0af1ca
-# ╟─642a46b9-70fd-4605-a160-d5a058404dae
-# ╟─8ee2a9d7-add8-44cd-82da-8905f12105cc
+# ╠═8bfc5476-3fed-42b1-9894-38d65d0af1ca
+# ╠═642a46b9-70fd-4605-a160-d5a058404dae
 # ╠═e1a2234d-5f45-4b01-a3e8-bbbe4a58aaf7
 # ╠═7e1156a2-f6fe-4df5-add7-e353f6671680
-# ╠═f84eb1ce-a852-4b7d-9977-2f636f0770e2
-# ╟─bb0b8fd1-715c-4748-b887-a210e293fd22
+# ╠═6a01d75e-7560-4134-ab0e-603c132a3b02
+# ╠═bb0b8fd1-715c-4748-b887-a210e293fd22
 # ╠═bd41e50c-5907-4d41-8d6b-72ffca5f524f
 # ╠═c24ebdeb-7427-4106-adbb-338118e9fbef
 # ╠═6451be3c-e9b8-490a-add9-1d294ce14c13
 # ╠═0c481b8f-4c8e-4cf4-8f7f-be78c2a2cbf2
 # ╠═220bd0a1-ac94-4fc4-ac9a-b817a3adcbcc
 # ╠═6e2ca1c2-248e-45a1-8915-1fc2ee31cf75
+# ╠═f84eb1ce-a852-4b7d-9977-2f636f0770e2
