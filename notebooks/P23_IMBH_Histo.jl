@@ -145,8 +145,8 @@ md" ###### Begin New Coding Here."
 # ╔═╡ 8ee2a9d7-add8-44cd-82da-8905f12105cc
 begin
     # df = jldopen(projectdir("crossMatches_df.jld2"))["crossMatches_df"]
-	df = jldopen(projectdir("crossMat5ra_df.jld2"))["crossMatches5ra_df"]
-	
+	# df = jldopen(projectdir("crossMat5ra_df.jld2"))["crossMatches5ra_df"]
+    df = jldopen(projectdir("crossMat5radec_df.jld2"))["crossMat5radec_df"]	
 	allDistancesMatrix = [df[i, :dists] for i in 1:6]
 	allDistances = vec(vcat([allDistancesMatrix[i] for i in 1:6]...))
 end

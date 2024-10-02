@@ -35,11 +35,11 @@ ind_DistsUniqueIDs = []
 println()
 for i in 1:3
     # for j in (i+1):3
-        idxs, dists, twoNames = crossmatchTwo(raΔ_dec, ra_dec, i, i) # crossmatch_angular(RA_Dec[i], RA_Dec[j])
+        idxs, dists, twoNames = crossmatchTwo(raΔ_decΔ, ra_dec, i, i) # crossmatch_angular(RA_Dec[i], RA_Dec[j])
 		pushIntoDictArray(idxs, dists, twoNames, i)
 
 		# Reversing the order of the two catalogs
-		idxs, dists, twoNames = crossmatchTwo(ra_dec, raΔ_dec,  i, i)
+		idxs, dists, twoNames = crossmatchTwo(ra_dec, raΔ_decΔ,  i, i)
 		pushIntoDictArray(idxs, dists, twoNames, i)
     # end
 end
@@ -51,4 +51,4 @@ end
 df = DataFrame(ind_DistsUniqueIDs)
 
 # JLD2.save("crossMatches_df.jld2", "crossMatches_df" => df) DOES NOT WORK!
-JLD2.@save joinpath(projectdir(), "crossMat5ra_df.jld2") crossMatches5ra_df = df
+JLD2.@save joinpath(projectdir(), "crossMat5radec_df.jld2") crossMat5radec_df = df
