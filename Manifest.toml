@@ -621,9 +621,9 @@ version = "9.55.0+4"
 
 [[deps.Glib_jll]]
 deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE2_jll", "Zlib_jll"]
-git-tree-sha1 = "7c82e6a6cd34e9d935e9aa4051b66c6ff3af59ba"
+git-tree-sha1 = "674ff0db93fffcd11a3573986e550d66cd4fd71f"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.80.2+0"
+version = "2.80.5+0"
 
 [[deps.Graphics]]
 deps = ["Colors", "LinearAlgebra", "NaNMath"]
@@ -1184,9 +1184,9 @@ version = "2024.2.0+0"
 
 [[deps.MPICH_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Hwloc_jll", "JLLWrappers", "LazyArtifacts", "Libdl", "MPIPreferences", "TOML"]
-git-tree-sha1 = "19d4bd098928a3263693991500d05d74dbdc2004"
+git-tree-sha1 = "7715e65c47ba3941c502bffb7f266a41a7f54423"
 uuid = "7cb0a576-ebde-5e09-9194-50597f1243b4"
-version = "4.2.2+0"
+version = "4.2.3+0"
 
 [[deps.MPIPreferences]]
 deps = ["Libdl", "Preferences"]
