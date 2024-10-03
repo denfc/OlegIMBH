@@ -66,7 +66,7 @@ include(srcdir("logXFitHisto.jl"))
 
 # ╔═╡ 754dbb34-631a-4aea-8660-443f70f11ea9
 md"""
-!!! note "Notebook title."
+!!! note "P23_IMBH_Histo"
     ###### Origin Date: 1 Oct 2024
 	- after basic reading and plotting code worked out in /home/dfc123/Gitted/OlegIMBH/scripts/histo_six.jl, will use Pluto's ability to show plots with varying bin sizes
 
@@ -117,7 +117,7 @@ html"""
 		margin: 0 auto;
 		max-width: 2000px;
     	padding-left: max(160px, 10%);
-    	padding-right: max(383px, 10%);
+    	padding-right: max(160px, 10%);
 	}
         # 383px to accomodate TableOfContents(aside=true)
         # 313px on vertical display
@@ -145,8 +145,8 @@ md" ###### Begin New Coding Here."
 # ╔═╡ 8ee2a9d7-add8-44cd-82da-8905f12105cc
 begin
     # df = jldopen(projectdir("crossMatches_df.jld2"))["crossMatches_df"]
-	# df = jldopen(projectdir("crossMat5ra_df.jld2"))["crossMatches5ra_df"]
-    df = jldopen(projectdir("crossMat5radec_df.jld2"))["crossMat5radec_df"]	
+	df = jldopen(projectdir("crossMat5ra_df.jld2"))["crossMatches5ra_df"]
+    # df = jldopen(projectdir("crossMat5radec_df.jld2"))["crossMat5radec_df"]	
 	allDistancesMatrix = [df[i, :dists] for i in 1:6]
 	allDistances = vec(vcat([allDistancesMatrix[i] for i in 1:6]...))
 end
@@ -201,11 +201,11 @@ begin
 	pltt = []
 	for i in 1:6
 		xT, xL, yends, yT, yL, y_fit, h = logXFitHisto(vec(allDistancesMatrix[i]), binSize, false)
-		# plt = plot(y_fit, yaxis=:log10, ylims = (1.0, 10_000.0), yminorticks = 9, xminorticks = 10, yticks = [1.0, 10.0, 100.0, 1000.0], xlims = (-7, -2), xticks = [-7.0, -6.0, -5.0, -4.0, -3.0, -2.0], label = df[i, :twoCats], seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
-		plt = plot(y_fit, yaxis=:log10, ylims = (1.0, 10_000.0), yminorticks = 9, xminorticks = 10, yticks = yT, xlims = xL, xticks = xT, label = df[i, :twoCats]) # , seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
+		# plt = plot(y_fit,  ylims = (1.0, 10_000.0), yminorticks = 9, xminorticks = 10, yticks = [1.0, 10.0, 100.0, 1000.0], xlims = (-7, -2), xticks = [-7.0, -6.0, -5.0, -4.0, -3.0, -2.0], label = df[i, :twoCats], seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
+		plt = plot(y_fit, xlims = (-7, -2), ylims = (0, 1_000.0)) #, yaxis=:log10, ylims = (1.0, 10_000.0), yminorticks = 9, xminorticks = 10, yticks = yT, xticks = xT, label = df[i, :twoCats]) # , seriestype=:steppost, widen = true, fg_legend = :transparent, legend = legend_position)
 		push!(pltt, plt)
 		# `yticks` and `ylims` hard-coded so they're the same in all six
-		println(y_fit.weights, yends, h)
+		println(y_fit.weights, yends)
 	end	
 end
 # seriestype=:steppost,
@@ -229,7 +229,7 @@ pltt[5]
 pltt[6]
 
 # ╔═╡ Cell order:
-# ╠═754dbb34-631a-4aea-8660-443f70f11ea9
+# ╟─754dbb34-631a-4aea-8660-443f70f11ea9
 # ╠═e85f9903-c869-416a-bf86-cb85a80b065b
 # ╠═4d9eb5bd-0759-4499-bd42-621834ae7f67
 # ╠═2016b7c9-df0f-4f48-95a7-96d31ed199e4
