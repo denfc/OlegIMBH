@@ -57,7 +57,7 @@ html"""
 		max-width: 2000px;
     	padding-left: min(50px, 10%);
     	# padding-right: max(160px, 10%);
-    	padding-right: max(313px, 10%); 
+    	padding-right: max(160px, 10%); 
         # 383px to accomodate TableOfContents(aside=true)
         # 313px on vertical display
 		# 160px on vertical display overlaps but gives sufficient space

@@ -83,11 +83,9 @@ md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)
 
 # ╔═╡ 754dbb34-631a-4aea-8660-443f70f11ea9
 md"""
-!!! note "notebook title"
-	- ###### Origin Date: day month 2023
-	- Description of intent
-
-Note that the date below does not update automatically unless notebook (or that cell) is re-run.
+!!! note "P22_IMBH_Notes"
+	- ###### Origin Date: 3 October 2024
+	- Describe progress on project with Oleg to find infrared signature of intermediate black hole in the largest Milky Way globular cluster, Omega Centaurus
 """
 
 # ╔═╡ e85f9903-c869-416a-bf86-cb85a80b065b
@@ -97,7 +95,7 @@ begin
 end
 
 # ╔═╡ 4d9eb5bd-0759-4499-bd42-621834ae7f67
-TableOfContents(title = "Pxx ...", depth = 6)
+TableOfContents(title = "P22_IMBH_Notes", depth = 6)
 
 # ╔═╡ 2016b7c9-df0f-4f48-95a7-96d31ed199e4
 pwd()
@@ -204,15 +202,34 @@ end
 # ╔═╡ 9a46221b-68f7-4101-b30a-13cc6d87f213
 md" ##### Begin New Coding Here."
 
+# ╔═╡ 15899cbb-53e1-4160-b24c-40fa959aa926
+md"""
+### What's Happened So far (3 October)
+!!! note "0) ... /OlegIMBH/notebooks/P22_JWST.jl (20 Sept.)"
+	    -- MAST stands for Mikulski Archive Space Telescopes
+    - MIRI: Mid-InfraRed Instrument: 4.9 to 28.8 μm
+      - "i2d" means "that this is a rectified and calibrated image mosaic"
+      - from Stage 3: "2-D resampled PSF-subtracted image"
+      - "segm" is a "Segmentation Map"
+    - An ECSV file contains a "Source Catalog Table," e.g., `jw02491-o005_t002_miri_f1130w_cat.ecsv`
+	  - Can read ESCV file either by denoting commenting symbol directly (`CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#", normalizenames=true)`) or or by going to header line directly (`CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; header = 263,  drop=[:label], normalizenames=true)`)
+	    - Latter example excludes the "label" column (which is identical to the original Julia index), which we end up needing later for better cross matching.
+      - [Definitions of column headings can be found here.](https://jwst-pipeline.readthedocs.io/en/stable/jwst/source_catalog/main.html)
+!!! note "1) .../OlegIMBH/scripts/sixCrossMatches.jl"
+!!! note "2) .../OlegIMBH/scripts/testingCrossMatches .jl"
+!!! note "3) .../histo_six.jl => .../OlegIMBH/notebooks/P23_IMBH_Histo.jl"
+!!! note "4) .../OlegIMBH/scripts/sixCrossMatches 2.jl"
+"""
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
-# ╟─754dbb34-631a-4aea-8660-443f70f11ea9
+# ╠═754dbb34-631a-4aea-8660-443f70f11ea9
 # ╟─e85f9903-c869-416a-bf86-cb85a80b065b
 # ╠═4d9eb5bd-0759-4499-bd42-621834ae7f67
 # ╟─2016b7c9-df0f-4f48-95a7-96d31ed199e4
 # ╟─572dbcee-cb58-4b21-8993-5d159f02228b
-# ╠═ace018d2-003c-496f-b8aa-69eb71fb9057
-# ╠═dce8dbce-c8b4-11ed-3263-65232dc16f8d
+# ╟─ace018d2-003c-496f-b8aa-69eb71fb9057
+# ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
 # ╟─e0a42a3c-00de-4ff6-8862-46fcd0596315
 # ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
 # ╟─43981055-f016-46e6-a019-9ac4501db0ad
@@ -222,3 +239,4 @@ md" ##### Begin New Coding Here."
 # ╟─f22ea8e5-e458-47bc-950a-3c8e0de06df3
 # ╟─d68c548a-71a3-45e6-9ec5-a6d9358a716a
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
+# ╠═15899cbb-53e1-4160-b24c-40fa959aa926
