@@ -21,6 +21,7 @@ Locations with no match are indicated by
     dist[i] = NaN, ind[i] = 0
 If no point is within the given radius, then inf will be returned.
 """
+
 function crossmatch(X1::Array{Float64}, X2::Array{Float64}, max_distance::Float64=Inf)
     tree = KDTree(X2)
     idxs, dists = knn(tree, X1, 1, true)

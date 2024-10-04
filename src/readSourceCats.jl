@@ -6,7 +6,7 @@ function readSourceCats()
 		threeSourceCats = []
 		for dir in 1:3
 			fName = threeDataDirs[dir]*"/jw02491-o005_t002_miri_"*threeFrequencies[dir]*"_cat.ecsv"
-			push!(threeSourceCats, CSV.read(fName, DataFrame; comment = "#",  drop=[:label], normalizenames=true))
+			push!(threeSourceCats, CSV.read(fName, DataFrame; comment = "#", normalizenames=true)) # formerly removed label column
 		end
 	
 		RA_Dec = [vcat((collect(threeSourceCats[i].sky_centroid_ra))', (collect(threeSourceCats[i].sky_centroid_dec))') for i in 1:3]

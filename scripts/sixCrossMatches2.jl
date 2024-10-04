@@ -23,18 +23,48 @@ extended_N = [sum(cat.is_extended) for cat in threeSourceCats]
 println("\nNumber of extended sources in each catalog: ", join(extended_N, ", "))
 println()
 
+# Remove the extended sources from RA_Dec and put them into a new matrix called RA_Dec_available
+# Initialize RA_Dec_available and labels arrays
+RA_Dec_available = deepcopy(RA_Dec)
+labels = [Int[] for _ in 1:3]  # Create an array of empty integer arrays
+
+for i in 1:3
+    # Find indices where is_extended is false
+	# transform SentinelArrays threeSourceCats[1].is_extended) to regular array
+	regularArray = collect(threeSourceCats[i].is_extended)
+
+    available_indices = findall(.!regularArray)
+    
+    # Update RA_Dec_available
+    RA_Dec_available[i] = RA_Dec[i][:, available_indices]
+    
+    # Append the corresponding labels to the respective label array
+    append!(labels[i], threeSourceCats[i].label[available_indices])
+end
+
+# Function to transform indices using the appropriate label array
+function transform_indices(idxs, labels)
+    transformed_idxs = idxs
+    for i in 1:length(idxs)
+        if idxs[i] != 0  # Skip indices that are 0 (no match)
+            transformed_idxs[i] = labels[idxs[i]]
+        end
+    end
+    return transformed_idxs
+end
+
 # Initialize an array to store combined indices, distances, and unique IDs in dictionaries
 ind_DistsUniqueIDs = []
 
 # Crossmatch the three catalogs twice
 for i in 1:2
     for j in (i+1):3
-        idxs, dists, twoNames = crossmatchTwo(RA_Dec, RA_Dec, i, j) # crossmatch_angular(RA_Dec[i], RA_Dec[j])
+        idxs, dists, twoNames = crossmatchTwo(RA_Dec_available, RA_Dec_available, i, j) # crossmatch_angular(RA_Dec[i], RA_Dec[j])
 		pushIntoDictArray(idxs, dists, twoNames, j)
 
 		# Reversing the order of the two catalogs
-		idxs, dists, twoNames = crossmatchTwo(RA_Dec, RA_Dec, j, i)
-		pushIntoDictArray(idxs, dists, twoNames, j)
+		idxs, dists, twoNames = crossmatchTwo(RA_Dec_available, RA_Dec_available, j, i)
+		pushIntoDictArray(idxs, dists, twoNames, i)
     end
 end
 
@@ -45,4 +75,4 @@ end
 df = DataFrame(ind_DistsUniqueIDs)
 
 # JLD2.save("crossMatches_df.jld2", "crossMatches_df" => df) DOES NOT WORK!
-JLD2.@save joinpath(projectdir(), "crossMatches_df.jld2") crossMatches_df.jld2 = df
+JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
