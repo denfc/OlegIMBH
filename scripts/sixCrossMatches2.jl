@@ -30,49 +30,194 @@ labels = [Int[] for _ in 1:3]  # Create an array of empty integer arrays
 
 for i in 1:3
     # Find indices where is_extended is false
-	# transform SentinelArrays threeSourceCats[1].is_extended) to regular array
-	regularArray = collect(threeSourceCats[i].is_extended)
-
-    available_indices = findall(.!regularArray)
+    regularArray = collect(threeSourceCats[i].is_extended)
+    available_indices = findall(!, regularArray)
     
     # Update RA_Dec_available
     RA_Dec_available[i] = RA_Dec[i][:, available_indices]
     
     # Append the corresponding labels to the respective label array
     append!(labels[i], threeSourceCats[i].label[available_indices])
-end
-
-# Function to transform indices using the appropriate label array
-function transform_indices(idxs, labels)
-    transformed_idxs = idxs
-    for i in 1:length(idxs)
-        if idxs[i] != 0  # Skip indices that are 0 (no match)
-            transformed_idxs[i] = labels[idxs[i]]
-        end
-    end
-    return transformed_idxs
+    
+    # Debugging print statements
+    println("Catalog $i: available_indices = $available_indices")
+    println("Catalog $i: labels = $(labels[i])")
 end
 
 # Initialize an array to store combined indices, distances, and unique IDs in dictionaries
 ind_DistsUniqueIDs = []
 
-# Crossmatch the three catalogs twice
-for i in 1:2
-    for j in (i+1):3
-        idxs, dists, twoNames = crossmatchTwo(RA_Dec_available, RA_Dec_available, i, j) # crossmatch_angular(RA_Dec[i], RA_Dec[j])
-		pushIntoDictArray(idxs, dists, twoNames, j)
-
-		# Reversing the order of the two catalogs
-		idxs, dists, twoNames = crossmatchTwo(RA_Dec_available, RA_Dec_available, j, i)
-		pushIntoDictArray(idxs, dists, twoNames, i)
+function filter_duplicates!(idxs, dists, valid_idxs)
+    unique_idxs = Dict{Int, Float64}()
+    for (idx, dist, valid) in zip(idxs, dists, valid_idxs)
+        if valid
+            if haskey(unique_idxs, idx)
+                if dist < unique_idxs[idx]
+                    unique_idxs[idx] = dist
+                end
+            else
+                unique_idxs[idx] = dist
+            end
+        end
+    end
+    for i in eachindex(idxs)
+        if haskey(unique_idxs, idxs[i]) && dists[i] == unique_idxs[idxs[i]]
+            continue
+        else
+            valid_idxs[i] = false
+            dists[i] = Inf
+        end
     end
 end
 
-# Can't save dictionary with `wsave` because it isn't a dictionary but a vector of dictionaries
-# wsave(joinpath(datadir(), "./sims/ind_DistsUniqueIDs.jld2"), ind_DistsUniqueIDs)
+function transform_indices(idxs, labels, valid_idxs)
+    transformed_idxs = []
+    for (i, valid) in zip(eachindex(idxs), valid_idxs)
+        if valid && idxs[i] <= length(labels)
+            push!(transformed_idxs, labels[idxs[i]])
+        else
+            push!(transformed_idxs, -1)
+        end
+    end
+    return transformed_idxs
+end
 
-# turn saved dictionary into a DataFrame
+function update_available!(idxs, RA_Dec_available, labels, valid_idxs)
+    non_invalid_idxs = findall(x -> x, valid_idxs)
+    for i in eachindex(RA_Dec_available)
+        RA_Dec_available[i] = RA_Dec_available[i][:, non_invalid_idxs]
+        labels[i] = labels[i][non_invalid_idxs]
+    end
+end
+
+function crossmatchTwo(radec1::Array{Array{Float64, 2}, 1}, radec2::Array{Array{Float64, 2}, 1}, i, j)
+    firstName = threeFrequencies[i]
+    secondName = threeFrequencies[j]
+    combinedNames = firstName * "_" * secondName
+    print("Crossmatching catalog $i $firstName with catalog $j $secondName: ")
+    ids, ds = crossmatch_angular(radec1[i], radec2[j])
+    ids = collect(ids) # to turn the indices into a regular array (from an adjoint array)
+    ds = collect(ds)
+    valid_idxs = trues(length(ids))  # Initialize valid indices array
+
+    # Transform indices using the appropriate label array
+    transformed_ids = transform_indices(ids, labels[j], valid_idxs)
+    return transformed_ids, ds, combinedNames, valid_idxs
+end
+
+# Crossmatch the three catalogs twice
+for i in 1:2
+    for j in (i+1):3
+        # Temporary storage for intermediate results
+        accumulated_idxs, accumulated_dists, accumulated_twoNames = [], [], ""
+        removed_radec, removed_dists = Matrix{Float64}[], []
+
+        while true
+            idxs, dists, twoNames, valid_idxs = crossmatchTwo(RA_Dec_available, RA_Dec_available, i, j)
+            filter_duplicates!(idxs, dists, valid_idxs)
+            
+            # Accumulate intermediate results
+            append!(accumulated_idxs, idxs)
+            append!(accumulated_dists, dists)
+            accumulated_twoNames = twoNames  # This will be the same for all iterations
+            
+            # Track removed coordinates
+            removed_indices = findall(!, valid_idxs)
+            append!(removed_radec, [RA_Dec_available[i][:, removed_indices]])
+            append!(removed_dists, dists[removed_indices])
+            
+            # Update available RA_Dec and labels for re-matching
+            update_available!(idxs, RA_Dec_available, labels, valid_idxs)
+            
+            # Check if there are any duplicates left
+            if all(x -> x, valid_idxs)
+                break
+            end
+        end
+
+        # Re-run crossmatch on removed coordinates until no duplicates remain
+        while !isempty(removed_radec)
+            idxs, dists, twoNames, valid_idxs = crossmatchTwo(removed_radec, RA_Dec_available, i, j)
+            filter_duplicates!(idxs, dists, valid_idxs)
+            
+            # Accumulate intermediate results
+            append!(accumulated_idxs, idxs)
+            append!(accumulated_dists, dists)
+            
+            # Track removed coordinates again
+            removed_radec, removed_dists = Matrix{Float64}[], []
+            removed_indices = findall(!, valid_idxs)
+            append!(removed_radec, [RA_Dec_available[i][:, removed_indices]])
+            append!(removed_dists, dists[removed_indices])
+            
+            # Update available RA_Dec and labels for re-matching
+            update_available!(idxs, RA_Dec_available, labels, valid_idxs)
+            
+            # Check if there are any duplicates left
+            if all(x -> x, valid_idxs)
+                break
+            end
+        end
+
+        # Push final accumulated results into ind_DistsUniqueIDs
+        pushIntoDictArray(accumulated_idxs, accumulated_dists, accumulated_twoNames, j)
+
+        # Temporary storage for intermediate results
+        accumulated_idxs, accumulated_dists, accumulated_twoNames = [], [], ""
+        removed_radec, removed_dists = Matrix{Float64}[], []
+
+        while true
+            idxs, dists, twoNames, valid_idxs = crossmatchTwo(RA_Dec_available, RA_Dec_available, j, i)
+            filter_duplicates!(idxs, dists, valid_idxs)
+            
+            # Accumulate intermediate results
+            append!(accumulated_idxs, idxs)
+            append!(accumulated_dists, dists)
+            accumulated_twoNames = twoNames  # This will be the same for all iterations
+            
+            # Track removed coordinates
+            removed_indices = findall(!, valid_idxs)
+            append!(removed_radec, [RA_Dec_available[j][:, removed_indices]])
+            append!(removed_dists, dists[removed_indices])
+            
+            # Update available RA_Dec and labels for re-matching
+            update_available!(idxs, RA_Dec_available, labels, valid_idxs)
+            
+            # Check if there are any duplicates left
+            if all(x -> x, valid_idxs)
+                break
+            end
+        end
+
+        # Re-run crossmatch on removed coordinates until no duplicates remain
+        while !isempty(removed_radec)
+            idxs, dists, twoNames, valid_idxs = crossmatchTwo(removed_radec, RA_Dec_available, j, i)
+            filter_duplicates!(idxs, dists, valid_idxs)
+            
+            # Accumulate intermediate results
+            append!(accumulated_idxs, idxs)
+            append!(accumulated_dists, dists)
+            
+            # Track removed coordinates again
+            removed_radec, removed_dists = Matrix{Float64}[], []
+            removed_indices = findall(!, valid_idxs)
+            append!(removed_radec, [RA_Dec_available[j][:, removed_indices]])
+            append!(removed_dists, dists[removed_indices])
+            
+            # Update available RA_Dec and labels for re-matching
+            update_available!(idxs, RA_Dec_available, labels, valid_idxs)
+            
+            # Check if there are any duplicates left
+            if all(x -> x, valid_idxs)
+                break
+            end
+        end
+
+        # Push final accumulated results into ind_DistsUniqueIDs
+        pushIntoDictArray(accumulated_idxs, accumulated_dists, accumulated_twoNames, i)
+    end
+end
+
+# Save the DataFrame to a JLD2 file
 df = DataFrame(ind_DistsUniqueIDs)
-
-# JLD2.save("crossMatches_df.jld2", "crossMatches_df" => df) DOES NOT WORK!
 JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
