@@ -27,7 +27,7 @@ function crossmatch(X1::Array{Float64}, X2::Array{Float64}, max_distance::Float6
     idxs, dists = knn(tree, X1, 1, true)
     dists = hcat(dists...)' ; idxs=hcat(idxs...)'
     # Replace NN further away than max_distance
-    away = (dists.>max_distance)
+    away = (dists .> max_distance)
     idxs[away]  .= 0    # original code did not broadcast, and it gagged
     dists[away] .= NaN  # ditto
     return idxs, dists
