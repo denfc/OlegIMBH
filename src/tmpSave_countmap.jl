@@ -12,11 +12,22 @@ non_unique_indices = [i for (i, x) in enum if counts[x] > 1]
 # Output the indices of non-unique values
 println(non_unique_indices)
 
+processed_values = Set{Int}()
+
 for (i, x) in enum
-	if counts[x] > 1
+    if x in processed_values
+        continue # with the above `for` loop
+    end
+
+    if counts[x] > 1
         println("Processing duplicated value at Index: $i, Value: $x")
-        # Add your processing code here
+        _ind = findall(y -> y == x, a)
+        println("Indices with value $x: ", _ind)
+        for i in _ind
+            # Add your processing code with a[i] here
+        end
+        push!(processed_values, x)
     else
         println("Unique value at Index: $i, Value: $x")
     end
-end 
+end

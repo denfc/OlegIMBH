@@ -57,3 +57,12 @@ end
 # Save the DataFrame to a JLD2 file
 df = DataFrame(ind_DistsUniqueIDs)
 #bJLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
+
+println()
+display(df)
+row1 = 3
+row2 = 4
+println("\nComparing rows 3 and 4 of the DataFrame")
+for i in eachindex(df[row1, 2])  println("$i) ", df[row1,  "Cat 1 labels"][i, 1], " ", df[row1, "matching labels"][i, 1:6]) end
+println("\n Reversing \n")
+for i in eachindex(df[row2, 2])  println("$i) ", df[row2,  "Cat 1 labels"][i, 1], " ", df[row2, "matching labels"][i, 1:6]) end
