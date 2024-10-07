@@ -1,4 +1,6 @@
 """
+dfc 5 OCtober 2024
+- Knowing how to use CoPilot better, and after a talk with Oleg, I have a different way of processing that uses newly learned functions `enumerate` and `countmap`
 dfc 4 October 20204
 - CoPilot couldn't do what I wanted ...
 	- want to remove duplicates but then find the second closest 
@@ -12,67 +14,46 @@ dfc 3 October 2024, copied from `sixCrossMatches.jl` to start, modified by narro
 """
 
 include("/home/dfc123/Gitted/OlegIMBH/src/intro.jl")
-include(srcdir("readSourceCats.jl"))
+include(srcdir("readSourceCats3.jl"))
 include(srcdir("crossmatches.jl"))
-include(srcdir("crossmatchTwo.jl"))
+include(srcdir("crossmatchTwo3.jl"))
 include(srcdir("pushIntoDictArray.jl"))
 
 threeFrequencies = ["f1130w", "f770w", "f560w"]
 
-RA_Dec, threeSourceCats = readSourceCats() # not run with this originally!
+RA_Dec, threeSourceCats = readSourceCats3() # not run with this originally!
 
-# Count the number of extended sources in each catalog
-extended_N = [sum(cat.is_extended) for cat in threeSourceCats]
-println("\nNumber of extended sources in each catalog: ", join(extended_N, ", "))
-println()
+# Initialize `RA_Dec_noExt`
+RA_Dec_noExt = deepcopy(RA_Dec)
 
-# Remove the extended sources from RA_Dec and put them into a new matrix called RA_Dec_available
-# Initialize `RA_Dec_available`` and `labels`` arrays
-RA_Dec_available = deepcopy(RA_Dec)
-labels = [Int[] for _ in 1:3]  # Create an array of empty integer arrays
-
+# By finding the true "is_extended" indices in each `threeSourceCat`, remove the extended sources from RA_Dec and put them into the new matrix called RA_Dec_noExt
 for i in 1:3
     # Find indices where is_extended is false
-    regularArray = collect(threeSourceCats[i].is_extended)
-    available_indices = findall(!, regularArray)
+    available_indices = findall(!, threeSourceCats[i][:, :is_extended])
     
-    # Update RA_Dec_available by removing the extended sources
-    RA_Dec_available[i] = RA_Dec[i][:, available_indices]
-    
-    # Append the corresponding labels to the respective label array
-    append!(labels[i], threeSourceCats[i].label[available_indices])
+    # Update RA_Dec_noExt by removing the extended sources
+    RA_Dec_noExt[i] = RA_Dec[i][:, available_indices]
 end
 
-# Initialize an array to store combined indices, distances, and unique IDs in dictionaries
+# Initialize an array to store combined indices and their labels, distances, and unique IDs in dictionaries
 ind_DistsUniqueIDs = []
 
 # Crossmatch the three catalogs twice
 for i in 1:2
     for j in (i+1):3
-        while true
-            idxs, dists, twoNames = crossmatchTwo(RA_Dec_available, RA_Dec_available, i, j)
-            filter_duplicates!(idxs, dists, valid_idxs)
-            
-            # Update available RA_Dec and labels for re-matching
-            update_available!(idxs, RA_Dec_available, labels)
-            
-            # Check if there are any duplicates left
-        end
-
-        # Push results into ind_DistsUniqueIDs
-        pushIntoDictArray(accumulated_idxs, accumulated_dists, accumulated_twoNames, j)
-
-        while true
-            idxs, dists, twoNames, valid_idxs = crossmatchTwo(RA_Dec_available, RA_Dec_available, j, i)
-            filter_duplicates!(idxs, dists, valid_idxs)
-            
-        end
+        idxs, dists, twoNames = crossmatchTwo3(RA_Dec_noExt, RA_Dec_noExt, i, j)
+		idxs = Int.(RA_Dec_noExt[j][1, idxs])
+    
+		# Push results into ind_DistsUniqueIDs
+        pushIntoDictArray(idxs, dists, twoNames, i, j)
+        idxs, dists, twoNames = crossmatchTwo3(RA_Dec_noExt, RA_Dec_noExt, j, i)
 
         # Push fresults into ind_DistsUniqueIDs
-        pushIntoDictArray(accumulated_idxs, accumulated_dists, accumulated_twoNames, i)
+		idxs = Int.(RA_Dec_noExt[i][1, idxs])
+		pushIntoDictArray(idxs, dists, twoNames, j, i)
     end
 end
 
 # Save the DataFrame to a JLD2 file
 df = DataFrame(ind_DistsUniqueIDs)
-JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
+#bJLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df

@@ -1,4 +1,4 @@
-function readSourceCats()
+function readSourceCats3()
 	# Read Source Catalog Files
 		oneDataDir = joinpath(datadir(), "exp_raw")
 		threeDataDirs = readdir(oneDataDir)
@@ -9,10 +9,17 @@ function readSourceCats()
 			push!(threeSourceCats, CSV.read(fName, DataFrame; comment = "#", normalizenames=true)) # formerly removed label column
 		end
 	
-		RA_Dec = [vcat((collect(threeSourceCats[i].sky_centroid_ra))', (collect(threeSourceCats[i].sky_centroid_dec))') for i in 1:3]
+		# RA_Dec = [vcat((collect(threeSourceCats[i].label))', (collect(threeSourceCats[i].sky_centroid_ra))', (collect(threeSourceCats[i].sky_centroid_dec))') for i in 1:3]
+		RA_Dec = [vcat(
+			collect(threeSourceCats[i].label)', 
+			collect(threeSourceCats[i].sky_centroid_ra)', 
+			collect(threeSourceCats[i].sky_centroid_dec)'
+		  ) for i in 1:3]
+
+		
 		print("Sizes of RA_Dec: ")
-		for i in 1:3
-			print(size(RA_Dec[i]), " $(threeFrequencies[i]); ", )
+	    for i in 1:3
+			print("$(size(RA_Dec[i], 2)) labels, $(threeFrequencies[i]); ")
 		end
 		println()
 		return RA_Dec, threeSourceCats
