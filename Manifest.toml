@@ -204,9 +204,9 @@ version = "0.10.14"
 
 [[deps.Cairo_jll]]
 deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "a2f1c8c668c8e3cb4cca4e57a8efdb09067bb3fd"
+git-tree-sha1 = "009060c9a6168704143100f36ab08f06c2af4642"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
-version = "1.18.0+2"
+version = "1.18.2+1"
 
 [[deps.Calculus]]
 deps = ["LinearAlgebra"]
@@ -733,9 +733,9 @@ version = "0.1.5"
 
 [[deps.ImageBinarization]]
 deps = ["HistogramThresholding", "ImageCore", "LinearAlgebra", "Polynomials", "Reexport", "Statistics"]
-git-tree-sha1 = "f5356e7203c4a9954962e3757c08033f2efe578a"
+git-tree-sha1 = "33485b4e40d1df46c806498c73ea32dc17475c59"
 uuid = "cbc4b850-ae4b-5111-9e64-df94c024a13d"
-version = "0.3.0"
+version = "0.3.1"
 
 [[deps.ImageContrastAdjustment]]
 deps = ["ImageBase", "ImageCore", "ImageTransformations", "Parameters"]
@@ -1196,9 +1196,9 @@ version = "0.1.11"
 
 [[deps.MPItrampoline_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "LazyArtifacts", "Libdl", "MPIPreferences", "TOML"]
-git-tree-sha1 = "fde81c9f9c94fe5fbeaed7b3f1330305cf9a327c"
+git-tree-sha1 = "70e830dab5d0775183c99fc75e4c24c614ed7142"
 uuid = "f1f71cc9-e9ae-5b93-9b94-4fe0e1ad3748"
-version = "5.5.0+0"
+version = "5.5.1+0"
 
 [[deps.MacroTools]]
 deps = ["Markdown", "Random"]
@@ -1525,18 +1525,20 @@ uuid = "1d0040c9-8b98-4ee7-8388-3f51789ca0ad"
 version = "0.2.2"
 
 [[deps.Polynomials]]
-deps = ["LinearAlgebra", "RecipesBase"]
-git-tree-sha1 = "3aa2bb4982e575acd7583f01531f241af077b163"
+deps = ["LinearAlgebra", "RecipesBase", "Requires", "Setfield", "SparseArrays"]
+git-tree-sha1 = "1a9cfb2dc2c2f1bd63f1906d72af39a79b49b736"
 uuid = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
-version = "3.2.13"
+version = "4.0.11"
 
     [deps.Polynomials.extensions]
     PolynomialsChainRulesCoreExt = "ChainRulesCore"
+    PolynomialsFFTWExt = "FFTW"
     PolynomialsMakieCoreExt = "MakieCore"
     PolynomialsMutableArithmeticsExt = "MutableArithmetics"
 
     [deps.Polynomials.weakdeps]
     ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+    FFTW = "7a1cc6ca-52ef-59f5-83cd-3a7055c09341"
     MakieCore = "20f20a25-4f0e-4fdf-b5d1-57303727442b"
     MutableArithmetics = "d8a4904e-b15c-11e9-3269-09a3773c0cb0"
 
@@ -1956,9 +1958,9 @@ uuid = "06e1c1a7-607b-532d-9fad-de7d9aa2abac"
 version = "0.5.0"
 
 [[deps.TranscodingStreams]]
-git-tree-sha1 = "e84b3a11b9bece70d14cce63406bbc79ed3464d2"
+git-tree-sha1 = "0c45878dcfdcfa8480052b6ab162cdd138781742"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
-version = "0.11.2"
+version = "0.11.3"
 
 [[deps.Tricks]]
 git-tree-sha1 = "7822b97e99a1672bfb1b49b668a6d46d58d8cbcb"
