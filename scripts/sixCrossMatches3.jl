@@ -19,7 +19,8 @@ include(srcdir("crossmatches.jl"))
 include(srcdir("crossmatchTwo3.jl"))
 include(srcdir("pushIntoDictArray.jl"))
 
-threeFrequencies = ["f1130w", "f770w", "f560w"]
+const threeFrequencies = ["f1130w", "f770w", "f560w"]
+const NN_level = 3  # 2 is the minimum
 
 RA_Dec, threeSourceCats = readSourceCats3() # not run with this originally!
 
@@ -60,9 +61,11 @@ df = DataFrame(ind_DistsUniqueIDs)
 
 println()
 display(df)
+
+# print Cat 1 labels and matching labels for rows 3 and 4
 row1 = 3
 row2 = 4
 println("\nComparing rows 3 and 4 of the DataFrame")
-for i in eachindex(df[row1, 2])  println("$i) ", df[row1,  "Cat 1 labels"][i, 1], " ", df[row1, "matching labels"][i, 1:6]) end
+for i in eachindex(df[row1, 2])  println("$i) ", df[row1, "Catalog 1"][i, 1], " ", df[row1, "matching labels"][i, 1:NN_level]) end
 println("\n Reversing \n")
-for i in eachindex(df[row2, 2])  println("$i) ", df[row2,  "Cat 1 labels"][i, 1], " ", df[row2, "matching labels"][i, 1:6]) end
+for i in eachindex(df[row2, 2])  println("$i) ", df[row2, "Catalog 1"][i, 1], " ", df[row2, "matching labels"][i, 1:NN_level]) end

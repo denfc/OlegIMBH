@@ -25,16 +25,16 @@ function pushIntoDictArray(matchingIDs, ds, names, k, l)
 			_ind = findall(y -> y == x, nearestNeighbors)
 			# println("Number of indices with value $x: ", length(_ind))
 			for i in _ind
-				# Add your processing code with a[i] here
+				# Add your processing code with nearestNeighbors[i] here
 			end
 			push!(processed_values, x)
 		else
-			matchingIDs[i, 2:6] .= -matchingIDs[i, 2:6]
+			matchingIDs[i, 2:NN_level] .= -matchingIDs[i, 2:NN_level]
 		end
 	end 
 	noDupes_n = length(findall(x -> x<0, matchingIDs[:, 2]))
 	
 	# sum(isEx), the number of extended sources in the match, is there only as a check; it should be zero.
 	isEx = [threeSourceCats[l].is_extended[id] for id in u1]
-	push!(ind_DistsUniqueIDs, Dict("twoCats" => names, "Cat 1 labels" => Int.(RA_Dec_noExt[k][1, :]), "matching labels" => matchingIDs, "dists" => ds, "uniquN" => lenU1, "no dupes" => noDupes_n, "N Ext" => sum(isEx), "ds2/ds1" => dRatio))
+	push!(ind_DistsUniqueIDs, Dict("twoCats" => names, "Catalog 1" => Int.(RA_Dec_noExt[k][1, :]), "matching labels" => matchingIDs, "dists" => ds, "uniquN" => lenU1, "no dupes" => noDupes_n, "N Ext" => sum(isEx), "ds2/ds1" => dRatio))
 end

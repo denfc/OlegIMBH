@@ -24,7 +24,7 @@ If no point is within the given radius, then inf will be returned.
 
 function crossmatch(X1::Array{Float64}, X2::Array{Float64}, max_distance::Float64=Inf)
     tree = KDTree(X2)
-    idxs, dists = knn(tree, X1, 6, true)
+    idxs, dists = knn(tree, X1, NN_level, true)
     dists = hcat(dists...)' ; idxs=hcat(idxs...)'
     # Replace NN further away than max_distance
     away = (dists .> max_distance)
