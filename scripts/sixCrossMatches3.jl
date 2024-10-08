@@ -57,7 +57,7 @@ end
 
 # Save the DataFrame to a JLD2 file
 df = DataFrame(ind_DistsUniqueIDs)
-#bJLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
+JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
 
 println()
 display(df)

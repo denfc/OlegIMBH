@@ -29,6 +29,7 @@ function pushIntoDictArray(matchingIDs, ds, names, k, l)
 			end
 			push!(processed_values, x)
 		else
+			# set the indices beyond the nearest neighbor negative to show that the nn itself has no duplicates
 			matchingIDs[i, 2:NN_level] .= -matchingIDs[i, 2:NN_level]
 		end
 	end 
