@@ -12,9 +12,6 @@ function pushIntoDictArray(matchingIDs, ds, names, k, l)
 	# Step 2: Create an array to store indices of non-unique values; `enumerate` is used to get the index and value of each element in the array directly without needing to know the length of the array
     enum = enumerate(nearestNeighbors)
 	
-	# create dRatio, the ratio of the second ds distance to the first ds distance
-	dRatio = ds[:, 2] ./ ds[:, 1]
-	
 	processed_values = Set{Int}()
 	for (i, x) in enum
 		if x in processed_values
@@ -37,5 +34,5 @@ function pushIntoDictArray(matchingIDs, ds, names, k, l)
 	
 	# sum(isEx), the number of extended sources in the match, is there only as a check; it should be zero.
 	isEx = [threeSourceCats[l].is_extended[id] for id in u1]
-	push!(ind_DistsUniqueIDs, Dict("twoCats" => names, "Catalog 1" => Int.(RA_Dec_noExt[k][1, :]), "matching labels" => matchingIDs, "dists" => ds, "uniquN" => lenU1, "no dupes" => noDupes_n, "N Ext" => sum(isEx), "ds2/ds1" => dRatio))
+	push!(ind_DistsUniqueIDs, Dict("twoCats" => names, "Catalog 1" => Int.(RA_Dec_noExt[k][1, :]), "matching labels" => matchingIDs, "dists" => ds, "uniquN" => lenU1, "no dupes" => noDupes_n, "N Ext" => sum(isEx)))
 end
