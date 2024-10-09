@@ -40,7 +40,7 @@ end
 ind_DistsUniqueIDs = []
 
 # Initialize an array to store the `countmap` results returned from `pushIntoDictArray`
-duplicate_labels = []
+CatB_dup_labels = []
 
 # Crossmatch the three catalogs twice
 for i in 1:2
@@ -49,13 +49,13 @@ for i in 1:2
 		idxs = Int.(RA_Dec_noExt[j][1, idxs])
 		# Push nn results into `ind_DistsUniqueIDs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
         dupes = pushIntoDictArray(idxs, dists, twoNames, i, j)
-        push!(duplicate_labels, dupes)
+        push!(CatB_dup_labels, dupes)
 
 		idxs, dists, twoNames = crossmatchTwo3(RA_Dec_noExt, RA_Dec_noExt, j, i)
 		idxs = Int.(RA_Dec_noExt[i][1, idxs])
 		# Push nn results into `ind_DistsUniqueIDs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
 		dupes = pushIntoDictArray(idxs, dists, twoNames, j, i)
-        push!(duplicate_labels, dupes)
+        push!(CatB_dup_labels, dupes)
     end
 end
 
@@ -67,12 +67,12 @@ println()
 display(df)
 
 # print Cat 1 labels and matching labels for rows 3 and 4
-row1 = 3
-row2 = 4
-println("\nComparing rows 3 and 4 of the DataFrame")
-for i in eachindex(df[row1, 3])  println("$i) ", df[row1, "Catalog 1"][i, 1], " ", df[row1, "matching labels"][i, 1:NN_level]) end
-println("\n Reversing \n")
-for i in eachindex(df[row2, 3])  println("$i) ", df[row2, "Catalog 1"][i, 1], " ", df[row2, "matching labels"][i, 1:NN_level]) end
+df_row1 = 3
+df_row2 = 4
+println("\nComparing rows $df_row1 and $df_row2 of the DataFrame.\n\nFirst, $(df[df_row1, "twoCats"]):\n")
+for i in eachindex(df[df_row1, 3])  println("$i) ", df[df_row1, "Catalog 1"][i, 1], " ", df[df_row1, "matching labels"][i, 1:NN_level]) end
+println("\nReversing, $(df[df_row2, "twoCats"]):\n")
+for i in eachindex(df[df_row2, 3])  println("$i) ", df[df_row2, "Catalog 1"][i, 1], " ", df[df_row2, "matching labels"][i, 1:NN_level]) end
 
 # include(srcdir("associations".jl"))
 # julia> df
@@ -89,14 +89,14 @@ for i in eachindex(df[row2, 3])  println("$i) ", df[row2, "Catalog 1"][i, 1], " 
 
  
 # for i in eachindex(df[row1, 3])
-enum1 = enumerate(df[row1, 5])
-enum2 = enumerate(df[row2, 5])
-for dupe in duplicate_labels[row1]
-	labels = Set{Int}()
-	for j in eachindex(df[row1, 3])
-		if df[row1, "matching labels"][j, 1] == dupe
-			push!(labels, df[row1, "Catalog 1"][j, 1])
+enum1 = enumerate(df[df_row1, 5])
+enum2 = enumerate(df[df_row2, 5])
+for dupe in CatB_dup_labels[df_row1]
+	CatA_labels = Set{Int}()
+	for j in eachindex(df[df_row1, "Catalog 1"])
+		if df[df_row1, "matching labels"][j, 1] == dupe
+			push!(CatA_labels, df[df_row1, "Catalog 1"][j, 1])
 		end
 	end
-	print(labels)
+	print(CatA_labels)
 end
