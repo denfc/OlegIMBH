@@ -69,9 +69,10 @@ display(df)
 # print Cat 1 labels and matching labels for rows 3 and 4
 df_row1 = 3
 df_row2 = 4
-println("\nComparing rows $df_row1 and $df_row2 of the DataFrame.\n\nFirst, $(df[df_row1, "twoCats"]):\n")
+
+printstyled("\nComparing rows $df_row1 and $df_row2 of the DataFrame.\n\nFirst, $(df[df_row1, "twoCats"]):\n", color=:blue)
 for i in eachindex(df[df_row1, 3])  println("$i) ", df[df_row1, "Catalog 1"][i, 1], " ", df[df_row1, "matching labels"][i, 1:NN_level]) end
-println("\nReversing, $(df[df_row2, "twoCats"]):\n")
+printstyled("\nReversing, $(df[df_row2, "twoCats"]):\n", color=:blue)
 for i in eachindex(df[df_row2, 3])  println("$i) ", df[df_row2, "Catalog 1"][i, 1], " ", df[df_row2, "matching labels"][i, 1:NN_level]) end
 
 # include(srcdir("associations".jl"))
@@ -91,12 +92,31 @@ for i in eachindex(df[df_row2, 3])  println("$i) ", df[df_row2, "Catalog 1"][i, 
 # for i in eachindex(df[row1, 3])
 enum1 = enumerate(df[df_row1, 5])
 enum2 = enumerate(df[df_row2, 5])
+dupA_ind = Int[]
 for dupe in CatB_dup_labels[df_row1]
 	CatA_labels = Set{Int}()
 	for j in eachindex(df[df_row1, "Catalog 1"])
 		if df[df_row1, "matching labels"][j, 1] == dupe
 			push!(CatA_labels, df[df_row1, "Catalog 1"][j, 1])
+			println("== dupe=$dupe, j $j ")
+			push!(dupA_ind, j)  # Push the index j into the array dupA_ind
 		end
 	end
-	print(CatA_labels)
+	# print(CatA_labels)
+	dup2_ind = findfirst(x -> x == dupe, df[df_row2, "Catalog 1"]) # `findfirst` 'cause there should only be one
+	# println(" dupe = ", dupe, " dup_ind = ", dup_ind, " CatA_labels = ", CatA_labels)
+
+	firstReverseMatch = df[df_row2, "matching labels"][dup2_ind, 1:1][1]
+	if firstReverseMatch in CatA_labels # the second "[1]" gets it out of the array and makes it just a number that can be found "in" the set
+		println("dupA_ind = $dupA_ind, dup2_ind=$dup2_ind ", CatA_labels, " ", df[df_row2, "matching labels"][dup2_ind, 1:1][1], " ", df[df_row2, "Catalog 1"][dup2_ind, 1])
+	end
+
+    # Zero out the dupA_ind array
+    empty!(dupA_ind)
 end
+
+# Set([15, 17]) dupe = 181 [117]
+# Set([52, 53]) dupe = 518 [351]
+# Set([11, 9]) dupe = 139 [90]
+# Set([20, 19]) dupe = 255 [170]
+# Set([72, 73]) dupe = 724 [508]
