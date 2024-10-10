@@ -16,6 +16,7 @@ function readSourceCats3()
 			collect(threeSourceCats[i].sky_centroid_dec)'
 		  ) for i in 1:3]
 		  
+		print("RA_Dec Sizes: ")
 	    for i in 1:3
 			print("$(size(RA_Dec[i], 2)) labels, $(threeFrequencies[i]); ")
 		end
