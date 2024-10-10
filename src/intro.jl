@@ -5,6 +5,7 @@ using DrWatson
 # include(srcdir("dummy_src_file.jl"))
 include(srcdir("crossmatches.jl"))
 # include(srcdir("reshapeCoords.jl"))
+include(srcdir("orderNoExtended.jl"))
 include(srcdir("logXFitHisto.jl"))
 
 using Base.Threads
@@ -15,6 +16,7 @@ using NearestNeighbors
 using JLD2
 using StatsBase
 using Plots
+using DataStructures # for `OrderedDict`
 # using Unitful, UnitfulAstro
 # using AstroImages, FITSIO
 # using Meshes #  MeshViz DO NOT USE (totally messed things up)

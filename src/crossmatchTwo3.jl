@@ -7,8 +7,8 @@ end
 function crossmatchTwo3(radec1::Array{Array{Float64, 2}, 1}, radec2::Array{Array{Float64, 2}, 1}, i, j)
 	firstName = threeFrequencies[i]
 	secondName = threeFrequencies[j]
-	combinedNames = "$secondName to $firstName"
-	print("Crossmatching catalog $i $firstName with catalog $j $secondName: ")
+	combinedNames = "$firstName to $secondName"
+	print("Crossmatching catalog A, $firstName, with catalog B, $secondName: ")
 	ids, ds = crossmatch_angular(radec1[i][2:3, :], radec2[j][2:3, :])
 	ids = collect(ids) # to turn the indices into a regular array (from an adjoint array)
 	# change the ids into the labels that correspond to the original indices

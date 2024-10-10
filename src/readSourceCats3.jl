@@ -15,7 +15,6 @@ function readSourceCats3()
 			collect(threeSourceCats[i].sky_centroid_ra)', 
 			collect(threeSourceCats[i].sky_centroid_dec)'
 		  ) for i in 1:3]
-
 		
 		print("Sizes of RA_Dec: ")
 	    for i in 1:3
