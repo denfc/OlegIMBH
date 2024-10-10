@@ -21,5 +21,5 @@ function readSourceCats3()
 			print("$(size(RA_Dec[i], 2)) labels, $(threeFrequencies[i]); ")
 		end
 		println()
-		return RA_Dec, threeSourceCats
+		return RA_Dec, threeSourceCats # RA_Dec is a 3-element array of matrices, threeSourceCats is a 3-element array of DataFrames
 	end
