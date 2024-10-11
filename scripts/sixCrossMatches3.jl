@@ -31,7 +31,7 @@ threeFrequencies = collect(keys(freq_Nsources))	# This orders the catalog freque
 ind_DistsUniqueIDs = []
 
 # Initialize an array to store the `countmap` results returned from `pushIntoDictArray`
-CatB_dup_labels = []
+catB_dup_matching_label_sets = Vector{Pair}()
 
 # Crossmatch the three catalogs twice
 for i in 1:2
@@ -44,13 +44,13 @@ for i in 1:2
 		idxs = Int.(RA_Dec_noExt[j][1, idxs])
 		# Push nn results into `ind_DistsUniqueIDs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
         dupes = pushIntoDictArray(idxs, dists, twoNames, i, j)
-        push!(CatB_dup_labels, dupes)
+        push!(catB_dup_matching_label_sets, Pair(twoNames, dupes))
 
 		idxs, dists, twoNames = crossmatchTwo3(RA_Dec_noExt, RA_Dec_noExt, j, i)
 		idxs = Int.(RA_Dec_noExt[i][1, idxs])
 		# Push nn results into `ind_DistsUniqueIDs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
 		dupes = pushIntoDictArray(idxs, dists, twoNames, j, i)
-        push!(CatB_dup_labels, dupes)
+        # push!(catA_dup_matching_label_set, dupes) might need this later
     end
 end
 
@@ -61,44 +61,5 @@ JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
 println()
 display(df)
 
-# print Cat 1 labels and matching labels for rows 3 and 4
-df_row1 = 3
-df_row2 = 4
-
-printstyled("\nComparing rows $df_row1 and $df_row2 of the DataFrame.\n\nFirst, $(df[df_row1, "Cat A to B"]):\n", color=:blue)
-for i in eachindex(df[df_row1, "Catalog A"])  println("$i) ", df[df_row1, "Catalog A"][i, 1], " ", df[df_row1, "Cat B matching labels"][i, 1:NN_level]) end
-printstyled("\nReversing, $(df[df_row2, "Cat A to B"]):\n", color=:blue)
-for i in eachindex(df[df_row2, "Catalog A"])  println("$i) ", df[df_row2, "Catalog A"][i, 1], " ", df[df_row2, "Cat B matching labels"][i, 1:NN_level]) end
-
-# include(srcdir("associations".jl"))
-# for i in eachindex(df[row1, 3])
-enum1 = enumerate(df[df_row1, 5])
-enum2 = enumerate(df[df_row2, 5])
-dupA_ind = Int[]
-for dupe in CatB_dup_labels[df_row1]
-	CatA_labels = Set{Int}()
-	for j in eachindex(df[df_row1, "Catalog A"])
-		if df[df_row1, "Cat B matching labels"][j, 1] == dupe
-			push!(CatA_labels, df[df_row1, "Catalog A"][j, 1])
-			println("== dupe=$dupe, j $j ")
-			push!(dupA_ind, j)  # Push the index j into the array dupA_ind
-		end
-	end
-	# print(CatA_labels)
-	dupB_ind = findfirst(x -> x == dupe, df[df_row2, "Catalog A"]) # `findfirst` 'cause there should only be one
-	# println(" dupe = ", dupe, " dup_ind = ", dup_ind, " CatA_labels = ", CatA_labels)
-
-	firstReverseMatch = df[df_row2, "Cat B matching labels"][dupB_ind, 1:1][1]
-	if firstReverseMatch in CatA_labels # the second "[1]" gets it out of the array and makes it just a number that can be found "in" the set
-		println("dupA_ind = $dupA_ind, dupB_ind=$dupB_ind ", CatA_labels, " ", df[df_row2, "Cat B matching labels"][dupB_ind, 1:1][1], " ", df[df_row2, "Catalog A"][dupB_ind, 1])
-	end
-
-    # Zero out the dupA_ind array
-    empty!(dupA_ind)
-end
-
-# Set([15, 17]) dupe = 181 [117]
-# Set([52, 53]) dupe = 518 [351]
-# Set([11, 9]) dupe = 139 [90]
-# Set([20, 19]) dupe = 255 [170]
-# Set([72, 73]) dupe = 724 [508]
+include(srcdir("duplicateDict.jl"))
+catsAtoB_dups = duplicateDict(catB_dup_matching_label_sets)
