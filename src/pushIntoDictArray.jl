@@ -13,10 +13,10 @@ function pushIntoDictArray(catB_matching_labels, ds, names, k, l)
 	# Why we need `enumerate`:  And, via CoPilot,  why we don't just loop through the dictionary's keys:  "if you only need to process the unique values and their counts, you can loop through the dictionary directly. However, in your current implementation, you are also using the index of each element in the nearestNeighbors array, which is why enumerate is used."
     enumNN = enumerate(nearestNeighbors)
 	
-	duplicateNN = Set{Int}()
+	processed_values = Set{Int}()
 
 	for (i, x) in enumNN
-		if x in duplicateNN # 
+		if x in processed_values # 
 			continue # with the above `for` loop
 		end
 		if counts[x] > 1
@@ -26,7 +26,7 @@ function pushIntoDictArray(catB_matching_labels, ds, names, k, l)
 				# for i in _ind
 				# 	# if we want to check distances immediately, it would go here
 				# end
-			push!(duplicateNN, x)
+			push!(processed_values, x)
 		else	
 			# set the indices beyond the nearest neighbor negative to show that the nn itself has no duplicates
 			catB_matching_labels[i, 2:NN_level] .= -catB_matching_labels[i, 2:NN_level]
@@ -39,5 +39,5 @@ function pushIntoDictArray(catB_matching_labels, ds, names, k, l)
 	isEx = [threeSourceCats[l].is_extended[id] for id in uniqueNN]
 
 	push!(ind_DistsUniqueIDs, OrderedDict("Cat A to B" => names, "nA, nB" => nA_nB, "Catalog A labels" => Int.(RA_Dec_noExt[k][1, :]), "Catalog B matching labels" => catB_matching_labels, "distances" => ds, "uniqNN" => len_uNN, "Ext?" => sum(isEx)))
-	return duplicateNN
+	return processed_values
 end

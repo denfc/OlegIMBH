@@ -1,13 +1,6 @@
 using DrWatson
 @quickactivate "OlegIMBH"
 
-# Here you may include files from the source directory
-# include(srcdir("dummy_src_file.jl"))
-include(srcdir("crossmatches.jl"))
-# include(srcdir("reshapeCoords.jl"))
-include(srcdir("orderNoExtended.jl"))
-include(srcdir("logXFitHisto.jl"))
-
 using Base.Threads
 using Revise
 using Plots
@@ -24,6 +17,18 @@ using DataStructures # for `OrderedDict`
 # using Cosmology, Unitful, UnitfulAstro, Measurements 
 # using Suppressor
 # include(srcdir("commas.jl"))
+
+# Here you may include files from the source directory
+# include(srcdir("dummy_src_file.jl"))
+include(srcdir("crossmatches.jl"))
+# include(srcdir("reshapeCoords.jl"))
+include(srcdir("orderNoExtended.jl"))
+include(srcdir("readSourceCats3.jl"))
+include(srcdir("duplicateDict.jl"))
+include(srcdir("pushIntoDictArray.jl"))
+include(srcdir("crossmatchTwo3.jl"))
+include(srcdir("findDuplicates.jl"))
+include(srcdir("logXFitHisto.jl"))
 
 println(
 """

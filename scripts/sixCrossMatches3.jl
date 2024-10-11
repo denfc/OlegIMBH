@@ -14,10 +14,6 @@ dfc 3 October 2024, copied from `sixCrossMatches.jl` to start, modified by narro
 """
 
 include("/home/dfc123/Gitted/OlegIMBH/src/intro.jl")
-include(srcdir("readSourceCats3.jl"))
-include(srcdir("crossmatches.jl"))
-include(srcdir("crossmatchTwo3.jl"))
-include(srcdir("pushIntoDictArray.jl"))
 
 threeFrequencies = ["f1130w", "f770w", "f560w"]
 const NN_level = 3  # "nearest neighbor level"; 2 is the minimum
@@ -61,5 +57,4 @@ JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
 println()
 display(df)
 
-include(srcdir("duplicateDict.jl"))
 catsAtoB_dups = duplicateDict(catB_dup_matching_label_sets)
