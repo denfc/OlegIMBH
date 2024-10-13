@@ -28,7 +28,7 @@ enum2 = enumerate(df[df_row_BtoA, 5])
 # 	dupB_ind = findfirst(x -> x == dupe, df[df_row_BtoA, "Catalog A labels"]) # `findfirst` 'cause there should only be one
 # 	# println(" dupe = ", dupe, " dup_ind = ", dup_ind, " CatA_labels = ", CatA_labels)
 
-# 	firstReverseMatch = df[df_row_BtoA, "Catalog B matching labels"][dupB_ind, 1:1][1]
+# 	firstReverseMatch = df[df_row_BtoA, "Catalog B matching labels"][dup	B_ind, 1:1][1]
 # 	if firstReverseMatch in CatA_labels # the second "[1]" gets it out of the array and makes it just a number that can be found "in" the set
 # 		println("dupA_ind = $dupA_ind, dupB_ind=$dupB_ind ", CatA_labels, " ", df[df_row_BtoA, "Catalog B matching labels"][dupB_ind, 1:1][1], " ", df[df_row_BtoA, "Catalog A labels"][dupB_ind, 1])
 # 	end

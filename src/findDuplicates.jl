@@ -1,13 +1,16 @@
 function findDuplicates(anArray::Array; setNegative::Bool=false)
 	# Step 1: Count occurrences using `countmap`, which returns a dictionary with the keys being the unique values in the array and the values being the counts of each value
-	counts = countmap(anArray)
+	# counts = countmap(anArray)
 	# Why we need `enumerate`:  And, via CoPilot,  why we don't just loop through the dictionary's keys:  "if you only need to process the unique values and their counts, you can loop through the dictionary directly. However, in your current implementation, you are also using the index of each element in the nearestNeighbors array, which is why enumerate is used."
-	enum = enumerate(anArray)
+	# enum = enumerate(anArray)
 	# Step 2: Create an array to store indices of non-unique values; `enumerate` is used to get the index and value of each element in the array directly without needing to know the length of the array
 	duplicates = Set{Int}()
 	
 	# if setNegative is true, then set the indices beyond the nearest neighbor negative to show that the nn itself has no duplicates
 	if setNegative
+		counts = countmap(anArray[:, 1])
+		enum = enumerate(anArray[:, 1])
+
 		for (i, x) in enum
 			if x in duplicates
 				continue
@@ -19,7 +22,11 @@ function findDuplicates(anArray::Array; setNegative::Bool=false)
 				anArray[i, 2:NN_level] .= -anArray[i, 2:NN_level]
 			end
 		end
+		return duplicates, anArray
 	else
+		counts = countmap(anArray)
+		enum = enumerate(anArray)
+
 		for (i, x) in enum
 			if x in duplicates
 				continue
@@ -28,6 +35,6 @@ function findDuplicates(anArray::Array; setNegative::Bool=false)
 				push!(duplicates, x)
 			end
 		end
+		return duplicates
 	end
-	return duplicates
 end

@@ -1,8 +1,8 @@
-function duplicateDict(capB_dmls::Vector{Pair})::Vector{OrderedDict} # {String, Vector{Int64}}
+function duplicateDict(catB_dmls::Vector{Pair})::Vector{OrderedDict} # {String, Vector{Int64}}
 	# initiate `catsAtoB_dups` dictionary
-	dupDictArray = Vector{OrderedDict}(undef, length(capB_dmls))
+	dupDictArray = Vector{OrderedDict}(undef, length(catB_dmls))
     # set up the array of dictionaries using `capB_DLMS`
-	for (i, pair) in enumerate(capB_dmls)
+	for (i, pair) in enumerate(catB_dmls)
 		dupDictArray[i] = OrderedDict(
 			"Cat Path" => pair.first,
 			"CatB_matching_labels" => pair.second
@@ -13,7 +13,7 @@ function duplicateDict(capB_dmls::Vector{Pair})::Vector{OrderedDict} # {String, 
 		for df_rowAtoB in 1:2:size(df)[1]
 			df_rowBtoA = df_rowAtoB + 1
 
-			
+
 			dupDictArray[i]["Cat B labels"] = df[df_rowBtoA, "Catalog A labels"]	
 		end
 	end
