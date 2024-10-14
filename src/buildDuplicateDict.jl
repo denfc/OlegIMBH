@@ -21,6 +21,12 @@ function buildDuplicateDict(catB_dmls::Vector{Pair})::Vector{OrderedDict} # {Str
 		for ind_BmatchingLabel in dupDictArray[ind_dupDictArray]["CatB_matching_labels_set"]
 			print(ind_BmatchingLabel, " ")
 			catA_ind = findall(x -> x == ind_BmatchingLabel, df[df_rowAtoB, "Catalog B matching labels"])
+
+BUT if findfirst in df_rowBtoA, isn't that better?, because there's only one?
+	df[df_rowAtoB, "Catalog A labels"][ind_CatALabels]
+	df[df_rowBtoA, "Catalog B matching labels"][170, 1]
+
+
 			ind_firstCartesian = getindex.(catA_ind, 1)
 			if ind_dupDictArray == 2
 				for ind_CatALabels in ind_firstCartesian
