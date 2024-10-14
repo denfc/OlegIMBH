@@ -37,7 +37,7 @@ function pushIntoDictArray(catB_matching_labels, ds, names, k, l)
 	# sum(isEx), the number of extended sources in the match, is there only as a check; it should be zero.
 	isEx = [threeSourceCats[l].is_extended[id] for id in uniqueNN]
 
-	# push!(ind_DistsUniqueIDs, OrderedDict("Cat A to B" => names, "nA, nB" => nA_nB, "Catalog A labels" => Int.(RA_Dec_noExt[k][1, :]), "Catalog B matching labels" => catB_matching_labels, "distances" => ds, "uniqNN" => len_uNN, "Ext?" => sum(isEx)))
-	push!(ind_DistsUniqueIDs, OrderedDict("Cat A to B" => names, "nA, nB" => nA_nB, "Catalog A labels" => Int.(RA_Dec_noExt[k][1, :]), "Catalog B matching labels" => catB_modified, "distances" => ds, "uniqNN" => len_uNN, "Ext?" => sum(isEx)))
+	# push!(ind_DistsUniqueNNs, OrderedDict("Cat A to B" => names, "nA, nB" => nA_nB, "Catalog A labels" => Int.(RA_Dec_noExt[k][1, :]), "Catalog B matching labels" => catB_matching_labels, "distances" => ds, "uniqNN" => len_uNN, "Ext?" => sum(isEx)))
+	push!(ind_DistsUniqueNNs, OrderedDict("Cat A to B" => names, "nA, nB" => nA_nB, "Catalog A labels" => Int.(RA_Dec_noExt[k][1, :]), "Catalog B matching labels" => catB_modified, "distances" => ds, "uniqNN" => len_uNN, "Ext?" => sum(isEx)))
 	return processed_values
 end

@@ -45,7 +45,7 @@ for i in 1:3
 end
 
 # Initialize an array to store combined indices, distances, and unique IDs in dictionaries
-ind_DistsUniqueIDs = []
+ind_DistsUniqueNNs = []
 
 function filter_duplicates!(idxs, dists, valid_idxs)
     unique_idxs = Dict{Int, Float64}()
@@ -159,7 +159,7 @@ for i in 1:2
             end
         end
 
-        # Push final accumulated results into ind_DistsUniqueIDs
+        # Push final accumulated results into ind_DistsUniqueNNs
         pushIntoDictArray(accumulated_idxs, accumulated_dists, accumulated_twoNames, j)
 
         # Temporary storage for intermediate results
@@ -213,11 +213,11 @@ for i in 1:2
             end
         end
 
-        # Push final accumulated results into ind_DistsUniqueIDs
+        # Push final accumulated results into ind_DistsUniqueNNs
         pushIntoDictArray(accumulated_idxs, accumulated_dists, accumulated_twoNames, i)
     end
 end
 
 # Save the DataFrame to a JLD2 file
-df = DataFrame(ind_DistsUniqueIDs)
+df = DataFrame(ind_DistsUniqueNNs)
 JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df

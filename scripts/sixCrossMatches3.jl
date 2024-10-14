@@ -25,7 +25,7 @@ RA_Dec_noExt, freq_Nsources = orderNoExtended(RA_Dec, threeSourceCats)
 threeFrequencies = collect(keys(freq_Nsources))	# This orders the catalog frequencies, via the `collect` function, into an array of String, just like the original (`keys` is of another type).
 
 # Initialize an array to store combined indices and their labels, distances, and unique IDs in dictionaries
-ind_DistsUniqueIDs = []
+ind_DistsUniqueNNs = []
 
 # Initialize an array to store the `countmap` results returned from `pushIntoDictArray`
 catB_dup_matching_label_sets = Vector{Pair}()
@@ -39,23 +39,23 @@ for i in 1:2
         end
         idxs, dists, twoNames = crossmatchTwo3(RA_Dec_noExt, RA_Dec_noExt, i, j)
 		idxs = Int.(RA_Dec_noExt[j][1, idxs])
-		# Push nn results into `ind_DistsUniqueIDs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
+		# Push nn results into `ind_DistsUniqueNNs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
         dupes = pushIntoDictArray(idxs, dists, twoNames, i, j)
         push!(catB_dup_matching_label_sets, Pair(twoNames, dupes))
 
 		idxs, dists, twoNames = crossmatchTwo3(RA_Dec_noExt, RA_Dec_noExt, j, i)
 		idxs = Int.(RA_Dec_noExt[i][1, idxs])
-		# Push nn results into `ind_DistsUniqueIDs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
+		# Push nn results into `ind_DistsUniqueNNs`` and obtain `countmap(nearestNeighbors)` results from function `pushIntoDictArray`
 		dupes = pushIntoDictArray(idxs, dists, twoNames, j, i)
         # push!(catA_dup_matching_label_set, dupes) might need this later
     end
 end
 
 # Save the DataFrame to a JLD2 file
-df = DataFrame(ind_DistsUniqueIDs)
+df = DataFrame(ind_DistsUniqueNNs)
 JLD2.@save joinpath(projectdir(), "test_df.jld2") notExtended_df = df
 
 println()
 display(df)
 
-catsAtoB_dups = duplicateDict(catB_dup_matching_label_sets)
+catsAtoB_dups_VectorOD = buildDuplicateDict(catB_dup_matching_label_sets);

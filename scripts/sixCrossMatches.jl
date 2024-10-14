@@ -5,6 +5,7 @@
 	- Can read ESCV file either by denoting commenting symbol directly or or by going to header line directly.
 !!! - As written originally, most functions are included in the main script, which means we probably have an excess of global variables.
 """
+
 include(srcdir("/home/dfc123/Gitted/OlegIMBH/src/intro.jl"))
 include(srcdir("readSourceCats.jl"))
 include(srcdir("crossmatches.jl"))
@@ -22,7 +23,7 @@ println("\nNumber of extended sources in each catalog: ", join(extended_N, ", ")
 println()
 
 # Initialize an array to store combined indices, distances, and unique Ids in dictionaries
-ind_DistsUniqueIDs = []
+ind_DistsUniqueNNs = []
 
 # Crossmatch the three catalogs twice
 for i in 1:2
@@ -37,10 +38,10 @@ for i in 1:2
 end
 
 # Can't save dictionary with `wsave` because it isn't a dictionary but a vector of dictionaries
-# wsave(joinpath(datadir(), "./sims/ind_DistsUniqueIDs.jld2"), ind_DistsUniqueIDs)
+# wsave(joinpath(datadir(), "./sims/ind_DistsUniqueNNs.jld2"), ind_DistsUniqueNNs)
 
 # turn saved dictionary into a DataFrame
-df = DataFrame(ind_DistsUniqueIDs)
+df = DataFrame(ind_DistsUniqueNNs)
 
 # JLD2.save("crossMatches_df.jld2", "crossMatches_df" => df) DOES NOT WORK!
 JLD2.@save joinpath(projectdir(), "crossMatches_df.jld2") crossMatches_df = df

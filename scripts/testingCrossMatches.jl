@@ -29,7 +29,7 @@ for i in 1:3
 end
 
 # Initialize an array to store combined indices, distances, and unique Ids in dictionaries
-ind_DistsUniqueIDs = []
+ind_DistsUniqueNNs = []
 
 # Crossmatch the modified catalogs the real one twice
 println()
@@ -45,10 +45,10 @@ for i in 1:3
 end
 
 # Can't save dictionary with `wsave` because it isn't a dictionary but a vector of dictionaries
-# wsave(joinpath(datadir(), "./sims/ind_DistsUniqueIDs.jld2"), ind_DistsUniqueIDs)
+# wsave(joinpath(datadir(), "./sims/ind_DistsUniqueNNs.jld2"), ind_DistsUniqueNNs)
 
 # turn saved dictionary into a DataFrame
-df = DataFrame(ind_DistsUniqueIDs)
+df = DataFrame(ind_DistsUniqueNNs)
 
 # JLD2.save("crossMatches_df.jld2", "crossMatches_df" => df) DOES NOT WORK!
 JLD2.@save joinpath(projectdir(), "crossMat5radec_df.jld2") crossMat5radec_df = df
