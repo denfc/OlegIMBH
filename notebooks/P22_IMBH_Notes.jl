@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.46
+# v0.20.0
 
 using Markdown
 using InteractiveUtils
@@ -216,9 +216,38 @@ md"""
 	    - Latter example excludes the "label" column (which is identical to the original Julia index), which we end up needing later for better cross matching.
       - [Definitions of column headings can be found here.](https://jwst-pipeline.readthedocs.io/en/stable/jwst/source_catalog/main.html)
 !!! note "1) .../OlegIMBH/scripts/sixCrossMatches.jl"
-!!! note "2) .../OlegIMBH/scripts/testingCrossMatches .jl"
+!!! note "2) .../OlegIMBH/scripts/testingCrossMatches.jl"
 !!! note "3) .../histo_six.jl => .../OlegIMBH/notebooks/P23_IMBH_Histo.jl"
-!!! note "4) .../OlegIMBH/scripts/sixCrossMatches 2.jl"
+!!! note "4) .../OlegIMBH/scripts/sixCrossMatches2.jl"
+"""
+
+# ╔═╡ c3b4a98c-4025-43bf-96dc-2b3c9b376c59
+md"""
+### Two Weeks Later ...  (16 October)
+!!! note "4) .../OlegIMBH/scripts/sixCrossMatches3.jl"
+!!! warning "Here's the problem I did not solve: Matching Catalog A's coordinates to Catalog B's coordinates, and vice versa (Matching Catalog B to A)"
+
+| index| label | match 1| match 2 | index| label | match 1| match 2 |
+|:----------:|:---------:|:---------:|:----------:|:----------:|:---------:|:----------:|:----------:|
+| 17| 19 | 255| 265 | 170 | $\leftarrow 255$ | 19 |
+| 18| 20 | 255| 265 |     | 257| 20 |
+|   | 20 |    | 265| |   $\leftarrow 265$ | 20 | |
+
+!!! note " "
+    - So, because of the reverse matchup, 19 gets matched with 255, and then 20 gets matched with 265.  The coding is not trivial, but if we end up trying again ...
+
+      -- Set `df_rowAtoB = 3` and `df_rowAtoB = 4`. Two lines that can show the information for the problem to be solved are 
+         - for i in eachindex(df[df\_rowAtoB, "Catalog A labels"])  println("$i) ", df[df\_rowAtoB, "Catalog A labels"][i, 1], " ", df[df\_rowAtoB, "Catalog B matching labels"][i, 1:NN\_level]) end
+
+        - for i in eachindex(df[df\_rowBtoA, "Catalog A labels"])  println("$i) ", df[df\_rowBtoA, "Catalog A labels"][i, 1], " ", df[df\_rowBtoA, "Catalog B matching labels"][i, 1:NN\_level]) end
+
+      -- And, BTW, `/home/dfc123/Gitted/OlegIMBH/src/GalCen/buildDuplicateDict.jl` has an uncommented comment line that prevents it from running.
+!!! note ""
+
+    - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf)) production of Omega Cen data.  I had not realized that the previous data were of the galactic center.
+	      
+      -- `GalacticCenter` directory created in `OlegIMBH` `data/exp_raw` directory and `GalCenter`s in `scripts` and `src` directories, and new data
+
 """
 
 # ╔═╡ Cell order:
@@ -239,4 +268,5 @@ md"""
 # ╟─f22ea8e5-e458-47bc-950a-3c8e0de06df3
 # ╟─d68c548a-71a3-45e6-9ec5-a6d9358a716a
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
-# ╠═15899cbb-53e1-4160-b24c-40fa959aa926
+# ╟─15899cbb-53e1-4160-b24c-40fa959aa926
+# ╠═c3b4a98c-4025-43bf-96dc-2b3c9b376c59
