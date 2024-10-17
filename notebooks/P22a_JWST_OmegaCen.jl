@@ -4,6 +4,16 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
 # ╔═╡ 82aa8219-8d97-4103-970d-6a89ada5e9f4
 begin
 	cd(joinpath(homedir(), "Gitted/OlegIMBH"))
@@ -70,9 +80,9 @@ md" # Top Cell"
 # ╔═╡ 5ad9dee6-6281-4b84-9f80-92da1a4e16a7
 begin
 	md"### Reading `omega_cen_phot` "
-	columnsToRead = nothing # 16:29
+	columnsToRead = 16:29 # nothing # 16:29
 #	Threads.@threads
-	df = CSV.read("./data/exp_raw/OmegaCen/omega_cen_phot", DataFrame; header=false, delim=" ", ignorerepeated = true) # , select = columnsToRead)
+	df = CSV.read("./data/exp_raw/OmegaCen/omega_cen_phot", DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
 end
 
 # ╔═╡ a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
@@ -91,13 +101,31 @@ names(df)
 df[someRows, [:Column16, :Column29]]
 
 # ╔═╡ 33f5c361-cd0d-4ac3-b1fa-8b4320f2bbc1
-extrema(skipmissing(df[:, :Column16])), extrema(skipmissing(df[:, :Column29])), extrema(skipmissing(df[:, :Column16] .- df[:, :Column29]))
+extrema(df[:, :Column16]), extrema(df[:, :Column29]), extrema(df[:, :Column16] .- df[:, :Column29])
+# extrema(skipmissing(df[:, :Column16])), extrema(skipmissing(df[:, :Column29])), extrema(skipmissing(df[:, :Column16] .- df[:, :Column29]))
 
 # ╔═╡ db6d3a85-df3e-4469-b781-3f73a194b49d
 names(df)
 
+# ╔═╡ 88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
+md"Select number of indices $(@bind indNumber confirm(Slider(9_113:10_000:749_113, default = 9_113, show_value = true)))"
+
+# ╔═╡ 56f13fa5-3806-461b-ab31-64d68eaf3928
+begin
+	# indNumber = missing # 100_000 # missing
+	x_reduced = df[!, :Column16] .- df[!, :Column29]
+	y_reduced = df[!, :Column16]
+	# if !ismissing(indNumber)
+	if indNumber != 749_113
+	    indices = rand(1:length(df[:, :Column16]), indNumber)
+		x_reduced = x_reduced[indices]
+		y_reduced = y_reduced[indices]
+	end
+	md" #### Reducing indices"
+end
+
 # ╔═╡ 506c52d5-30a0-4d7c-8550-4cd9259730d0
-scatter(df[!, :Column16] .- df[!, :Column29], df[!, :Column16], yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5) # , markercolor = :blue)
+scatter(x_reduced, y_reduced, yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5) # , markercolor = :blue)
 
 # ╔═╡ 4d56a2a4-d011-4199-9d68-47b6df09a928
 # Function to display specific lines of a file
@@ -210,6 +238,8 @@ md" # Bottom Cell"
 # ╠═739b8dfa-6721-42a7-ae2b-bcbb9b04d296
 # ╠═33f5c361-cd0d-4ac3-b1fa-8b4320f2bbc1
 # ╠═db6d3a85-df3e-4469-b781-3f73a194b49d
+# ╠═56f13fa5-3806-461b-ab31-64d68eaf3928
+# ╠═88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
 # ╠═506c52d5-30a0-4d7c-8550-4cd9259730d0
 # ╠═4d56a2a4-d011-4199-9d68-47b6df09a928
 # ╟─45693af8-294a-429a-a884-f609e648f49b
