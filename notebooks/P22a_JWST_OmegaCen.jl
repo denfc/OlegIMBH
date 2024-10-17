@@ -80,13 +80,15 @@ md" # Top Cell"
 # ╔═╡ 5ad9dee6-6281-4b84-9f80-92da1a4e16a7
 begin
 	md"### Reading `omega_cen_phot` "
-	columnsToRead = 16:29 # nothing # 16:29
-#	Threads.@threads
+	columnsToRead = 1:29 # nothing # 16:29
 	df = CSV.read("./data/exp_raw/OmegaCen/omega_cen_phot", DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
 end
 
 # ╔═╡ a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
 size(df)
+
+# ╔═╡ 22738cd1-e9ef-4972-961f-fd7b9d54c05b
+typeof((df[1:100, 3], df[1:100, 3]))
 
 # ╔═╡ d7732a1b-786f-48d0-a230-d55d617ac0cc
 someRows = 170_000:170_010
@@ -106,6 +108,14 @@ extrema(df[:, :Column16]), extrema(df[:, :Column29]), extrema(df[:, :Column16] .
 
 # ╔═╡ db6d3a85-df3e-4469-b781-3f73a194b49d
 names(df)
+
+# ╔═╡ 69ba9361-28c4-4c18-b0c8-2a8da43e4376
+begin
+	len_df = size(df)[1]
+	xyPairs = [ (df[i, :Column3], df[i, :Column4]) for i in 1:len_df]
+	println(length(unique(xyPairs)) == len_df, " @ $len_df pairs")
+	md" ### All xyPairs Unique"
+end
 
 # ╔═╡ 88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
 md"Select number of indices $(@bind indNumber confirm(Slider(9_113:10_000:749_113, default = 9_113, show_value = true)))"
@@ -232,12 +242,14 @@ md" # Bottom Cell"
 # ╠═baec53cc-f36a-4dce-84d4-f41dc6d919df
 # ╠═5ad9dee6-6281-4b84-9f80-92da1a4e16a7
 # ╠═a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
+# ╠═22738cd1-e9ef-4972-961f-fd7b9d54c05b
 # ╠═d7732a1b-786f-48d0-a230-d55d617ac0cc
 # ╠═f4b50de1-ec00-4285-acac-70dfe31e3de6
 # ╠═d7e61019-4b19-4de2-b925-da149b992372
 # ╠═739b8dfa-6721-42a7-ae2b-bcbb9b04d296
 # ╠═33f5c361-cd0d-4ac3-b1fa-8b4320f2bbc1
 # ╠═db6d3a85-df3e-4469-b781-3f73a194b49d
+# ╠═69ba9361-28c4-4c18-b0c8-2a8da43e4376
 # ╠═56f13fa5-3806-461b-ab31-64d68eaf3928
 # ╠═88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
 # ╠═506c52d5-30a0-4d7c-8550-4cd9259730d0
