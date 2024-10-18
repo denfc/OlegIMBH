@@ -173,62 +173,8 @@ md"""
   - [AB vs Vega Magnitudes](https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-performance/nircam-absolute-flux-calibration-and-zeropoints#gsc.tab=0)
 """
 
-# ╔═╡ e73ae0e8-162d-48e4-a342-c4f24a92f679
-begin
-	# Function to compute the data for plotting
-	function compute_plot_data(df)
-	    n = size(df, 1)
-	    x = Vector{Float64}(undef, n)
-	    y = Vector{Float64}(undef, n)
-	    
-	    @threads for i in 1:n
-	        x[i] = df[i, :Column16] - df[i, :Column29]
-	        y[i] = df[i, :Column16]
-	    end
-	    
-	    return x, y
-	end
-end
-
-# ╔═╡ b970472b-9c91-4638-ada7-694732762fe1
-begin
-	using Distributed
-	@everywhere function compute_plot_data(df_chunk)
-	    x = df_chunk[!, :Column16] .- df_chunk[!, :Column29]
-	    y = df_chunk[!, :Column16]
-	    return x, y
-	end
-	
-	# Split the DataFrame into chunks
-	chunks = [df[i:min(i+187499, end), :] for i in 1:187500:750000]
-	
-	# Distribute the computation
-	results = pmap(compute_plot_data, chunks)
-	
-	# Combine the results
-	xD = vcat([res[1] for res in results]...)
-	yD = vcat([res[2] for res in results]...)
-	
-end
-
-# ╔═╡ b444a9ed-34c6-447d-83cc-2f3c4b2613be
-	x, y = compute_plot_data(df)
-
 # ╔═╡ b27ddee0-95fd-4ad9-9b18-11454501b2df
 Threads.nthreads()
-
-# ╔═╡ 67449d54-6d07-4fbb-87e2-b6129b9522e8
-	scatter(x, y, yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W", 
-	        title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", 
-	        label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5)
-
-# ╔═╡ 33f83630-8e06-418a-b889-baf0268bcf3c
-size(df, 1) == nrow(df)
-
-# ╔═╡ 9fa70ab1-6683-423f-9fb5-c0a8cdc08b59
-	scatter(xD, yD, yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W", 
-	        title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", 
-	        label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5)
 
 # ╔═╡ c0caff24-d5dc-46c3-8370-220e979c9f91
 md" # Bottom Cell"
@@ -257,11 +203,5 @@ md" # Bottom Cell"
 # ╟─45693af8-294a-429a-a884-f609e648f49b
 # ╠═c4968ea9-9dc1-4cad-b402-4339e21cf9b4
 # ╠═bd8195c4-ae94-405e-9536-9f7b9883a4c9
-# ╠═e73ae0e8-162d-48e4-a342-c4f24a92f679
-# ╠═b444a9ed-34c6-447d-83cc-2f3c4b2613be
 # ╠═b27ddee0-95fd-4ad9-9b18-11454501b2df
-# ╠═67449d54-6d07-4fbb-87e2-b6129b9522e8
-# ╠═33f83630-8e06-418a-b889-baf0268bcf3c
-# ╠═b970472b-9c91-4638-ada7-694732762fe1
-# ╠═9fa70ab1-6683-423f-9fb5-c0a8cdc08b59
 # ╠═c0caff24-d5dc-46c3-8370-220e979c9f91
