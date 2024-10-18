@@ -26,7 +26,7 @@ begin
 	
 	using Base.Threads
 	using Revise
-	using Plots
+	using PlutoPlotly
 	using CSV, DataFrames
 	# using NearestNeighbors
 	# using AstroImages, FITSIO
@@ -135,7 +135,7 @@ begin
 end
 
 # ╔═╡ 506c52d5-30a0-4d7c-8550-4cd9259730d0
-scatter(x_reduced, y_reduced, yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5, markercolor = :white)
+plot(scatter(df, x =  df.Column29, y = df.Column16, mode = "markers")) # , yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5, markercolor = :white))
 
 # ╔═╡ 4d56a2a4-d011-4199-9d68-47b6df09a928
 # Function to display specific lines of a file
