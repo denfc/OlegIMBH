@@ -120,6 +120,14 @@ begin
 	md" ### All xyPairs Unique"
 end
 
+# ╔═╡ 390c2b92-0884-41fb-a279-aef87c890132
+layout = Layout(
+	width=700, height= 607,
+	xaxis = attr(range = [-15, 15], title = "16 minus 29: IRCAM_F200W - NIRCAM_F444W"),
+	yaxis = attr(range = [40, 14], title = "16. Instr VEGAMAG, NIRCAM_F200W"),
+	title = "Omega Centauri"
+)
+
 # ╔═╡ 88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
 md"Select number of indices $(@bind indNumber confirm(Slider(9_113:10_000:749_113, default = 50_000, show_value = true)))"
 
@@ -150,25 +158,44 @@ trace = scattergl(
 ) 
 # to remember kwargs from when using Plots:, yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5, markercolor = :white))
 
-# ╔═╡ 390c2b92-0884-41fb-a279-aef87c890132
-layout = Layout(
-	width=700, height= 607,
-	xaxis = attr(range = [-15, 15], title = "16 minus 29: IRCAM_F200W - NIRCAM_F444W"),
-	yaxis = attr(range = [40, 14], title = "16. Instr VEGAMAG, NIRCAM_F200W"),
-	title = "Omega Centauri"
-)
+# ╔═╡ 77567b04-0deb-4411-8d66-4c91851d1b41
+if indNumber > 200_000 warning = true else warning = false end
 
-# ╔═╡ 4e00a1a0-2958-4274-8b85-ae1e7f068170
-PlutoPlotly.plot([trace], layout) #, config = pp_config)
+# ╔═╡ 6027924c-ec8c-4381-ad33-aad5f92ab7e9
+md"""
+#### Static Plot Choice
+"""
+
+# ╔═╡ 4db8b9af-bc18-4ab5-a98e-66dce23dc3ff
+if warning
+md"""!!! danger "No. Too many points for interactive plot." """
+end
+
+# ╔═╡ 67a5442f-e127-465f-9096-523fd4b8db27
+md"""
+If want interactie plots, uncheck the box, but remember that above about 200,000 points, you'll freeze the program:$(@bind staticP CheckBox(default = true))
+"""
+
+# ╔═╡ 4e40ff1c-6663-4d5f-a5ba-c571b1fb3381
+md" #### `pp_config`"
 
 # ╔═╡ 58d31569-0e0f-4058-a571-d466764181a7
 pp_config = PlutoPlotly.PlotConfig(staticPlot=true)
 
-# ╔═╡ cf279d7a-7225-467e-a276-a56b19266273
-plot_obj = PlotlyJS.plot([trace], layout) #, config = pp_config)
+# ╔═╡ 4e00a1a0-2958-4274-8b85-ae1e7f068170
+if staticP PlutoPlotly.plot([trace], layout, config = pp_config) else PlutoPlotly.plot([trace], layout) end
+
+# ╔═╡ ca60cb11-84ac-48f6-8356-0bcc2ba3c8e7
+md"""
+#### Save Plot?
+If want to save a plot, `omega_centauri_plot.html` (interactive), check the box: $(@bind saveP CheckBox(default = false))
+"""
 
 # ╔═╡ 477de3d0-3150-489a-b272-f77de4da0013
-PlotlyJS.savefig(plot_obj, "omega_centauri_plot.html")
+if saveP
+	plot_obj = PlotlyJS.plot([trace], layout) #, config = pp_config)
+    PlotlyJS.savefig(plot_obj, "omega_centauri_plot.html")
+end
 
 # ╔═╡ 4d56a2a4-d011-4199-9d68-47b6df09a928
 # Function to display specific lines of a file
@@ -230,13 +257,18 @@ md" # Bottom Cell"
 # ╠═db6d3a85-df3e-4469-b781-3f73a194b49d
 # ╠═69ba9361-28c4-4c18-b0c8-2a8da43e4376
 # ╠═56f13fa5-3806-461b-ab31-64d68eaf3928
-# ╠═88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
 # ╠═506c52d5-30a0-4d7c-8550-4cd9259730d0
 # ╠═390c2b92-0884-41fb-a279-aef87c890132
+# ╠═88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
+# ╠═77567b04-0deb-4411-8d66-4c91851d1b41
+# ╟─6027924c-ec8c-4381-ad33-aad5f92ab7e9
+# ╟─4db8b9af-bc18-4ab5-a98e-66dce23dc3ff
+# ╟─67a5442f-e127-465f-9096-523fd4b8db27
 # ╠═4e00a1a0-2958-4274-8b85-ae1e7f068170
+# ╟─4e40ff1c-6663-4d5f-a5ba-c571b1fb3381
 # ╠═58d31569-0e0f-4058-a571-d466764181a7
 # ╠═f7f826ba-af18-4beb-880a-f8e6da4136ca
-# ╠═cf279d7a-7225-467e-a276-a56b19266273
+# ╟─ca60cb11-84ac-48f6-8356-0bcc2ba3c8e7
 # ╠═477de3d0-3150-489a-b272-f77de4da0013
 # ╠═4d56a2a4-d011-4199-9d68-47b6df09a928
 # ╟─45693af8-294a-429a-a884-f609e648f49b
