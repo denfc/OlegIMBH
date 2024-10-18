@@ -26,7 +26,7 @@ begin
 	
 	using Base.Threads
 	using Revise
-	using PlutoPlotly
+	using PlutoPlotly # loaded _instead_ of PlotlyJS
 	using CSV, DataFrames
 	# using NearestNeighbors
 	# using AstroImages, FITSIO
@@ -118,7 +118,7 @@ begin
 end
 
 # ╔═╡ 88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
-md"Select number of indices $(@bind indNumber confirm(Slider(9_113:10_000:749_113, default = 9_113, show_value = true)))"
+md"Select number of indices $(@bind indNumber confirm(Slider(9_113:10_000:749_113, default = 50_000, show_value = true)))"
 
 # ╔═╡ 56f13fa5-3806-461b-ab31-64d68eaf3928
 begin
@@ -135,7 +135,31 @@ begin
 end
 
 # ╔═╡ 506c52d5-30a0-4d7c-8550-4cd9259730d0
-plot(scatter(df, x =  df.Column29, y = df.Column16, mode = "markers")) # , yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5, markercolor = :white))
+trace = scattergl(
+	df,
+	x =  x_reduced,
+	y = y_reduced,
+	mode = "markers",
+    marker = attr(
+        size = 3,       # Adjust the size of the points
+        opacity = 1    # Adjust the transparency of the points
+	)
+) 
+# to remember kwargs from when using Plots:, yflip = true, xlabel = "16 minus 29: IRCAM_F200W - NIRCAM_F444W",  title = "Omega Centauri", ylabel = "16. Instr VEGAMAG, NIRCAM_F200W", label = "", xlims = [-15, 15], ylims = [14, 40], markersize = 2.5, markercolor = :white))
+
+# ╔═╡ 390c2b92-0884-41fb-a279-aef87c890132
+layout = Layout(
+	width=700, height= 607,
+	xaxis = attr(range = [-15, 15], title = "16 minus 29: IRCAM_F200W - NIRCAM_F444W"),
+	yaxis = attr(range = [40, 14], title = "16. Instr VEGAMAG, NIRCAM_F200W"),
+	title = "Omega Centauri"
+)
+
+# ╔═╡ 58d31569-0e0f-4058-a571-d466764181a7
+config = PlotConfig(staticPlot=true)
+
+# ╔═╡ 4e00a1a0-2958-4274-8b85-ae1e7f068170
+plot([trace], layout, config=config)
 
 # ╔═╡ 4d56a2a4-d011-4199-9d68-47b6df09a928
 # Function to display specific lines of a file
@@ -199,6 +223,9 @@ md" # Bottom Cell"
 # ╠═56f13fa5-3806-461b-ab31-64d68eaf3928
 # ╠═88253dc5-b8e8-4b38-82c8-ed0b6fb3268e
 # ╠═506c52d5-30a0-4d7c-8550-4cd9259730d0
+# ╠═390c2b92-0884-41fb-a279-aef87c890132
+# ╠═4e00a1a0-2958-4274-8b85-ae1e7f068170
+# ╠═58d31569-0e0f-4058-a571-d466764181a7
 # ╠═4d56a2a4-d011-4199-9d68-47b6df09a928
 # ╟─45693af8-294a-429a-a884-f609e648f49b
 # ╠═c4968ea9-9dc1-4cad-b402-4339e21cf9b4
