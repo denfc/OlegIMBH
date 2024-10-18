@@ -48,6 +48,9 @@ begin
 	TableOfContents(title = "P23_JWST_OmegaCen", depth = 6)
 end
 
+# ╔═╡ f7f826ba-af18-4beb-880a-f8e6da4136ca
+using PlotlyJS
+
 # ╔═╡ 7b98ed8c-7a38-463d-91e9-9915901a0047
 md"""
 dfc 16 October: P22a_JWST_OmegaCen.jl
@@ -155,11 +158,17 @@ layout = Layout(
 	title = "Omega Centauri"
 )
 
-# ╔═╡ 58d31569-0e0f-4058-a571-d466764181a7
-config = PlotConfig(staticPlot=true)
-
 # ╔═╡ 4e00a1a0-2958-4274-8b85-ae1e7f068170
-plot([trace], layout, config=config)
+PlutoPlotly.plot([trace], layout) #, config = pp_config)
+
+# ╔═╡ 58d31569-0e0f-4058-a571-d466764181a7
+pp_config = PlutoPlotly.PlotConfig(staticPlot=true)
+
+# ╔═╡ cf279d7a-7225-467e-a276-a56b19266273
+plot_obj = PlotlyJS.plot([trace], layout) #, config = pp_config)
+
+# ╔═╡ 477de3d0-3150-489a-b272-f77de4da0013
+PlotlyJS.savefig(plot_obj, "omega_centauri_plot.html")
 
 # ╔═╡ 4d56a2a4-d011-4199-9d68-47b6df09a928
 # Function to display specific lines of a file
@@ -226,6 +235,9 @@ md" # Bottom Cell"
 # ╠═390c2b92-0884-41fb-a279-aef87c890132
 # ╠═4e00a1a0-2958-4274-8b85-ae1e7f068170
 # ╠═58d31569-0e0f-4058-a571-d466764181a7
+# ╠═f7f826ba-af18-4beb-880a-f8e6da4136ca
+# ╠═cf279d7a-7225-467e-a276-a56b19266273
+# ╠═477de3d0-3150-489a-b272-f77de4da0013
 # ╠═4d56a2a4-d011-4199-9d68-47b6df09a928
 # ╟─45693af8-294a-429a-a884-f609e648f49b
 # ╠═c4968ea9-9dc1-4cad-b402-4339e21cf9b4
