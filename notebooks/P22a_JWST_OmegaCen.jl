@@ -27,6 +27,7 @@ begin
 	using Base.Threads
 	using Revise
 	using PlutoPlotly # loaded _instead_ of PlotlyJS
+	using PlotlyJS # which it turned out we needed for `savefig`
 	using CSV, DataFrames
 	# using NearestNeighbors
 	# using AstroImages, FITSIO
@@ -47,9 +48,6 @@ begin
 	using PlutoUI
 	TableOfContents(title = "P23_JWST_OmegaCen", depth = 6)
 end
-
-# ╔═╡ f7f826ba-af18-4beb-880a-f8e6da4136ca
-using PlotlyJS
 
 # ╔═╡ 7b98ed8c-7a38-463d-91e9-9915901a0047
 md"""
@@ -83,9 +81,64 @@ md" # Top Cell"
 # ╔═╡ 5ad9dee6-6281-4b84-9f80-92da1a4e16a7
 begin
 	md"### Reading `omega_cen_phot` "
-	columnsToRead = 1:29 # nothing # 16:29
+	columnsToRead = 1:37 # nothing # 16:29
 	df = CSV.read("./data/exp_raw/OmegaCen/omega_cen_phot", DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
 end
+
+# ╔═╡ 6c0fdeb3-d5f2-4819-a9bb-5cce9068d623
+md"### Check Quality"
+
+# ╔═╡ f77f5982-9c79-40c9-a7df-d1ca0cf54733
+md"#### Col. 11 (object type)"
+
+# ╔═╡ 5955377d-242a-4964-b209-e05f082f7dce
+objectType = ["bright star", "faint star ", "elongated  ", "hot pixel  ", "extended   "]
+
+# ╔═╡ e5ca7174-2d4b-4081-a509-57a6e2193193
+for i in eachindex(objectType)
+	println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
+end
+
+# ╔═╡ a9d9c3e0-ce88-4219-9f5e-e6cfa05b9700
+faint_ind = findall(x -> x == 2, df.Column11)
+
+# ╔═╡ cde8a2bc-3f0f-4915-8bd9-4efead766dba
+begin
+	faint16 = df[:, :Column16][faint_ind]
+	faint29 = df[:, :Column29][faint_ind]
+end
+
+# ╔═╡ b9244582-6992-4416-aea8-f2b4f1e0db5f
+begin
+	faint_SNR = df.Column6[faint_ind]
+	faint_Crowding = df.Column10[faint_ind]
+	faint_SharpSq = df.Column7[faint_ind].^2
+	faint_Q200_flag = df.Column24[faint_ind]
+	faint_Q444_flag = df.Column37[faint_ind]
+end
+
+# ╔═╡ 0e76b9b2-1393-40d0-9fa3-e94368333ae8
+faint_good = findall(i -> faint_SNR[i] >= 4 && faint_Crowding[i] <= 2.25 && faint_SharpSq[i] <= 2.25 && faint_Q200_flag[i] <= 3 && faint_Q444_flag[i] <= 3, 1:length(faint_ind) ) 
+
+# ╔═╡ 787c3072-88d8-4085-a915-19ef94326e9d
+length(faint_good)
+
+# ╔═╡ 4c4b9bdc-66c2-4dbe-a13a-32508a408ea5
+extrema(faint16)
+
+# ╔═╡ 2688062b-3c47-4229-ad1b-2cd64233f845
+p = scatter(y = faint16[faint_good], x = faint16[faint_good] .- faint29[faint_good], mode = "markers")
+
+# ╔═╡ 9421829a-0ae5-411f-80f0-63c5ad7c06b0
+l_faint = Layout(
+	# width = 700, height = 607,
+	yaxis = attr(range = [28, 23], title = "16. Instr VEGAMAG, NIRCAM_F200W"),
+	xaxis = attr(range = [-8, 4], title = "16 minus 29: IRCAM_F200W - NIRCAM_F444W"),
+	title = "OmCen 11740 faint, good (1555 stars)"
+)
+
+# ╔═╡ 0dee2cff-bdc9-4ffc-baa1-54bb64f0deba
+PlutoPlotly.plot(p, l_faint) #,  config = pp_configStatic) 
 
 # ╔═╡ a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
 size(df)
@@ -121,8 +174,8 @@ begin
 end
 
 # ╔═╡ 390c2b92-0884-41fb-a279-aef87c890132
-layout = Layout(
-	width=700, height= 607,
+l_all = Layout(
+	width = 700, height = 607,
 	xaxis = attr(range = [-15, 15], title = "16 minus 29: IRCAM_F200W - NIRCAM_F444W"),
 	yaxis = attr(range = [40, 14], title = "16. Instr VEGAMAG, NIRCAM_F200W"),
 	title = "Omega Centauri"
@@ -180,10 +233,10 @@ If want interactie plots, uncheck the box, but remember that above about 200,000
 md" #### `pp_config`"
 
 # ╔═╡ 58d31569-0e0f-4058-a571-d466764181a7
-pp_config = PlutoPlotly.PlotConfig(staticPlot=true)
+pp_configStatic = PlutoPlotly.PlotConfig(staticPlot = true)
 
 # ╔═╡ 4e00a1a0-2958-4274-8b85-ae1e7f068170
-if staticP PlutoPlotly.plot([trace], layout, config = pp_config) else PlutoPlotly.plot([trace], layout) end
+if staticP PlutoPlotly.plot([trace], l_all, config = pp_configStatic) else PlutoPlotly.plot([trace], layout) end
 
 # ╔═╡ ca60cb11-84ac-48f6-8356-0bcc2ba3c8e7
 md"""
@@ -247,6 +300,19 @@ md" # Bottom Cell"
 # ╠═6cc5f5c4-0153-4903-ac7a-31f6fe7c19a6
 # ╠═baec53cc-f36a-4dce-84d4-f41dc6d919df
 # ╠═5ad9dee6-6281-4b84-9f80-92da1a4e16a7
+# ╠═6c0fdeb3-d5f2-4819-a9bb-5cce9068d623
+# ╠═f77f5982-9c79-40c9-a7df-d1ca0cf54733
+# ╠═5955377d-242a-4964-b209-e05f082f7dce
+# ╠═e5ca7174-2d4b-4081-a509-57a6e2193193
+# ╠═a9d9c3e0-ce88-4219-9f5e-e6cfa05b9700
+# ╠═cde8a2bc-3f0f-4915-8bd9-4efead766dba
+# ╠═b9244582-6992-4416-aea8-f2b4f1e0db5f
+# ╠═0e76b9b2-1393-40d0-9fa3-e94368333ae8
+# ╠═787c3072-88d8-4085-a915-19ef94326e9d
+# ╠═4c4b9bdc-66c2-4dbe-a13a-32508a408ea5
+# ╠═2688062b-3c47-4229-ad1b-2cd64233f845
+# ╠═9421829a-0ae5-411f-80f0-63c5ad7c06b0
+# ╠═0dee2cff-bdc9-4ffc-baa1-54bb64f0deba
 # ╠═a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
 # ╠═22738cd1-e9ef-4972-961f-fd7b9d54c05b
 # ╠═d7732a1b-786f-48d0-a230-d55d617ac0cc
@@ -267,7 +333,6 @@ md" # Bottom Cell"
 # ╠═4e00a1a0-2958-4274-8b85-ae1e7f068170
 # ╟─4e40ff1c-6663-4d5f-a5ba-c571b1fb3381
 # ╠═58d31569-0e0f-4058-a571-d466764181a7
-# ╠═f7f826ba-af18-4beb-880a-f8e6da4136ca
 # ╟─ca60cb11-84ac-48f6-8356-0bcc2ba3c8e7
 # ╠═477de3d0-3150-489a-b272-f77de4da0013
 # ╠═4d56a2a4-d011-4199-9d68-47b6df09a928

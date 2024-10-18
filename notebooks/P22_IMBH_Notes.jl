@@ -253,9 +253,27 @@ md"""
 
 """
 
+# ╔═╡ 1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
+md"""
+### Progress (18 October)
+!!! tip "P22a"
+	- Works with both static and interactive Plotly plots that can be saved.
+	- Can vary number of randomized points to view.
+	- Can also vary opacity.
+!!! note "Catalog Characteristics"
+	- ["Culling"](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html#culling-the-catalog)
+| Count | Col 11 value | Description|
+|----------:|:---------:|:---------|
+| 733,991 | 1 | bright star |
+| 11,740  | 2 | faint star  |
+| 0       | 3 | elongated   |
+| 3,382   | 4 | hot pixel   |
+| 0       | 5 | extended    |
+"""
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
-# ╠═754dbb34-631a-4aea-8660-443f70f11ea9
+# ╟─754dbb34-631a-4aea-8660-443f70f11ea9
 # ╟─e85f9903-c869-416a-bf86-cb85a80b065b
 # ╠═4d9eb5bd-0759-4499-bd42-621834ae7f67
 # ╟─2016b7c9-df0f-4f48-95a7-96d31ed199e4
@@ -273,3 +291,4 @@ md"""
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
 # ╠═c3b4a98c-4025-43bf-96dc-2b3c9b376c59
+# ╠═1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
