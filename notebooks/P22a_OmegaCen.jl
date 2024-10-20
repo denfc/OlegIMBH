@@ -140,6 +140,9 @@ l_faint = Layout(
 # ╔═╡ 0dee2cff-bdc9-4ffc-baa1-54bb64f0deba
 PlutoPlotly.plot(p, l_faint) #,  config = pp_configStatic) 
 
+# ╔═╡ 0755db98-38cd-4cc9-abed-68e3d4ab57c2
+PlutoPlotly.restyle!(p, title = "test")
+
 # ╔═╡ a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
 size(df)
 
@@ -313,6 +316,7 @@ md" # Bottom Cell"
 # ╠═2688062b-3c47-4229-ad1b-2cd64233f845
 # ╠═9421829a-0ae5-411f-80f0-63c5ad7c06b0
 # ╠═0dee2cff-bdc9-4ffc-baa1-54bb64f0deba
+# ╠═0755db98-38cd-4cc9-abed-68e3d4ab57c2
 # ╠═a269c4b8-aa06-4ac1-8cfe-b1d4fd3d89cd
 # ╠═22738cd1-e9ef-4972-961f-fd7b9d54c05b
 # ╠═d7732a1b-786f-48d0-a230-d55d617ac0cc

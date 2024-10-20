@@ -30,6 +30,7 @@ end
 
 # ╔═╡ dce8dbce-c8b4-11ed-3263-65232dc16f8d
 begin
+	# using Base.Threads
 	using Revise
 	using PlutoUI
 	# using Dates
@@ -42,6 +43,7 @@ begin
 	
     # AstroIO
   	using AstroImages
+	using ImageTransformations
   	# using BSON
   	# using CSV v
   	# using DataFrames
@@ -50,6 +52,8 @@ begin
   	# using FileIO 
   	# using Images 
   	# using ImageIO
+	using ImageCore
+	using Base64
     # using JLD2
   	# using NearestNeighbors 
 	# using StatsBase # needed for F12, and for some reason get error message in the call to F12 despite it being there
@@ -85,7 +89,7 @@ md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)
 
 # ╔═╡ 754dbb34-631a-4aea-8660-443f70f11ea9
 md"""
-!!! note "notebook title"
+!!! note "P24_ViewOmCen"
 	- ###### Origin Date: 18 October 2023
 	- Eventually we need to put some xy points on the image.  Starting here.
 """
@@ -207,8 +211,19 @@ md" Example below [here.](https://plotly.com/julia/images/)
 Detailed reference [here](https://plotly.com/julia/reference/layout/images/)
 "
 
+# ╔═╡ 6c93055c-6a96-4d1e-a6b8-f4a60a5a5348
+begin
+	# Clamp the values to the [0, 1] range
+	# clamped_imgAI = map(clamp01nan, imgAI)
+	# Convert the image to a base64 string or save it as a file
+	# save("clamped_imgAI.png", clamped_imgAI)
+end
+
 # ╔═╡ 03a778db-d813-4bea-805f-bb516174a7df
 img_path = joinpath(projectdir(), "notebooks/clamped_imgAI.png")
+
+# ╔═╡ 1ba5e1ac-f4b3-42cf-ae1a-c2c73c2694c0
+pp_configStatic = PlutoPlotly.PlotConfig(staticPlot = true)
 
 # ╔═╡ b1ded347-777a-499a-ba1e-e346660b8568
 begin
@@ -222,9 +237,10 @@ begin
 	    # template=templates.plotly_white,
 		# template=templates.plotly_dark,
 	    images=[
-	        attr(            # source="https://upload.wikimedia.org/wikipedia/commons/1/1f/Julia_Programming_Language_Logo.svg"
+	        attr(               source="https://upload.wikimedia.org/wikipedia/commons/1/1f/Julia_Programming_Language_Logo.svg"
 				# source = img_path
-				source = LocalResource(img_path)
+				# source = LocalResource(img_path)
+			# source="data:image/png;base64," * base64encode(imgLoad_array)
 ,	            xref="x",
 	            yref="y",
 	            x=0,
@@ -238,7 +254,7 @@ begin
 	    ]
 	)
 	
-	plot(trace, layout)
+	plot(trace, layout, config = pp_configStatic)
 end
 
 # ╔═╡ 729f54ab-b4a4-40c3-8ccd-cc4e85829fb3
@@ -247,35 +263,70 @@ md" #### The Image "
 # ╔═╡ cd2b0c75-c8e3-4101-936a-78ae97d72ddc
 imgFile = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits"
 
+# ╔═╡ d488c970-8a7d-4c55-a2e1-dc816bf3afcd
+begin
+	imgLoad = load(img_path)
+	imgLoad_array = Float64.(imgLoad)
+end;
+
 # ╔═╡ ee07a851-6e3d-4a04-ac69-cd7431059f49
-f = FITS(imgFile)
+# f = FITS(imgFile)
 
 # ╔═╡ b64c3398-3029-4679-ab94-e0749e255edc
 md"""!!! note "Here, at least, can just read it directly (see "true," below)." """
 
 # ╔═╡ ceb7f3d7-7465-4833-a666-95430795ec4e
-AstroImage(f[2]) == AstroImage(imgFile)
+# AstroImage(f[2]) == AstroImage(imgFile)
 
 # ╔═╡ 8f1138bb-86c1-42b7-ada7-51b10b71a77f
-f[2]
+# f[2]
 
 # ╔═╡ 82bc8292-88d3-40f0-921b-16962697be8b
-hdu = f[1]
+# hdu = f[1]
 
 # ╔═╡ 0a983c06-d756-4f2c-b0ec-b7af12470b5b
-imgAI = AstroImage(imgFile)
-
-# ╔═╡ 6c93055c-6a96-4d1e-a6b8-f4a60a5a5348
-begin
-	using ImageCore
-	# Clamp the values to the [0, 1] range
-	clamped_imgAI = map(clamp01nan, imgAI)
-	# Convert the image to a base64 string or save it as a file
-	save("clamped_imgAI.png", clamped_imgAI)
-end
+imgAI = AstroImage(imgFile);
 
 # ╔═╡ 3e369fc8-2555-4c2a-b2e4-5b74a84aba25
-size(imgAI)
+# size(imgAI)
+
+# ╔═╡ 6a53f77d-514a-42fa-a884-fbd673cecb66
+# imview(imgAI); # same view
+
+# ╔═╡ 1304c5b4-e006-4d78-ac90-f78b10e272f2
+begin
+# using AstroImages
+# using ImageTransformations
+
+# Load the background and foreground images
+bg = load(img_path)
+fg = load(img_path)
+
+# Transform the foreground image (e.g., rotate and resize)
+fg_transformed = imrotate(fg, π/4)  # Rotate by 45 degrees
+fg_transformed = imresize(fg_transformed, ratio=0.5)  # Resize to 50%
+
+# Define the position where the foreground image will be placed
+pos = (100, 100)
+
+# Overlay the images
+function overlay_images(bg, fg, pos)
+    mask = Gray.(fg)
+    mask[:] .= Gray(1)
+    img = warp(fg, Translation(pos...))
+    mask = warp(mask, Translation(pos...))
+    scene = copy(bg)
+    scene[findall(mask .== Gray(1))] = img[mask .== Gray(1)]
+    return scene
+end
+
+result = overlay_images(bg, fg_transformed, pos)
+imview(result)
+
+end
+
+# ╔═╡ 565bc3f2-c5ac-4d42-ac2a-31f020594408
+
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -298,8 +349,10 @@ size(imgAI)
 # ╠═6c93055c-6a96-4d1e-a6b8-f4a60a5a5348
 # ╠═03a778db-d813-4bea-805f-bb516174a7df
 # ╠═b1ded347-777a-499a-ba1e-e346660b8568
+# ╠═1ba5e1ac-f4b3-42cf-ae1a-c2c73c2694c0
 # ╟─729f54ab-b4a4-40c3-8ccd-cc4e85829fb3
 # ╠═cd2b0c75-c8e3-4101-936a-78ae97d72ddc
+# ╠═d488c970-8a7d-4c55-a2e1-dc816bf3afcd
 # ╠═ee07a851-6e3d-4a04-ac69-cd7431059f49
 # ╠═b64c3398-3029-4679-ab94-e0749e255edc
 # ╠═ceb7f3d7-7465-4833-a666-95430795ec4e
@@ -307,3 +360,6 @@ size(imgAI)
 # ╠═82bc8292-88d3-40f0-921b-16962697be8b
 # ╠═0a983c06-d756-4f2c-b0ec-b7af12470b5b
 # ╠═3e369fc8-2555-4c2a-b2e4-5b74a84aba25
+# ╠═6a53f77d-514a-42fa-a884-fbd673cecb66
+# ╠═1304c5b4-e006-4d78-ac90-f78b10e272f2
+# ╠═565bc3f2-c5ac-4d42-ac2a-31f020594408
