@@ -200,7 +200,7 @@ end
   ╠═╡ =#
 
 # ╔═╡ 9a46221b-68f7-4101-b30a-13cc6d87f213
-md" ##### Begin New Coding Here."
+md" ###### Begin New Coding Here."
 
 # ╔═╡ 15899cbb-53e1-4160-b24c-40fa959aa926
 md"""
@@ -236,16 +236,16 @@ md"""
 !!! note " "
     - So, because of the reverse matchup, 19 gets matched with 255, and then 20 gets matched with 265.  The coding is not trivial, but if we end up trying again ...
 
-      -- Set `df_rowAtoB = 3` and `df_rowAtoB = 4`. Two lines that can show the information for the problem to be solved are 
+      -- Set `df_rowAtoB = 3` and `df_rowAtoB = 4`. Two lines that can show the information for the problem to be solved are:
          - for i in eachindex(df[df\_rowAtoB, "Catalog A labels"])  println("$i) ", df[df\_rowAtoB, "Catalog A labels"][i, 1], " ", df[df\_rowAtoB, "Catalog B matching labels"][i, 1:NN\_level]) end
 
         - for i in eachindex(df[df\_rowBtoA, "Catalog A labels"])  println("$i) ", df[df\_rowBtoA, "Catalog A labels"][i, 1], " ", df[df\_rowBtoA, "Catalog B matching labels"][i, 1:NN\_level]) end
 
       -- And, BTW, `/home/dfc123/Gitted/OlegIMBH/src/GalCen/buildDuplicateDict.jl` has an uncommented comment line that prevents it from running.
 
-### DOLPHOT
+#### DOLPHOT
 !!! note ""
-    - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf)) production of Omega Cen data.  I had not realized that the previous data were of the galactic center, so previous data and code moved into:
+    - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf); [JWST specifics when running](https://dolphot-jwst.readthedocs.io/en/latest/search.html?q=FITS&check_keywords=yes&area=default)) production of Omega Cen data.  I had not realized that the previous data were of the galactic center, so previous data and code moved into:
     `GalacticCenter` directory created in `OlegIMBH/data/exp_raw` and `GalCenter`s in `scripts` and `src` directories.
 !!! warning "Where (and how) to back up the original data, i.e., those stored in \data\exp_raw?"
 !!! tip ""
@@ -255,13 +255,45 @@ md"""
 
 # ╔═╡ 1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 md"""
-### Progress (18 October)
-!!! tip "P22a"
+### Plotly & Quality Progress (18 October)
+#### Plotly
+!!! tip "P22a_OmegaCen"
+	- Keys to reading the file with CSV: `... header=false, delim=" ", ignorerepeated = true, select = columnsToRead`
 	- Works with both static and interactive Plotly plots that can be saved.
+	  - at about 220,000 points, attempt at interactive freezes Pluto completely.
+	  - in Plotly, just reverse limits to reverse axis (or set `autorange = "reversed"`
+	  - [image layout options] (https://plotly.com/julia/reference/layout/images/#layout-images-items-image-name)
+      - [zoom on static images](https://plotly.com/julia/images/#zoom-on-static-images)
+	  - [setting graph size](https://plotly.com/julia/setting-graph-size/)
+      - [scatter traces](https://plotly.com/julia/reference/scatter/#scatter)
+	  - [adding a background image completely inside Plotly](https://plotly.com/julia/reference/scatter/#scatter)
 	- Can vary number of randomized points to view.
 	- Can also vary opacity.
-!!! note "Catalog Characteristics"
-	- ["Culling"](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html#culling-the-catalog)
+	- To save plot, have to use `PlotlyJS`, but using `PlutoPlotyly`, too, so have to call functions explicitly.
+	- `config` options; only change from default is `staticPlot` is true via `pp_configStatic = PlutoPlotly.PlotConfig(staticPlot = true)`:
+      - [detailed config descriptons](https://plotly.com/julia/configuration-options/)
+			PlotConfig
+			  scrollZoom: Bool true
+			  editable: Bool false
+			  staticPlot: Bool true
+			  toImageButtonOptions: Nothing nothing
+			  displayModeBar: Nothing nothing
+			  modeBarButtonsToRemove: Nothing nothing
+			  modeBarButtonsToAdd: Nothing nothing
+			  modeBarButtons: Nothing nothing
+			  showLink: Bool false
+			  plotlyServerURL: Nothing nothing
+			  linkText: Nothing nothing
+			  showEditInChartStudio: Nothing nothing
+			  locale: Nothing nothing
+			  displaylogo: Nothing nothing
+			  responsive: Bool true
+			  doubleClickDelay: Nothing nothing
+#### Quality
+!!! tip ""
+	- Confirmed that all 750K xy coordinates are unique.
+    - Looks at Column11, "object type," to produce the table of total counts, below.
+
 | Count | Col 11 value | Description|
 |----------:|:---------:|:---------|
 | 733,991 | 1 | bright star |
@@ -269,6 +301,36 @@ md"""
 | 0       | 3 | elongated   |
 | 3,382   | 4 | hot pixel   |
 | 0       | 5 | extended    |
+!!! note "Catalog Characteristics"
+	- [AB vs Vega Magnitudes](https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-performance/nircam-absolute-flux-calibration-and-zeropoints#gsc.tab=0)
+	- Reduced the number of "good" "faint star" ojects at wavelengths 200 and 444 to 1555 by using flags and the following ["Culling"](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html#culling-the-catalog) critera on signal-to-noise, sharpness (squared) and crowding: 
+	  - SNR >=4
+	  - Sharp^2 <= 0.1
+	  - Crowding <= 2.25
+	  - Flag <= 3
+	  - Type <= 2
+"""
+
+# ╔═╡ 4d9abf6c-4385-41c5-9361-463d5549ac44
+md"""
+### A step sideways, then forward (21 October)
+#### `P23_IMBH_Histo`
+!!! note "Plotted distances of nearest neighbors, confirming the function was working correctly."
+#### `P24_ViewOmCen`
+!!! note "To get a handle on plotting points on an image."
+    - Because of rotation (why? see below), `using ImageTransformations` and `OffsetArrays` as well as the usual image packages: `Astroimages`.  Only need `FITSIO` if want to see all the information inside the fits file (which you may).
+	- After executing full Plotly "Logo" example (link above), spent time messing with my fits image, but didn't get it work and decided to try another tack of simply overlaying files."
+!!! tip "Using `AstroImages.load(file)` rather than `AstroImages.AstroImage(file)` allows simple addition of one file to another."
+	- Assume that the image loaded with `AstroImage` has the correct orientation, and rotate the image loaded with `load` to match it.  The rotation causes type-matching problems that require a couple of functions to correct so that the "overlay" addition can succeed.
+	- `load` gives a black and white image: `typeof(imgLoad)`: Matrix{Gray{N0f8}} (alias for Array{Gray{Normed{UInt8, 8}}, 2}), whereas `typeof(imgAI)` yields
+AstroImageMat{Float32, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}, Y{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}}, Tuple{}, Matrix{Float32}, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}, Y{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}}} (alias for AstroImage{Float32, 2, Tuple{X{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}, Y{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}}, Tuple{}, Array{Float32, 2}, Tuple{X{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}, Y{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}}})
+
+!!! tip ""
+    - but after being rotated via `ImageTransformations.imrotate`, the new type is OffsetMatrix{Gray{N0f8}, Matrix{Gray{N0f8}}} (alias for OffsetArray{Gray{Normed{UInt8, 8}}, 2, Array{Gray{Normed{UInt8, 8}}, 2}}).
+	  - the offset has to be removed: `imgLoad_rotated_noOffset = OffsetArrays.no_offset_view(imgLoad_rotated)`, and to add it to a (resized) plot image, the image has to be made into a regular array:  `imgLoad_final = Array(imgLoad_rotated_noOffset)`.
+	  - can finally add the two together: `overlay_img = imgLoad_final .* 0.7 .+ plot_image_resized .* 0.3`
+!!! note ""
+	- Next step is to plot the four (?) brightest to see if the -90 degree rotation is indeed correct.
 """
 
 # ╔═╡ Cell order:
@@ -290,5 +352,6 @@ md"""
 # ╟─d68c548a-71a3-45e6-9ec5-a6d9358a716a
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
-# ╠═c3b4a98c-4025-43bf-96dc-2b3c9b376c59
-# ╠═1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
+# ╟─c3b4a98c-4025-43bf-96dc-2b3c9b376c59
+# ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
+# ╟─4d9abf6c-4385-41c5-9361-463d5549ac44

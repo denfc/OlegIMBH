@@ -46,7 +46,7 @@ end
 # ╔═╡ baec53cc-f36a-4dce-84d4-f41dc6d919df
 begin
 	using PlutoUI
-	TableOfContents(title = "P22a_JWST_OmegaCen", depth = 6)
+	TableOfContents(title = "P22a_OmegaCen", depth = 6)
 end
 
 # ╔═╡ 7b98ed8c-7a38-463d-91e9-9915901a0047
@@ -280,15 +280,6 @@ end
 # ╔═╡ c4968ea9-9dc1-4cad-b402-4339e21cf9b4
 print_textFile_lines(columnsFile, 16:29)
 
-# ╔═╡ bd8195c4-ae94-405e-9536-9f7b9883a4c9
-md"""
-!!! note ""
-# notes start
-#### should go to a new notebook exclusively dedicated to notes
-
-  - [AB vs Vega Magnitudes](https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-performance/nircam-absolute-flux-calibration-and-zeropoints#gsc.tab=0)
-"""
-
 # ╔═╡ b27ddee0-95fd-4ad9-9b18-11454501b2df
 Threads.nthreads()
 
@@ -342,6 +333,5 @@ md" # Bottom Cell"
 # ╠═4d56a2a4-d011-4199-9d68-47b6df09a928
 # ╟─45693af8-294a-429a-a884-f609e648f49b
 # ╠═c4968ea9-9dc1-4cad-b402-4339e21cf9b4
-# ╠═bd8195c4-ae94-405e-9536-9f7b9883a4c9
 # ╠═b27ddee0-95fd-4ad9-9b18-11454501b2df
 # ╠═c0caff24-d5dc-46c3-8370-220e979c9f91
