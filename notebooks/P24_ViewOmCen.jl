@@ -14,20 +14,6 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
-begin
-	using DrWatson
-	md" ###### `using` DrWatson"
-end
-
-# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
-begin
-	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
-	projectDir = "Gitted/OlegIMBH"
-	project_path = joinpath(homedir(), projectDir)
-	quickactivate(project_path)
-end
-
 # ╔═╡ dce8dbce-c8b4-11ed-3263-65232dc16f8d
 begin
 	# using Base.Threads
@@ -35,7 +21,7 @@ begin
 	using PlutoUI
 	# using Dates
 	# using Plots
-	# using PlotlyJS
+	using PlotlyJS
 	using PlutoPlotly
 	# using PlotThemes  # PlotThemes needs Plots to work.
 	# theme(:default) # :dark)
@@ -50,10 +36,10 @@ begin
   	# using DrWatson 
   	using FITSIO 
   	# using FileIO 
-  	# using Images 
+  	using Images 
   	# using ImageIO
-	using ImageCore
-	using Base64
+	# using ImageCore
+	# using Base64
     # using JLD2
   	# using NearestNeighbors 
 	# using StatsBase # needed for F12, and for some reason get error message in the call to F12 despite it being there
@@ -64,7 +50,8 @@ begin
 	# using LinearAlgebra # needed for `norm` of vector
 	# using ImageBinarization
 	# using ColorVectorSpace # must be included already somewhere --- loaded in few hundred microseconds
-	# using IndirectArrays, OffsetArrays
+	# using IndirectArrays
+	using OffsetArrays
 	# using SparseArrays # ? also quick load here, but wasn't being accessed?  check
 	# using StaticArrays # didn't improve speed on fractal calculation
 	# using ReferenceFrameRotations
@@ -83,6 +70,20 @@ begin
 	# using Unitful # ditto
 	md" ###### `using` packages"
 end	
+
+# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
+begin
+	using DrWatson
+	md" ###### `using` DrWatson"
+end
+
+# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
+begin
+	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
+	projectDir = "Gitted/OlegIMBH"
+	project_path = joinpath(homedir(), projectDir)
+	quickactivate(project_path)
+end
 
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
@@ -254,7 +255,7 @@ begin
 	    ]
 	)
 	
-	plot(trace, layout, config = pp_configStatic)
+	PlutoPlotly.plot(trace, layout, config = pp_configStatic)
 end
 
 # ╔═╡ 729f54ab-b4a4-40c3-8ccd-cc4e85829fb3
@@ -263,11 +264,29 @@ md" #### The Image "
 # ╔═╡ cd2b0c75-c8e3-4101-936a-78ae97d72ddc
 imgFile = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits"
 
+# ╔═╡ ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
+imgLoad = AstroImages.load(img_path)
+
 # ╔═╡ d488c970-8a7d-4c55-a2e1-dc816bf3afcd
 begin
-	imgLoad = load(img_path)
-	imgLoad_array = Float64.(imgLoad)
+	imgLoad_rotated = ImageTransformations.imrotate(imgLoad, -π/2)
+	# imgLoad_rotated = convert(eltype(imgLoad), imgLoad_rotated)
 end;
+
+# ╔═╡ ad1d1616-3666-401e-a137-180ddf745efb
+typeof(imgLoad_rotated)
+
+# ╔═╡ 15b72413-9a93-4781-adf6-701984ed1a4b
+eltype(imgLoad)
+
+# ╔═╡ 257fa654-5c55-47c7-9ba9-c4543c08a9dc
+	imgLoad_array64 = Float64.(imgLoad);
+
+# ╔═╡ 4f1f0cdb-484c-435b-8f15-a0ca38be7374
+	# imgAI_array = Float64.(imgAI)
+
+# ╔═╡ 9ae25e5e-cad1-4d60-afaf-0ae03c7e4124
+md"""!!! warning "`AstroImage(file)` appears to have rotated image compared to `load(file)`" """
 
 # ╔═╡ ee07a851-6e3d-4a04-ac69-cd7431059f49
 # f = FITS(imgFile)
@@ -284,8 +303,11 @@ md"""!!! note "Here, at least, can just read it directly (see "true," below)." "
 # ╔═╡ 82bc8292-88d3-40f0-921b-16962697be8b
 # hdu = f[1]
 
+# ╔═╡ 111d9674-8bae-42fa-be6f-8f5a80fbcae6
+md"""!!! note "Assume that the image loaded with `AstroImage` has the correct orientation, and rotate the image loaded with `load` to match it.  The rotation causes type-mathing problems that require a couple of functions to correct so that the "overlay" below can succeed." """
+
 # ╔═╡ 0a983c06-d756-4f2c-b0ec-b7af12470b5b
-imgAI = AstroImage(imgFile);
+imgAI = AstroImages.AstroImage(imgFile)
 
 # ╔═╡ 3e369fc8-2555-4c2a-b2e4-5b74a84aba25
 # size(imgAI)
@@ -294,6 +316,8 @@ imgAI = AstroImage(imgFile);
 # imview(imgAI); # same view
 
 # ╔═╡ 1304c5b4-e006-4d78-ac90-f78b10e272f2
+# ╠═╡ disabled = true
+#=╠═╡
 begin
 # using AstroImages
 # using ImageTransformations
@@ -313,8 +337,8 @@ pos = (100, 100)
 function overlay_images(bg, fg, pos)
     mask = Gray.(fg)
     mask[:] .= Gray(1)
-    img = warp(fg, Translation(pos...))
-    mask = warp(mask, Translation(pos...))
+    img = warp(fg, ImageTransformations.Translation(pos...))
+    mask = warp(mask, ImageTransformations.Translation(pos...))
     scene = copy(bg)
     scene[findall(mask .== Gray(1))] = img[mask .== Gray(1)]
     return scene
@@ -324,9 +348,80 @@ result = overlay_images(bg, fg_transformed, pos)
 imview(result)
 
 end
+  ╠═╡ =#
 
-# ╔═╡ 565bc3f2-c5ac-4d42-ac2a-31f020594408
+# ╔═╡ ae05adc5-43ef-444c-aa73-7f36db784cd6
+typeof(imgLoad)
 
+# ╔═╡ 8c38f62d-bb8f-4896-a75b-51b10a401c4a
+img_height, img_width = size(imgLoad)
+
+# ╔═╡ 51535fb5-a470-460a-91a0-56761884c73a
+plot_data = PlotlyJS.plot(
+    scatter(x=0:0.1:2π, y=sin.(0:0.1:2π), mode="lines", name="Sine Wave"),
+    Layout(
+        width=img_width,
+        height=img_height,
+        margin=attr(l=0, r=0, t=0, b=0),
+        xaxis=attr(
+            showgrid=false, 
+            zeroline=false, 
+            showline=false, 
+            ticks="", 
+            domain=[0, 1], 
+            automargin=false
+        ),
+        yaxis=attr(
+            showgrid=false, 
+            zeroline=false, 
+            showline=false, 
+            ticks="", 
+            domain=[0, 1], 
+            automargin=false
+        )
+    )
+)
+
+# ╔═╡ 71f2a83c-b130-4a6c-a2b4-8abe62f1745c
+begin
+	PlotlyJS.savefig(plot_data, "plot_image.png")
+end
+
+# ╔═╡ d7f12f2e-24a6-4fdf-969a-bffde0cd221a
+plot_image = load("plot_image.png")
+
+# ╔═╡ 0f7487ef-674f-46cb-8988-ffdfe03e2061
+# plot_image_resized = imresize(plot_image, size(imgLoad))
+plot_image_resized = imresize(plot_image, size(imgLoad_rotated))
+# plot_image_resized = imresize(plot_image, size(imgAI_array)) NO GO AFTER ROTATION
+
+# ╔═╡ 513ce5fb-cc1a-403b-b39c-2e0437e7ec5b
+imgLoad_rotated_noOffset = OffsetArrays.no_offset_view(imgLoad_rotated);
+
+# ╔═╡ 94efbdc4-26dd-4047-a1af-506fd9442911
+imgLoad_final = Array(imgLoad_rotated_noOffset);
+
+# ╔═╡ 3c94a86e-fb55-4875-a75d-0a31d8e604a5
+size(plot_image_resized), size(imgLoad_rotated), size(imgLoad_final)
+
+# ╔═╡ 66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
+overlay_img = imgLoad_final .* 0.7 .+ plot_image_resized .* 0.3
+# overlay_img = imgAI_array .* 0.7 .+ plot_image_resized .* 0.3
+
+# ╔═╡ 2e4f26c4-29d7-4048-82b2-77e3cbd1fda4
+md"""!!! warning "rotation (via `imrotate`, commented out above), changes the type and then they cannot be added to produce `overlay_img` in the cell above." """
+
+# ╔═╡ ef496bb9-b004-462c-95b5-bec8cc7664bf
+typeof(imgLoad_rotated)
+
+# ╔═╡ e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
+typeof(imgLoad_final)
+
+# ╔═╡ 36773c21-1e8c-4936-8f41-f9eef21bccdd
+typeof(plot_image_resized)
+
+# ╔═╡ 4ffe5f76-3986-4e76-a37e-9ef4ebb429fa
+size(overlay_img)
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -352,14 +447,35 @@ end
 # ╠═1ba5e1ac-f4b3-42cf-ae1a-c2c73c2694c0
 # ╟─729f54ab-b4a4-40c3-8ccd-cc4e85829fb3
 # ╠═cd2b0c75-c8e3-4101-936a-78ae97d72ddc
+# ╠═ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
 # ╠═d488c970-8a7d-4c55-a2e1-dc816bf3afcd
+# ╠═ad1d1616-3666-401e-a137-180ddf745efb
+# ╠═15b72413-9a93-4781-adf6-701984ed1a4b
+# ╠═257fa654-5c55-47c7-9ba9-c4543c08a9dc
+# ╠═4f1f0cdb-484c-435b-8f15-a0ca38be7374
+# ╠═9ae25e5e-cad1-4d60-afaf-0ae03c7e4124
 # ╠═ee07a851-6e3d-4a04-ac69-cd7431059f49
 # ╠═b64c3398-3029-4679-ab94-e0749e255edc
 # ╠═ceb7f3d7-7465-4833-a666-95430795ec4e
 # ╠═8f1138bb-86c1-42b7-ada7-51b10b71a77f
 # ╠═82bc8292-88d3-40f0-921b-16962697be8b
+# ╠═111d9674-8bae-42fa-be6f-8f5a80fbcae6
 # ╠═0a983c06-d756-4f2c-b0ec-b7af12470b5b
 # ╠═3e369fc8-2555-4c2a-b2e4-5b74a84aba25
 # ╠═6a53f77d-514a-42fa-a884-fbd673cecb66
 # ╠═1304c5b4-e006-4d78-ac90-f78b10e272f2
-# ╠═565bc3f2-c5ac-4d42-ac2a-31f020594408
+# ╠═ae05adc5-43ef-444c-aa73-7f36db784cd6
+# ╠═8c38f62d-bb8f-4896-a75b-51b10a401c4a
+# ╠═51535fb5-a470-460a-91a0-56761884c73a
+# ╠═71f2a83c-b130-4a6c-a2b4-8abe62f1745c
+# ╠═d7f12f2e-24a6-4fdf-969a-bffde0cd221a
+# ╠═0f7487ef-674f-46cb-8988-ffdfe03e2061
+# ╠═513ce5fb-cc1a-403b-b39c-2e0437e7ec5b
+# ╠═94efbdc4-26dd-4047-a1af-506fd9442911
+# ╠═3c94a86e-fb55-4875-a75d-0a31d8e604a5
+# ╠═66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
+# ╠═2e4f26c4-29d7-4048-82b2-77e3cbd1fda4
+# ╠═ef496bb9-b004-462c-95b5-bec8cc7664bf
+# ╠═e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
+# ╠═36773c21-1e8c-4936-8f41-f9eef21bccdd
+# ╠═4ffe5f76-3986-4e76-a37e-9ef4ebb429fa
