@@ -14,20 +14,6 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
-begin
-	using DrWatson
-	md" ###### `using` DrWatson"
-end
-
-# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
-begin
-	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
-	projectDir = "Gitted/OlegIMBH"
-	project_path = joinpath(homedir(), projectDir)
-	quickactivate(project_path)
-end
-
 # ╔═╡ dce8dbce-c8b4-11ed-3263-65232dc16f8d
 begin
 	# using Base.Threads
@@ -65,7 +51,7 @@ begin
 	# using ImageBinarization
 	# using ColorVectorSpace # must be included already somewhere --- loaded in few hundred microseconds
 	# using IndirectArrays
-	using OffsetArrays
+	# using OffsetArrays
 	# using SparseArrays # ? also quick load here, but wasn't being accessed?  check
 	# using StaticArrays # didn't improve speed on fractal calculation
 	# using ReferenceFrameRotations
@@ -85,6 +71,20 @@ begin
 	md" ###### `using` packages"
 end	
 
+# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
+begin
+	using DrWatson
+	md" ###### `using` DrWatson"
+end
+
+# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
+begin
+	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
+	projectDir = "Gitted/OlegIMBH"
+	project_path = joinpath(homedir(), projectDir)
+	quickactivate(project_path)
+end
+
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
 
@@ -99,7 +99,7 @@ md"""
 md" ###### Title "
 
 # ╔═╡ 4d9eb5bd-0759-4499-bd42-621834ae7f67
-TableOfContents(title = "P24_ViewOmCen", depth = 6)
+TableOfContents(title = "P24a_Brightest", depth = 6)
 
 # ╔═╡ 2016b7c9-df0f-4f48-95a7-96d31ed199e4
 pwd()
@@ -228,7 +228,7 @@ md" ### The Image "
 imgFilePath = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits"
 
 # ╔═╡ ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
-imgLoad = AstroImages.load(imgFilePath);
+imgLoad = AstroImages.load(imgFilePath)
 
 # ╔═╡ 1aa44815-bb46-42f4-b442-9df96cc2bc98
 typeof(imgLoad)
@@ -277,43 +277,56 @@ for i in eachindex(objectType)
 end
 
 # ╔═╡ 3ecc7ee6-20c2-45fb-89c5-8ff0470dbd5c
-faint_ind = findall(x -> x == 1, df.Column11)
+bright_ind = findall(x -> x == 1, df.Column11)
 
 # ╔═╡ 0f161eaf-d624-4361-b305-62ad1a9b6df6
 begin
-	faint16 = df[:, :Column16][faint_ind]
-	faint29 = df[:, :Column29][faint_ind]
+	bright16 = df[:, :Column16][bright_ind]
+	bright29 = df[:, :Column29][bright_ind]
 end
 
 # ╔═╡ 371147b6-a208-433c-b178-252c56a45a4f
 begin
-	faint_SNR = df.Column6[faint_ind]
-	faint_Crowding = df.Column10[faint_ind]
-	faint_SharpSq = df.Column7[faint_ind].^2
-	faint_Q200_flag = df.Column24[faint_ind]
-	faint_Q444_flag = df.Column37[faint_ind]
+	bright_SNR = df.Column6[bright_ind]
+	bright_Crowding = df.Column10[bright_ind]
+	bright_SharpSq = df.Column7[bright_ind].^2
+	bright_Q200_flag = df.Column24[bright_ind]
+	bright_Q444_flag = df.Column37[bright_ind]
 end
 
 # ╔═╡ 19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
-md" #####  `faint_good`"
+md" #####  `bright_good`"
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
-faint_good_ind = findall(i -> faint_SNR[i] >= 4 && faint_Crowding[i] <= 2.25 && faint_SharpSq[i] <= 2.25 && faint_Q200_flag[i] <= 3 && faint_Q444_flag[i] <= 3, 1:length(faint_ind) )
-HERE take faint of faint good ind
-THEN sort 
-Then take top ten
+begin
+	bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
+	bright16_good = bright16[bright_good_ind]
+	bright29_good = bright29[bright_good_ind]
+	brightest10_16 = sort(bright16_good, rev=true)[1:10]
+	brightest10_29 = sort(bright29_good, rev=true)[1:10]
+	brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
+	brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
+	brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
+	brightest10_29_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
+end
+
+# ╔═╡ cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
+length(bright_good_ind)
+
+# ╔═╡ adb799d7-882e-4359-909b-73fa3245c119
+brightest10_29
+
+# ╔═╡ 3ca641d7-765b-431a-a795-a3b85dd984fc
+length(brightest10_16_Yvalues)
 
 # ╔═╡ 3b8d6f68-8169-4a2e-b17f-e88dc28030e0
-length(faint_good_ind)
+length(bright_good_ind)
+
+# ╔═╡ 47f8fee2-accb-4b59-9119-627c6d5be2fa
+length(findall(x-> x==99.999, bright29_good))
 
 # ╔═╡ b051c08f-1699-4a30-acbe-b020b80d5844
-extrema(faint16)
-
-# ╔═╡ 361538e2-b080-4518-86e1-bd5501f54ab1
-# ╠═╡ disabled = true
-#=╠═╡
-p = scatter(y = faint16[faint_good_ind], x = faint16[faint_good_ind] .- faint29[faint_good_ind], mode = "markers")
-  ╠═╡ =#
+extrema(bright16)
 
 # ╔═╡ bf232544-54bb-448b-9521-c465250fed79
 l_faint = Layout(
@@ -325,7 +338,7 @@ l_faint = Layout(
 
 # ╔═╡ 51535fb5-a470-460a-91a0-56761884c73a
 plot_data = PlotlyJS.plot(
-    scatter(x=df.Column3[faint_good_ind], y=df.Column4[faint_good_ind], mode="lines", name="Sine Wave"),
+    scatter(x=brightest10_16_Xvalues, y=brightest10_16_Yvalues, mode="markers", name="First XY"),
     Layout(
         width=img_width,
         height=img_height,
@@ -353,7 +366,7 @@ plot_data = PlotlyJS.plot(
 PlotlyJS.savefig(plot_data, "plot_image.png")
 
 # ╔═╡ d7f12f2e-24a6-4fdf-969a-bffde0cd221a
-plot_image = load("plot_image.png")
+plot_image = load(joinpath(projectdir("notebooks"), "plot_image.png"))
 
 # ╔═╡ 0f7487ef-674f-46cb-8988-ffdfe03e2061
 # plot_image_resized = imresize(plot_image, size(imgLoad))
@@ -377,10 +390,7 @@ size(plot_image_resized), size(imgLoad_final)
 
 # ╔═╡ 66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
 # overlay_img = imgLoad_final .* 0.7 .+ plot_image_resized .* 0.3
-overlay_img = clamped_retrieved .* 0.7 .+ plot_image_resized .* 0.3
-
-# ╔═╡ 2e4f26c4-29d7-4048-82b2-77e3cbd1fda4
-md"""!!! warning "rotation (via `imrotate`, commented out above), changes the type and then they cannot be added to produce `overlay_img` in the cell above." """
+overlay_img = clamped_retrieved .* 0.8 .+ plot_image_resized .* 0.2
 
 # ╔═╡ e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
 typeof(imgLoad_final)
@@ -434,9 +444,12 @@ size(overlay_img)
 # ╠═371147b6-a208-433c-b178-252c56a45a4f
 # ╠═19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
 # ╠═3223682d-a23e-4f5c-b4e2-d7687b6000f2
+# ╠═cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
+# ╠═adb799d7-882e-4359-909b-73fa3245c119
+# ╠═3ca641d7-765b-431a-a795-a3b85dd984fc
 # ╠═3b8d6f68-8169-4a2e-b17f-e88dc28030e0
+# ╠═47f8fee2-accb-4b59-9119-627c6d5be2fa
 # ╠═b051c08f-1699-4a30-acbe-b020b80d5844
-# ╠═361538e2-b080-4518-86e1-bd5501f54ab1
 # ╠═bf232544-54bb-448b-9521-c465250fed79
 # ╠═51535fb5-a470-460a-91a0-56761884c73a
 # ╠═71f2a83c-b130-4a6c-a2b4-8abe62f1745c
@@ -448,7 +461,6 @@ size(overlay_img)
 # ╠═63229acc-2b72-45ed-b950-388df215136c
 # ╠═3c94a86e-fb55-4875-a75d-0a31d8e604a5
 # ╠═66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
-# ╠═2e4f26c4-29d7-4048-82b2-77e3cbd1fda4
 # ╠═e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
 # ╠═36773c21-1e8c-4936-8f41-f9eef21bccdd
 # ╠═4ffe5f76-3986-4e76-a37e-9ef4ebb429fa

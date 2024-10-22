@@ -14,6 +14,20 @@ macro bind(def, element)
     end
 end
 
+# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
+begin
+	using DrWatson
+	md" ###### `using` DrWatson"
+end
+
+# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
+begin
+	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
+	projectDir = "Gitted/OlegIMBH"
+	project_path = joinpath(homedir(), projectDir)
+	quickactivate(project_path)
+end
+
 # ╔═╡ dce8dbce-c8b4-11ed-3263-65232dc16f8d
 begin
 	# using Base.Threads
@@ -70,20 +84,6 @@ begin
 	# using Unitful # ditto
 	md" ###### `using` packages"
 end	
-
-# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
-begin
-	using DrWatson
-	md" ###### `using` DrWatson"
-end
-
-# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
-begin
-	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
-	projectDir = "Gitted/OlegIMBH"
-	project_path = joinpath(homedir(), projectDir)
-	quickactivate(project_path)
-end
 
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
