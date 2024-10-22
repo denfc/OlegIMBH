@@ -34,7 +34,7 @@ begin
   	# using CSV v
   	# using DataFrames
   	# using DrWatson 
-  	# using FITSIO 
+  	using FITSIO 
   	# using FileIO 
   	using Images 
   	# using ImageIO
@@ -289,13 +289,13 @@ eltype(imgLoad)
 md"""!!! warning "retrieved saved appears to have rotated image compared to `load(file)`" """
 
 # ╔═╡ ee07a851-6e3d-4a04-ac69-cd7431059f49
-# f = FITS(imgFile)
+f = FITS(imgFile)
 
 # ╔═╡ b64c3398-3029-4679-ab94-e0749e255edc
 md"""!!! note "Here, at least, can just read it directly (see "true," below)." """
 
 # ╔═╡ ceb7f3d7-7465-4833-a666-95430795ec4e
-# AstroImage(f[2]) == AstroImage(imgFile)
+AstroImage(f[2]) == AstroImage(imgFile)
 
 # ╔═╡ 8f1138bb-86c1-42b7-ada7-51b10b71a77f
 # f[2]

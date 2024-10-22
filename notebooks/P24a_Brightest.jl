@@ -237,22 +237,39 @@ md" ### The Image "
 imgFilePath = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits"
 
 # ╔═╡ ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
-imgLoad = AstroImages.load(imgFilePath)
+# imgLoad = AstroImages.load(imgFilePath)
+imgLoad = AstroImages.AstroImage(imgFilePath)
 
 # ╔═╡ 113f37ab-9f05-4f80-b856-4a6beb2fe52a
 begin
-	imgLoad_rotated = ImageTransformations.imrotate(imgLoad, -π/2);
-	imgLoad_rotated_noOffset = OffsetArrays.no_offset_view(imgLoad_rotated);
+	# imgLoad_rotated = ImageTransformations.imrotate(imgLoad, -π/2)
+	# imgLoad_rotated_noOffset = OffsetArrays.no_offset_view(imgLoad_rotated)
 	# Clamp the values to the [0, 1] range
-    clamped_imgLoad = map(clamp01nan, imgLoad_rotated_noOffset);
-	save("clamped_img.png", Array(clamped_imgLoad))
+ 	# clamped_imgLoad = map(clamp01nan, imgLoad_rotated_noOffset)
+	# clamped_imgLoad = Array(clamped_imgLoad)
+    clamped_imgLoad = map(clamp01nan, imgLoad)
+	clamped_imgLoad = Array(clamped_imgLoad)
+	save("clamped_img.png", clamped_imgLoad)
+	# save("clamped_img.png", clamped_imgLoad)
 end
 
 # ╔═╡ 9e6de21f-3eb6-47d0-9ca7-671ecc54376e
 imview(clamped_imgLoad)
+# imview(Array(clamped_imgLoad)) has same orientation
 
 # ╔═╡ 0febb7c0-d295-4625-99ca-83f833558540
-	imgLoad_final = AstroImages.load(joinpath(projectdir(), "notebooks/clamped_img.png"))
+begin
+		imgLoad_retrieved = AstroImages.load(joinpath(projectdir(), "notebooks/clamped_img.png"))
+	# imgLoad_final = AstroImages.AstroImage(joinpath(projectdir(), "notebooks/clamped_img.png")) doesn't work
+		imgLoad_rotated = ImageTransformations.imrotate(imgLoad_retrieved, -π/2) # π)
+		imgLoad_final = OffsetArrays.no_offset_view(imgLoad_rotated)
+end
+
+# ╔═╡ 2a385a14-028d-4f24-a20f-47070cb5ebb4
+typeof(imgLoad_final)
+
+# ╔═╡ 15653ce5-f8b6-4836-92ce-7bf74663d360
+typeof(clamped_imgLoad)
 
 # ╔═╡ 3db9dafe-fa4a-481f-81d4-be9e142fe6e0
 typeof(imgLoad_final)
@@ -316,13 +333,16 @@ end
 # ╔═╡ 19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
 md" #####  `bright_good`"
 
+# ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
+nBrightest = 30
+
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
 	bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
 	bright16_good = bright16[bright_good_ind]
 	bright29_good = bright29[bright_good_ind]
-	brightest10_16 = sort(bright16_good)[1:20]
-	brightest10_29 = sort(bright29_good)[1:20]
+	brightest10_16 = sort(bright16_good)[1:nBrightest]
+	brightest10_29 = sort(bright29_good)[1:nBrightest]
 	brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
 	brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
 	brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
@@ -346,7 +366,7 @@ begin
 	binSize = 0.5
 	xT, xL, yends, yT, yL, y_fit = logXFitHisto(Array(bright16_good), binSize, true)
 	plt = Plots.plot(y_fit, seriestype=:steppost)
-end
+end;
 
 # ╔═╡ a4f55b1c-52ed-43da-a7c3-35d15259455c
 extrema(Array(bright16_good))
@@ -373,7 +393,7 @@ l_faint = Layout(
 
 # ╔═╡ 51535fb5-a470-460a-91a0-56761884c73a
 plot_data = PlotlyJS.plot(
-    PlotlyJS.scatter(x=brightest10_16_Xvalues, y=brightest10_16_Yvalues, mode="markers", name="First XY"),
+    PlotlyJS.scatter(x=brightest10_29_Xvalues, y=brightest10_29_Yvalues, mode="markers", name="First XY"),
     Layout(
         width=img_width,
         height=img_height,
@@ -421,7 +441,7 @@ typeof(plot_image_resized)
 size(plot_image_resized), size(imgLoad_final)
 
 # ╔═╡ 66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
-overlay_img = imgLoad_final .* 0.5 .+ plot_image_resized .* 0.5
+overlay_img = imgLoad_final .* 0.4 .+ plot_image_resized .* 0.6
 # overlay_img = clamped_retrieved .* 0.6 .+ plot_image_resized .* 0.4
 
 # ╔═╡ e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
@@ -460,6 +480,8 @@ size(overlay_img)
 # ╠═113f37ab-9f05-4f80-b856-4a6beb2fe52a
 # ╠═9e6de21f-3eb6-47d0-9ca7-671ecc54376e
 # ╠═0febb7c0-d295-4625-99ca-83f833558540
+# ╠═2a385a14-028d-4f24-a20f-47070cb5ebb4
+# ╠═15653ce5-f8b6-4836-92ce-7bf74663d360
 # ╠═3db9dafe-fa4a-481f-81d4-be9e142fe6e0
 # ╠═1aa44815-bb46-42f4-b442-9df96cc2bc98
 # ╠═6fcd8c85-75f9-4f00-ab6f-8bf2f57afa7c
@@ -477,6 +499,7 @@ size(overlay_img)
 # ╠═0f161eaf-d624-4361-b305-62ad1a9b6df6
 # ╠═371147b6-a208-433c-b178-252c56a45a4f
 # ╠═19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
+# ╠═6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
 # ╠═3223682d-a23e-4f5c-b4e2-d7687b6000f2
 # ╠═cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
 # ╠═07c4870f-499c-49a3-9532-025ef4b2de00
