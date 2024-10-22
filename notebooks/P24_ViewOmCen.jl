@@ -14,20 +14,6 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
-begin
-	using DrWatson
-	md" ###### `using` DrWatson"
-end
-
-# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
-begin
-	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
-	projectDir = "Gitted/OlegIMBH"
-	project_path = joinpath(homedir(), projectDir)
-	quickactivate(project_path)
-end
-
 # ╔═╡ dce8dbce-c8b4-11ed-3263-65232dc16f8d
 begin
 	# using Base.Threads
@@ -84,6 +70,20 @@ begin
 	# using Unitful # ditto
 	md" ###### `using` packages"
 end	
+
+# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
+begin
+	using DrWatson
+	md" ###### `using` DrWatson"
+end
+
+# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
+begin
+	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
+	projectDir = "Gitted/OlegIMBH"
+	project_path = joinpath(homedir(), projectDir)
+	quickactivate(project_path)
+end
 
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
@@ -286,7 +286,7 @@ eltype(imgLoad)
 	# imgAI_array = Float64.(imgAI)
 
 # ╔═╡ 9ae25e5e-cad1-4d60-afaf-0ae03c7e4124
-md"""!!! warning "`AstroImage(file)` appears to have rotated image compared to `load(file)`" """
+md"""!!! warning "retrieved saved appears to have rotated image compared to `load(file)`" """
 
 # ╔═╡ ee07a851-6e3d-4a04-ac69-cd7431059f49
 # f = FITS(imgFile)

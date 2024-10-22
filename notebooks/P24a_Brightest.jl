@@ -20,7 +20,7 @@ begin
 	using Revise
 	using PlutoUI
 	# using Dates
-	# using Plots
+	using Plots
 	using PlotlyJS
 	using PlutoPlotly
 	# using PlotThemes  # PlotThemes needs Plots to work.
@@ -42,16 +42,16 @@ begin
 	# using Base64
     # using JLD2
   	# using NearestNeighbors 
-	# using StatsBase # needed for F12, and for some reason get error message in the call to F12 despite it being there
+	using StatsBase # needed for F12, and for some reason get error message in the call to F12 despite it being there
 		# not using FI2 these days, so leaving it out
 	# using StatsPlots # why do we need this one?
-	# using Statistics
+	using Statistics
 	# using HDF5
-	# using LinearAlgebra # needed for `norm` of vector
+	using LinearAlgebra # needed for `norm` of vector
 	# using ImageBinarization
 	# using ColorVectorSpace # must be included already somewhere --- loaded in few hundred microseconds
 	# using IndirectArrays
-	# using OffsetArrays
+	using OffsetArrays
 	# using SparseArrays # ? also quick load here, but wasn't being accessed?  check
 	# using StaticArrays # didn't improve speed on fractal calculation
 	# using ReferenceFrameRotations
@@ -83,6 +83,15 @@ begin
 	projectDir = "Gitted/OlegIMBH"
 	project_path = joinpath(homedir(), projectDir)
 	quickactivate(project_path)
+end
+
+# ╔═╡ 21c7fe2b-631b-46aa-8e77-a2a350c825c4
+begin
+	include(srcdir("GalCen/logXFitHisto.jl"))
+	# using Statistics
+	# using StatsBase
+	# using LinearAlgebra
+	# using Plots
 end
 
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -230,6 +239,24 @@ imgFilePath = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/OmegaCen/jw04343-o002_t
 # ╔═╡ ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
 imgLoad = AstroImages.load(imgFilePath)
 
+# ╔═╡ 113f37ab-9f05-4f80-b856-4a6beb2fe52a
+begin
+	imgLoad_rotated = ImageTransformations.imrotate(imgLoad, -π/2);
+	imgLoad_rotated_noOffset = OffsetArrays.no_offset_view(imgLoad_rotated);
+	# Clamp the values to the [0, 1] range
+    clamped_imgLoad = map(clamp01nan, imgLoad_rotated_noOffset);
+	save("clamped_img.png", Array(clamped_imgLoad))
+end
+
+# ╔═╡ 9e6de21f-3eb6-47d0-9ca7-671ecc54376e
+imview(clamped_imgLoad)
+
+# ╔═╡ 0febb7c0-d295-4625-99ca-83f833558540
+	imgLoad_final = AstroImages.load(joinpath(projectdir(), "notebooks/clamped_img.png"))
+
+# ╔═╡ 3db9dafe-fa4a-481f-81d4-be9e142fe6e0
+typeof(imgLoad_final)
+
 # ╔═╡ 1aa44815-bb46-42f4-b442-9df96cc2bc98
 typeof(imgLoad)
 
@@ -238,14 +265,6 @@ display(imgLoad)
 
 # ╔═╡ 5029ac6f-3ec8-4b01-994c-3626ce018abe
 extrema(imgLoad)
-
-# ╔═╡ e713665b-776d-4af8-b764-7c74f5417174
-# Clamp the values to the [0, 1] range
-clamped_imgLoad = map(clamp01nan, imgLoad);
-
-# ╔═╡ fadf3bc6-12b0-4e62-a25c-df46ab42f1f3
-# save it as a file
-save("clamped_imgLoad.png", clamped_imgLoad)
 
 # ╔═╡ b0d3aac7-4936-4433-b11e-60586e1666bf
 typeof(clamped_imgLoad)
@@ -302,8 +321,8 @@ begin
 	bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
 	bright16_good = bright16[bright_good_ind]
 	bright29_good = bright29[bright_good_ind]
-	brightest10_16 = sort(bright16_good, rev=true)[1:10]
-	brightest10_29 = sort(bright29_good, rev=true)[1:10]
+	brightest10_16 = sort(bright16_good)[1:20]
+	brightest10_29 = sort(bright29_good)[1:20]
 	brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
 	brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
 	brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
@@ -313,17 +332,33 @@ end
 # ╔═╡ cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
 length(bright_good_ind)
 
-# ╔═╡ adb799d7-882e-4359-909b-73fa3245c119
-brightest10_29
+# ╔═╡ 07c4870f-499c-49a3-9532-025ef4b2de00
+typeof(bright16_good)
+
+# ╔═╡ 101b6526-edac-4b55-b98c-df586bf643dc
+Array(bright16_good)
+
+# ╔═╡ d2b940de-2302-4560-a29d-5ddea2ac47e4
+brightest10_16
+
+# ╔═╡ 5b242578-8a2e-463b-b418-c7747d75594c
+begin
+	binSize = 0.5
+	xT, xL, yends, yT, yL, y_fit = logXFitHisto(Array(bright16_good), binSize, true)
+	plt = Plots.plot(y_fit, seriestype=:steppost)
+end
+
+# ╔═╡ a4f55b1c-52ed-43da-a7c3-35d15259455c
+extrema(Array(bright16_good))
 
 # ╔═╡ 3ca641d7-765b-431a-a795-a3b85dd984fc
 length(brightest10_16_Yvalues)
 
+# ╔═╡ 47f8fee2-accb-4b59-9119-627c6d5be2fa
+length(findall(x-> x==99.999, bright16_good))
+
 # ╔═╡ 3b8d6f68-8169-4a2e-b17f-e88dc28030e0
 length(bright_good_ind)
-
-# ╔═╡ 47f8fee2-accb-4b59-9119-627c6d5be2fa
-length(findall(x-> x==99.999, bright29_good))
 
 # ╔═╡ b051c08f-1699-4a30-acbe-b020b80d5844
 extrema(bright16)
@@ -338,7 +373,7 @@ l_faint = Layout(
 
 # ╔═╡ 51535fb5-a470-460a-91a0-56761884c73a
 plot_data = PlotlyJS.plot(
-    scatter(x=brightest10_16_Xvalues, y=brightest10_16_Yvalues, mode="markers", name="First XY"),
+    PlotlyJS.scatter(x=brightest10_16_Xvalues, y=brightest10_16_Yvalues, mode="markers", name="First XY"),
     Layout(
         width=img_width,
         height=img_height,
@@ -366,15 +401,12 @@ plot_data = PlotlyJS.plot(
 PlotlyJS.savefig(plot_data, "plot_image.png")
 
 # ╔═╡ d7f12f2e-24a6-4fdf-969a-bffde0cd221a
-plot_image = load(joinpath(projectdir("notebooks"), "plot_image.png"))
+plot_image = load(joinpath(projectdir("notebooks"), "plot_image.png"));
 
 # ╔═╡ 0f7487ef-674f-46cb-8988-ffdfe03e2061
-# plot_image_resized = imresize(plot_image, size(imgLoad))
-plot_image_resized = imresize(plot_image, size(clamped_imgLoad));
+plot_image_resized = imresize(plot_image, size(imgLoad_final))
+# plot_image_resized = imresize(plot_image, size(imgLoad_rotated));
 # plot_image_resized = imresize(plot_image, size(imgAI_array)) NO GO AFTER ROTATION
-
-# ╔═╡ 94efbdc4-26dd-4047-a1af-506fd9442911
-imgLoad_final = Array(clamped_imgLoad);
 
 # ╔═╡ a01c01f0-2ac8-491c-9e1a-494d06f8bf86
 typeof(clamped_imgLoad)
@@ -389,8 +421,8 @@ typeof(plot_image_resized)
 size(plot_image_resized), size(imgLoad_final)
 
 # ╔═╡ 66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
-# overlay_img = imgLoad_final .* 0.7 .+ plot_image_resized .* 0.3
-overlay_img = clamped_retrieved .* 0.8 .+ plot_image_resized .* 0.2
+overlay_img = imgLoad_final .* 0.5 .+ plot_image_resized .* 0.5
+# overlay_img = clamped_retrieved .* 0.6 .+ plot_image_resized .* 0.4
 
 # ╔═╡ e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
 typeof(imgLoad_final)
@@ -425,11 +457,13 @@ size(overlay_img)
 # ╟─729f54ab-b4a4-40c3-8ccd-cc4e85829fb3
 # ╠═cd2b0c75-c8e3-4101-936a-78ae97d72ddc
 # ╠═ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
+# ╠═113f37ab-9f05-4f80-b856-4a6beb2fe52a
+# ╠═9e6de21f-3eb6-47d0-9ca7-671ecc54376e
+# ╠═0febb7c0-d295-4625-99ca-83f833558540
+# ╠═3db9dafe-fa4a-481f-81d4-be9e142fe6e0
 # ╠═1aa44815-bb46-42f4-b442-9df96cc2bc98
 # ╠═6fcd8c85-75f9-4f00-ab6f-8bf2f57afa7c
 # ╠═5029ac6f-3ec8-4b01-994c-3626ce018abe
-# ╠═e713665b-776d-4af8-b764-7c74f5417174
-# ╠═fadf3bc6-12b0-4e62-a25c-df46ab42f1f3
 # ╠═b0d3aac7-4936-4433-b11e-60586e1666bf
 # ╠═08957b28-eda3-44a1-91e4-0f527a24e329
 # ╠═31225053-43f7-4798-9f89-8d7cb25d16bc
@@ -445,17 +479,21 @@ size(overlay_img)
 # ╠═19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
 # ╠═3223682d-a23e-4f5c-b4e2-d7687b6000f2
 # ╠═cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
-# ╠═adb799d7-882e-4359-909b-73fa3245c119
+# ╠═07c4870f-499c-49a3-9532-025ef4b2de00
+# ╠═101b6526-edac-4b55-b98c-df586bf643dc
+# ╠═d2b940de-2302-4560-a29d-5ddea2ac47e4
+# ╠═21c7fe2b-631b-46aa-8e77-a2a350c825c4
+# ╠═5b242578-8a2e-463b-b418-c7747d75594c
+# ╠═a4f55b1c-52ed-43da-a7c3-35d15259455c
 # ╠═3ca641d7-765b-431a-a795-a3b85dd984fc
-# ╠═3b8d6f68-8169-4a2e-b17f-e88dc28030e0
 # ╠═47f8fee2-accb-4b59-9119-627c6d5be2fa
+# ╠═3b8d6f68-8169-4a2e-b17f-e88dc28030e0
 # ╠═b051c08f-1699-4a30-acbe-b020b80d5844
 # ╠═bf232544-54bb-448b-9521-c465250fed79
 # ╠═51535fb5-a470-460a-91a0-56761884c73a
 # ╠═71f2a83c-b130-4a6c-a2b4-8abe62f1745c
 # ╠═d7f12f2e-24a6-4fdf-969a-bffde0cd221a
 # ╠═0f7487ef-674f-46cb-8988-ffdfe03e2061
-# ╠═94efbdc4-26dd-4047-a1af-506fd9442911
 # ╠═a01c01f0-2ac8-491c-9e1a-494d06f8bf86
 # ╠═ebc0cbf0-21d5-4c12-954b-6345adda07fd
 # ╠═63229acc-2b72-45ed-b950-388df215136c
