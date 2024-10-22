@@ -317,12 +317,13 @@ md"""
 #### `P23_IMBH_Histo`
 !!! note "Plotted distances of nearest neighbors, confirming the function was working correctly."
 #### `P24_ViewOmCen`
+!!! danger "corrections needed ("load" was "capped")"
 !!! note "To get a handle on plotting points on an image."
     - Because of rotation (why? see below), `using ImageTransformations` and `OffsetArrays` as well as the usual image packages: `Astroimages`.  Only need `FITSIO` if want to see all the information inside the fits file (which you may).
 	- After executing full Plotly "Logo" example (link above), spent time messing with my fits image, but didn't get it work and decided to try another tack of simply overlaying files."
 !!! tip "Using `AstroImages.load(file)` rather than `AstroImages.AstroImage(file)` allows simple addition of one file to another."
 	- Assume that the image loaded with `AstroImage` has the correct orientation, and rotate the image loaded with `load` to match it.  The rotation causes type-matching problems that require a couple of functions to correct so that the "overlay" addition can succeed.
-	- `load` gives a black and white image: `typeof(imgLoad)`: Matrix{Gray{N0f8}} (alias for Array{Gray{Normed{UInt8, 8}}, 2}), whereas `typeof(imgAI)` yields
+	- `load` here gave a black and white image because it had been clamped!: `typeof(imgLoad)`: Matrix{Gray{N0f8}} (alias for Array{Gray{Normed{UInt8, 8}}, 2}), whereas `typeof(imgAI)` yields
 AstroImageMat{Float32, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}, Y{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}}, Tuple{}, Matrix{Float32}, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}, Y{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}}} (alias for AstroImage{Float32, 2, Tuple{X{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}, Y{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}}, Tuple{}, Array{Float32, 2}, Tuple{X{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}, Y{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}}})
 
 !!! tip ""
@@ -331,6 +332,20 @@ AstroImageMat{Float32, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regu
 	  - can finally add the two together: `overlay_img = imgLoad_final .* 0.7 .+ plot_image_resized .* 0.3`
 !!! note ""
 	- Next step is to plot the four (?) brightest to see if the -90 degree rotation is indeed correct.
+"""
+
+# ╔═╡ ad919d5a-e732-4a87-80a8-4e7023558a45
+md"""
+The change in type of clamped_imgLoad to Matrix{Gray{N0f8}} after saving and re-loading is due to the way image data is handled by the save and load functions in the AstroImages package. Here's a step-by-step explanation:
+
+Initial Type: When clamped_imgLoad is created using map(clamp01nan, imgLoad), it retains the type of the original imgLoad array, but with values clamped to the [0, 1] range.
+
+Saving the Image: The save function converts the in-memory image data to a format suitable for storage in a PNG file. This process typically involves converting the image data to a standard format, such as an array of Gray{N0f8} values, where N0f8 represents an 8-bit normalized floating-point number (i.e., values between 0 and 1 stored as 8-bit integers).
+
+Loading the Image: When the image is loaded back using AstroImages.load, the data is read from the PNG file and converted back into a Julia array. The AstroImages package interprets the PNG data as a Matrix{Gray{N0f8}}, which is a common representation for grayscale images.
+
+Summary
+The type change occurs because the save function converts the image data to a standard format for storage, and the load function reads this format back into a Julia array. The Matrix{Gray{N0f8}} type is a standard representation for grayscale images in the AstroImages package.
 """
 
 # ╔═╡ Cell order:
@@ -354,4 +369,5 @@ AstroImageMat{Float32, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regu
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
 # ╟─c3b4a98c-4025-43bf-96dc-2b3c9b376c59
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
-# ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
+# ╠═4d9abf6c-4385-41c5-9361-463d5549ac44
+# ╠═ad919d5a-e732-4a87-80a8-4e7023558a45

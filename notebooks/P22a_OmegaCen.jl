@@ -117,17 +117,20 @@ begin
 	faint_Q444_flag = df.Column37[faint_ind]
 end
 
+# ╔═╡ 9ebc2ade-4050-4a02-8e58-0a2e9cf0865c
+md" #####  `faint_good`"
+
 # ╔═╡ 0e76b9b2-1393-40d0-9fa3-e94368333ae8
-faint_good = findall(i -> faint_SNR[i] >= 4 && faint_Crowding[i] <= 2.25 && faint_SharpSq[i] <= 2.25 && faint_Q200_flag[i] <= 3 && faint_Q444_flag[i] <= 3, 1:length(faint_ind) ) 
+faint_good_ind = findall(i -> faint_SNR[i] >= 4 && faint_Crowding[i] <= 2.25 && faint_SharpSq[i] <= 2.25 && faint_Q200_flag[i] <= 3 && faint_Q444_flag[i] <= 3, 1:length(faint_ind) ) 
 
 # ╔═╡ 787c3072-88d8-4085-a915-19ef94326e9d
-length(faint_good)
+length(faint_good_ind)
 
 # ╔═╡ 4c4b9bdc-66c2-4dbe-a13a-32508a408ea5
 extrema(faint16)
 
 # ╔═╡ 2688062b-3c47-4229-ad1b-2cd64233f845
-p = scatter(y = faint16[faint_good], x = faint16[faint_good] .- faint29[faint_good], mode = "markers")
+p = scatter(y = faint16[faint_good_ind], x = faint16[faint_good_ind] .- faint29[faint_good_ind], mode = "markers")
 
 # ╔═╡ 9421829a-0ae5-411f-80f0-63c5ad7c06b0
 l_faint = Layout(
@@ -301,6 +304,7 @@ md" # Bottom Cell"
 # ╠═a9d9c3e0-ce88-4219-9f5e-e6cfa05b9700
 # ╠═cde8a2bc-3f0f-4915-8bd9-4efead766dba
 # ╠═b9244582-6992-4416-aea8-f2b4f1e0db5f
+# ╠═9ebc2ade-4050-4a02-8e58-0a2e9cf0865c
 # ╠═0e76b9b2-1393-40d0-9fa3-e94368333ae8
 # ╠═787c3072-88d8-4085-a915-19ef94326e9d
 # ╠═4c4b9bdc-66c2-4dbe-a13a-32508a408ea5

@@ -414,6 +414,9 @@ overlay_img = imgLoad_final .* 0.7 .+ plot_image_resized .* 0.3
 # ╔═╡ 2e4f26c4-29d7-4048-82b2-77e3cbd1fda4
 md"""!!! warning "rotation (via `imrotate`, commented out above), changes the type and then they cannot be added to produce `overlay_img` in the cell above." """
 
+# ╔═╡ 5a876aac-7f1a-430e-a8fa-20f21cd75030
+typeof(imgLoad)
+
 # ╔═╡ ef496bb9-b004-462c-95b5-bec8cc7664bf
 typeof(imgLoad_rotated)
 
@@ -479,6 +482,7 @@ size(overlay_img)
 # ╠═3c94a86e-fb55-4875-a75d-0a31d8e604a5
 # ╠═66287ca0-bb84-4d0a-a5ac-b2b84b6067e5
 # ╠═2e4f26c4-29d7-4048-82b2-77e3cbd1fda4
+# ╠═5a876aac-7f1a-430e-a8fa-20f21cd75030
 # ╠═ef496bb9-b004-462c-95b5-bec8cc7664bf
 # ╠═e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
 # ╠═36773c21-1e8c-4936-8f41-f9eef21bccdd
