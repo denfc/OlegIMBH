@@ -352,10 +352,21 @@ md"""
 # ╔═╡ 8e6c876b-5a59-43e8-9661-c16c467b834e
 md"""
 ### DS9 (23 October)
-
-[Installation here](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
 !!! note ""
+    [Linux installation instructions here.](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
+	  - ["Regions" here](https://ds9.si.edu/doc/ref/region.html)
+!!! tip ""
 	- ds9 & # in bash
+      - might have also needed `sudo apt-get install saods9 libxpa-dev`
+	- first program: /home/dfc123/Gitted/OlegIMBH/scripts/DS9_RegionTest.jl
+	  - can override `global` colors with local ones, e.g.,
+
+\# global color=red  # green is default\
+circle 1004 175.8280288184799 10 # x y radius\
+circle 1005 976.4864929248429 10 # x y radius\
+circle 1006 232.47290954159294 10 # color = red\
+circle 1007 734.6312878220773 10 # x y radius\
+circle 1008 370.2739336160197 10 # x y radius\
 """
 
 # ╔═╡ Cell order:

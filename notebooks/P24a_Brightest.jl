@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.0
+# v0.20.1
 
 using Markdown
 using InteractiveUtils
@@ -372,7 +372,7 @@ end;
 extrema(Array(bright16_good))
 
 # ╔═╡ 3ca641d7-765b-431a-a795-a3b85dd984fc
-length(brightest10_16_Yvalues)
+length(brightest10_16_Yvalues), typeof(brightest10_16_Yvalues)
 
 # ╔═╡ 47f8fee2-accb-4b59-9119-627c6d5be2fa
 length(findall(x-> x==99.999, bright16_good))
