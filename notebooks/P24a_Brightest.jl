@@ -94,6 +94,12 @@ begin
 	# using Plots
 end
 
+# ╔═╡ 326975a2-b8b6-4b72-a467-d33a7f959370
+begin	
+	include(srcdir("writeDS9RegFile.jl"))
+	include(srcdir("verifyRegFileSent.jl"))
+end
+
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
 
@@ -334,7 +340,7 @@ end
 md" #####  `bright_good`"
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
-nBrightest = 30
+nBrightest = 1
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
@@ -453,6 +459,51 @@ typeof(plot_image_resized)
 # ╔═╡ 4ffe5f76-3986-4e76-a37e-9ef4ebb429fa
 size(overlay_img)
 
+# ╔═╡ 24746ec1-99fd-45b4-b588-c00e50485527
+md"# DS9"
+
+# ╔═╡ f3e96016-21d8-49fa-a10b-8af5c3e6299a
+begin
+	import SAOImageDS9
+	const sao = SAOImageDS9
+	
+	# Connect to DS9
+	sao.connect()
+end
+
+# ╔═╡ 43d073eb-8c37-48c3-a69c-da632ec2838d
+begin
+	regFile_1 = DS9_writeRegionFile(brightest10_16_Xvalues, brightest10_16_Yvalues, 25, "F200"; color = green)
+	regFile_2 = DS9_writeRegionFile(brightest10_29_Xvalues, brightest10_29_Yvalues, 25, "F444"; color = red)
+end
+
+# ╔═╡ 8bb7f9c8-c356-4941-a3a8-dbf9f629498b
+begin
+    # Delete all regions before sending new ones
+    sao.set("regions", "delete all")
+    println("All regions deleted successfully.")
+	DS9_SendAndVerify(regFile_1)
+	DS9_SendAndVerify(regFile_2)
+end
+
+# ╔═╡ 2c8480c7-9c28-416e-848d-b8456c58539b
+sort(bright16_good)[1:nBrightest]
+
+# ╔═╡ b9f31c3b-900d-4dc3-b310-740977bea1c1
+bright_good_ind
+
+# ╔═╡ 49ebb357-ff18-4546-a423-0b3ae6536895
+findmin(df.Column29)
+
+# ╔═╡ f6715f7b-8fe7-4913-93d3-afb23fa6f520
+df[4136, :]
+
+# ╔═╡ bd697c8d-a227-4eaa-8a12-8398a7c84eba
+df[2142, :]
+
+# ╔═╡ 06750c4f-703f-4b9b-8e87-60ad48e56af4
+bright_ind[2401]
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
 # ╠═754dbb34-631a-4aea-8660-443f70f11ea9
@@ -525,3 +576,14 @@ size(overlay_img)
 # ╠═e3b63ea6-7eed-4cde-928d-4ed2d7e14d60
 # ╠═36773c21-1e8c-4936-8f41-f9eef21bccdd
 # ╠═4ffe5f76-3986-4e76-a37e-9ef4ebb429fa
+# ╠═24746ec1-99fd-45b4-b588-c00e50485527
+# ╠═f3e96016-21d8-49fa-a10b-8af5c3e6299a
+# ╠═326975a2-b8b6-4b72-a467-d33a7f959370
+# ╠═43d073eb-8c37-48c3-a69c-da632ec2838d
+# ╠═8bb7f9c8-c356-4941-a3a8-dbf9f629498b
+# ╠═2c8480c7-9c28-416e-848d-b8456c58539b
+# ╠═b9f31c3b-900d-4dc3-b310-740977bea1c1
+# ╠═49ebb357-ff18-4546-a423-0b3ae6536895
+# ╠═f6715f7b-8fe7-4913-93d3-afb23fa6f520
+# ╠═bd697c8d-a227-4eaa-8a12-8398a7c84eba
+# ╠═06750c4f-703f-4b9b-8e87-60ad48e56af4

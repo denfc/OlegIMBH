@@ -1,0 +1,4 @@
+# Region file format: DS9 version 8.5.0
+# green is default but, e.g., could use `global color=red`; format: x y radius 
+global color=green
+circle 2492.11 2341.69 25

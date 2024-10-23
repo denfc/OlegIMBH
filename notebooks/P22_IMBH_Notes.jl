@@ -353,8 +353,9 @@ md"""
 md"""
 ### DS9 (23 October)
 !!! note ""
-    [Linux installation instructions here.](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
-	  - ["Regions" here](https://ds9.si.edu/doc/ref/region.html)
+    [(Julia) Linux installation instructions here.](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
+	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0)  
+	- [SAO "Regions" here.](https://ds9.si.edu/doc/ref/region.html)
 !!! tip ""
 	- ds9 & # in bash
       - might have also needed `sudo apt-get install saods9 libxpa-dev`

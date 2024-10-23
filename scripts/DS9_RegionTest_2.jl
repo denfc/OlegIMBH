@@ -12,4 +12,6 @@ x = [1000., 3000, 500, 700, 900]
 y = x
 
 regFile = DS9_writeRegionFile(x, y, 10)
+# Can delete all previous regions before sending new ones
+sao.set("regions", "delete all")
 DS9_SendAndVerify(regFile)
