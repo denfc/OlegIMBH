@@ -2,7 +2,7 @@
 
 julia_version = "1.11.1"
 manifest_format = "2.0"
-project_hash = "312e37d5faf2b974da5ae1b938b41d0b7f0590f5"
+project_hash = "23ff1bffc02391af5df9182756f0758de2ae776f"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -270,9 +270,9 @@ version = "0.7.6"
 
 [[deps.ColorSchemes]]
 deps = ["ColorTypes", "ColorVectorSpace", "Colors", "FixedPointNumbers", "PrecompileTools", "Random"]
-git-tree-sha1 = "b5278586822443594ff615963b0c09755771b3e0"
+git-tree-sha1 = "13951eb68769ad1cd460cdb2e64e5e95f1bf123d"
 uuid = "35d6a980-a343-548e-a6ea-1d62b119f2f4"
-version = "3.26.0"
+version = "3.27.0"
 
 [[deps.ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
@@ -452,9 +452,9 @@ version = "0.27.9"
 
 [[deps.Distances]]
 deps = ["LinearAlgebra", "Statistics", "StatsAPI"]
-git-tree-sha1 = "66c4c81f259586e8f002eacebc177e1fb06363b0"
+git-tree-sha1 = "c7e3a542b999843086e2f29dac96a618c105be1d"
 uuid = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
-version = "0.10.11"
+version = "0.10.12"
 weakdeps = ["ChainRulesCore", "SparseArrays"]
 
     [deps.Distances.extensions]
@@ -1590,15 +1590,15 @@ version = "1.40.7"
 
 [[deps.Pluto]]
 deps = ["Base64", "Configurations", "Dates", "Downloads", "ExpressionExplorer", "FileWatching", "FuzzyCompletions", "HTTP", "HypertextLiteral", "InteractiveUtils", "Logging", "LoggingExtras", "MIMEs", "Malt", "Markdown", "MsgPack", "Pkg", "PlutoDependencyExplorer", "PrecompileSignatures", "PrecompileTools", "REPL", "RegistryInstances", "RelocatableFolders", "Scratch", "Sockets", "TOML", "Tables", "URIs", "UUIDs"]
-git-tree-sha1 = "7bfacc26d134744edc825f1434abca4960f53936"
+git-tree-sha1 = "274f6900eb612a173104cddfe60ec95f72b6e379"
 uuid = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
-version = "0.20.0"
+version = "0.20.1"
 
 [[deps.PlutoDependencyExplorer]]
 deps = ["ExpressionExplorer", "InteractiveUtils", "Markdown"]
-git-tree-sha1 = "4bc5284f77d731196d3e97f23abb732ad6f2a6e4"
+git-tree-sha1 = "592470bdf383cd34e88a21bbd7f1f7ffc52a21c6"
 uuid = "72656b73-756c-7461-726b-72656b6b696b"
-version = "1.0.4"
+version = "1.1.0"
 
 [[deps.PlutoPlotly]]
 deps = ["AbstractPlutoDingetjes", "Artifacts", "ColorSchemes", "Colors", "Dates", "Downloads", "HypertextLiteral", "InteractiveUtils", "LaTeXStrings", "Markdown", "Pkg", "PlotlyBase", "PrecompileTools", "Reexport", "ScopedValues", "Scratch", "TOML"]
@@ -1806,6 +1806,14 @@ weakdeps = ["RecipesBase"]
 
     [deps.Rotations.extensions]
     RotationsRecipesBaseExt = "RecipesBase"
+
+[[deps.SAOImageDS9]]
+deps = ["TwoDimensional", "XPA"]
+git-tree-sha1 = "eebadad1368211ace56867287d6dcb620d0c6c8b"
+repo-rev = "master"
+repo-url = "https://github.com/JuliaAstro/SAOImageDS9.jl"
+uuid = "dbce9b26-8eb4-4825-964b-d4940cf8daff"
+version = "0.2.0"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -2066,6 +2074,12 @@ git-tree-sha1 = "7822b97e99a1672bfb1b49b668a6d46d58d8cbcb"
 uuid = "410a4b4d-49e4-4fbc-ab6d-cb71b17b3775"
 version = "0.1.9"
 
+[[deps.TwoDimensional]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "11e927e476d669e3039c26bc629cacfbeb4bbf36"
+uuid = "1907e7ba-7586-4310-a2ba-dd01462aeb50"
+version = "0.2.1"
+
 [[deps.URIs]]
 git-tree-sha1 = "67db6cc7b3821e19ebe75791a9dd19c9b1188f2b"
 uuid = "5c2747f8-b7ea-4ff2-ba2e-563bfd36b1d4"
@@ -2195,6 +2209,18 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Zlib_jll"]
 git-tree-sha1 = "1165b0443d0eca63ac1e32b8c0eb69ed2f4f8127"
 uuid = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
 version = "2.13.3+0"
+
+[[deps.XPA]]
+deps = ["XPA_jll"]
+git-tree-sha1 = "798c1bf472475e8cc83132a562efa529b7c3cece"
+uuid = "d310a076-6a08-52b6-ab78-79baa254182b"
+version = "0.2.1"
+
+[[deps.XPA_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "be95a40dfb1f7ce0f6b045b264bb88bebec79d0a"
+uuid = "9dbca590-e19a-5566-89a8-3997bfd21c58"
+version = "2.1.21+0"
 
 [[deps.XSLT_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgcrypt_jll", "Libgpg_error_jll", "Libiconv_jll", "XML2_jll", "Zlib_jll"]
