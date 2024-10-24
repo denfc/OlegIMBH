@@ -340,7 +340,7 @@ end
 md" #####  `bright_good`"
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
-nBrightest = 1
+nBrightest = 20
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
@@ -546,10 +546,10 @@ bright_ind[2401]
 # ╠═c47856aa-0255-408c-9ead-eff29e633574
 # ╠═514c8233-455e-4cbb-be92-ca4cef018d54
 # ╠═09c94891-f9c1-4437-811c-db553c7dd3a2
+# ╠═19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
 # ╠═3ecc7ee6-20c2-45fb-89c5-8ff0470dbd5c
 # ╠═0f161eaf-d624-4361-b305-62ad1a9b6df6
 # ╠═371147b6-a208-433c-b178-252c56a45a4f
-# ╠═19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
 # ╠═6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
 # ╠═3223682d-a23e-4f5c-b4e2-d7687b6000f2
 # ╠═cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
