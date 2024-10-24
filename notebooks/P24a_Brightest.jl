@@ -34,7 +34,7 @@ begin
   	using CSV
   	using DataFrames
   	# using DrWatson 
-  	# using FITSIO 
+  	using FITSIO 
   	# using FileIO 
   	using Images 
   	# using ImageIO
@@ -244,9 +244,20 @@ md" ### The Image "
 # ╔═╡ cd2b0c75-c8e3-4101-936a-78ae97d72ddc
 imgFilePath = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits"
 
+# ╔═╡ d8cd93c0-1523-4e76-bad6-4979655b14c3
+FITS(imgFilePath)
+
+# ╔═╡ ae5c6ccc-1902-46ce-a0fb-6a126f8b66c1
+md"""
+!!! danger "`imgLoad` is what you knew as  `imgAI`"
+"""
+
 # ╔═╡ ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
 # imgLoad = AstroImages.load(imgFilePath)
 imgLoad = AstroImages.AstroImage(imgFilePath)
+
+# ╔═╡ 0a1d1c00-b01d-45cc-9d82-bc7dde9827b3
+AstroImages.header(imgLoad)
 
 # ╔═╡ 113f37ab-9f05-4f80-b856-4a6beb2fe52a
 begin
@@ -328,8 +339,8 @@ bright_ind = findall(x -> x == 1, df.Column11)
 
 # ╔═╡ 0f161eaf-d624-4361-b305-62ad1a9b6df6
 begin
-	bright16 = df[:, :Column16][bright_ind]
-	bright29 = df[:, :Column29][bright_ind]
+	bright16 = df[!, :Column16][bright_ind]
+	bright29 = df[!, :Column29][bright_ind]
 end
 
 # ╔═╡ 371147b6-a208-433c-b178-252c56a45a4f
@@ -342,7 +353,7 @@ begin
 end
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
-nBrightest = 20
+nBrightest = 3
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
@@ -504,14 +515,38 @@ sao.connect()
 # ╔═╡ 2c8480c7-9c28-416e-848d-b8456c58539b
 sort(bright16_good)[1:nBrightest]
 
+# ╔═╡ 0e3ae6a4-011b-4d6f-839c-c3dd5c9c0a88
+md" ### `sortperm`"
+
+# ╔═╡ b9cd3cb5-4650-44b0-ba70-c924c2d7df7b
+begin
+	# Sort bright16_good and get the indices
+	sorted_indices = sortperm(bright16_good)
+	sorted_bright_ind = bright_ind[bright_good_ind][sorted_indices]
+	
+	# Now sorted_bright_ind contains the indices of bright_ind corresponding to the sorted bright16_good
+end
+
+# ╔═╡ 601e4b8d-ea9b-46cb-8438-11dec78edd89
+md"""
+!!! tip "Can replace sort on values."
+    - `bright16_good_sorted_ind`
+"""
+
+# ╔═╡ ece6d6c7-8f8e-4c04-92b1-f0ae94d33795
+bright16_good[sorted_indices][1:3] == sort(bright16_good)[1:nBrightest]
+
 # ╔═╡ b9f31c3b-900d-4dc3-b310-740977bea1c1
-bright_good_ind
+bright_ind, length(bright_ind)
 
 # ╔═╡ 7557dcba-206d-4c80-80c6-10db579a32a2
-bright_ind[bright_good_ind]
+bright_ind[bright_good_ind], length(bright_ind[bright_good_ind])
 
 # ╔═╡ 49ebb357-ff18-4546-a423-0b3ae6536895
 findmin(df.Column29), findmin(df.Column16)
+
+# ╔═╡ ff27aab5-e924-476c-8d1a-902a88479756
+bright16_good == df[!, :Column16][bright_ind][bright_good_ind]
 
 # ╔═╡ feb0bb94-8431-4c91-9599-1e284f9bc737
 findmin(bright16)
@@ -548,7 +583,10 @@ bright_ind[2401]
 # ╠═7ef24bfe-1fce-4ff9-8855-ea31969ecc27
 # ╟─729f54ab-b4a4-40c3-8ccd-cc4e85829fb3
 # ╠═cd2b0c75-c8e3-4101-936a-78ae97d72ddc
+# ╠═d8cd93c0-1523-4e76-bad6-4979655b14c3
+# ╠═ae5c6ccc-1902-46ce-a0fb-6a126f8b66c1
 # ╠═ed6a08d6-74ed-4448-b4ac-8560df7c5a6a
+# ╠═0a1d1c00-b01d-45cc-9d82-bc7dde9827b3
 # ╠═113f37ab-9f05-4f80-b856-4a6beb2fe52a
 # ╠═9e6de21f-3eb6-47d0-9ca7-671ecc54376e
 # ╠═0febb7c0-d295-4625-99ca-83f833558540
@@ -605,9 +643,14 @@ bright_ind[2401]
 # ╠═d7b817a2-247b-4ee0-8718-4b287397e8f7
 # ╠═a9b6c67e-6900-4907-a061-d7d8f52ffa95
 # ╠═2c8480c7-9c28-416e-848d-b8456c58539b
+# ╠═0e3ae6a4-011b-4d6f-839c-c3dd5c9c0a88
+# ╠═b9cd3cb5-4650-44b0-ba70-c924c2d7df7b
+# ╠═601e4b8d-ea9b-46cb-8438-11dec78edd89
+# ╠═ece6d6c7-8f8e-4c04-92b1-f0ae94d33795
 # ╠═b9f31c3b-900d-4dc3-b310-740977bea1c1
 # ╠═7557dcba-206d-4c80-80c6-10db579a32a2
 # ╠═49ebb357-ff18-4546-a423-0b3ae6536895
+# ╠═ff27aab5-e924-476c-8d1a-902a88479756
 # ╠═feb0bb94-8431-4c91-9599-1e284f9bc737
 # ╠═f6715f7b-8fe7-4913-93d3-afb23fa6f520
 # ╠═bd697c8d-a227-4eaa-8a12-8398a7c84eba

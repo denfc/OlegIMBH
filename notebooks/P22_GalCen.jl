@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.0
+# v0.20.1
 
 using Markdown
 using InteractiveUtils
@@ -17,6 +17,8 @@ begin
 	using CSV, DataFrames
 	using NearestNeighbors
 	using AstroImages, FITSIO
+	using SkipNan
+
 	# using Cosmology, Unitful, UnitfulAstro, Measurements 
 	# using Suppressor
 	# include(srcdir("commas.jl"))
@@ -93,6 +95,7 @@ md"### Reading ESCV file "
 
 # ╔═╡ d937eb69-92fc-443b-8cac-d3fb33b787b8
 md"""
+!!! tip "copied to P22_IMBH_Notes"
 !!! note "Can read ESCV file either by denoting commenting symbol directly or or by going to header line directly."
 	- This note belongs in the notebook to be set up for this project.
 	- Can exclude the "label" column, but might need it for the cross matching.
@@ -105,6 +108,15 @@ begin
 	sourceCat_f1130 = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#",  drop=[:label], normalizenames=true) # [1, :]
 	test = CSV.read(joinpath(dataDir_T45_f1130, six_f1130[3]), DataFrame; comment = "#", normalizenames=true) # :label included
 end
+
+# ╔═╡ 1e96d0bc-0223-4072-8d78-1aec6323d53f
+xy_vega70 = test[:, [:label, :xcentroid, :ycentroid, :aper70_vegamag]]
+
+# ╔═╡ 93a5144f-bfde-4fe6-ab98-19904cc14665
+findmax(skipnan(xy_vega70[!, :aper70_vegamag]))
+
+# ╔═╡ 194d6cbb-aeb6-41d0-886a-169401fbf578
+xy_vega70[70, :]
 
 # ╔═╡ ac6f1aa1-9da3-419d-8ce9-2e2a07c2deb1
 six_f1130[3]
@@ -230,7 +242,7 @@ six_f1130[4]
 FITS(imageFile_f1130_2)
 
 # ╔═╡ 63a9f4c4-1f35-44fd-9148-750565e5b866
-H45_2 = header(miri_f1130_2)
+H45_2 = AstroImages.header(miri_f1130_2) # miri_f1130_2::AstroImage
 
 # ╔═╡ 32acdfb5-5674-493c-aced-71af36c2af20
 length(H45_2)
@@ -401,6 +413,9 @@ md" # Bottom Cell"
 # ╠═5ad9dee6-6281-4b84-9f80-92da1a4e16a7
 # ╠═d937eb69-92fc-443b-8cac-d3fb33b787b8
 # ╠═f370c1b5-47f2-4af4-b2ff-eb1aac682d4c
+# ╠═1e96d0bc-0223-4072-8d78-1aec6323d53f
+# ╠═93a5144f-bfde-4fe6-ab98-19904cc14665
+# ╠═194d6cbb-aeb6-41d0-886a-169401fbf578
 # ╠═ac6f1aa1-9da3-419d-8ce9-2e2a07c2deb1
 # ╠═9b2a1904-04a1-42cf-8922-c8efe651c4fa
 # ╠═6c9456af-8ea3-4255-b345-2954204c0b9f

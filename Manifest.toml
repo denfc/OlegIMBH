@@ -2,7 +2,7 @@
 
 julia_version = "1.11.1"
 manifest_format = "2.0"
-project_hash = "23ff1bffc02391af5df9182756f0758de2ae776f"
+project_hash = "93a2c6f737906af1bf57726365cd9855474b9f10"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -1897,6 +1897,11 @@ deps = ["Dates", "FileIO", "ImageCore", "IndirectArrays", "OffsetArrays", "REPL"
 git-tree-sha1 = "2da10356e31327c7096832eb9cd86307a50b1eb6"
 uuid = "45858cf5-a6b0-47a3-bbea-62219f50df47"
 version = "0.1.3"
+
+[[deps.SkipNan]]
+git-tree-sha1 = "b07be17ad1c4dd3e2d11aff5aa06157838ee6a6a"
+uuid = "aed68c70-c8b0-4309-8cd1-d392a74f991a"
+version = "0.2.0"
 
 [[deps.Sockets]]
 uuid = "6462fe0b-24de-5631-8697-dd941f90decc"

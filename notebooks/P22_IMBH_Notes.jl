@@ -374,6 +374,19 @@ circle 1007 734.6312878220773 10 # x y radius\
 circle 1008 370.2739336160197 10 # x y radius\
 """
 
+# ╔═╡ a8c24b20-da05-404f-8ac6-47086782d604
+md"""
+### Getting original indices (24 October)
+!!! tip "code toward the end of (messy) P24a_Brightest" 
+    - don't have to sort separately
+- begin\
+  "#" Sort `bright16_good` and get the indices\
+  `bright16_good_sorted_ind = sortperm(bright16_good)`\
+  `sorted_bright16_ind` = `bright_ind[bright_good_ind][bright16_good_sorted_ind]`\
+  "#" Now `sorted_bright16_ind` contains the indices of` bright_ind` corresponding to the sorted `bright16_good` indices.
+- end
+"""
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
 # ╟─754dbb34-631a-4aea-8660-443f70f11ea9
@@ -398,3 +411,4 @@ circle 1008 370.2739336160197 10 # x y radius\
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
 # ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╠═a8c24b20-da05-404f-8ac6-47086782d604
