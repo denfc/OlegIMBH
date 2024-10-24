@@ -257,7 +257,7 @@ begin
 	# clamped_imgLoad = Array(clamped_imgLoad)
     clamped_imgLoad = map(clamp01nan, imgLoad)
 	clamped_imgLoad = Array(clamped_imgLoad)
-	save("clamped_img.png", clamped_imgLoad)
+	save("clamped_imgLoad.png", clamped_imgLoad)
 	# save("clamped_img.png", clamped_imgLoad)
 end
 
@@ -267,7 +267,7 @@ imview(clamped_imgLoad)
 
 # ╔═╡ 0febb7c0-d295-4625-99ca-83f833558540
 begin
-		imgLoad_retrieved = AstroImages.load(joinpath(projectdir(), "notebooks/clamped_img.png"))
+		imgLoad_retrieved = AstroImages.load(joinpath(projectdir(), "notebooks/clamped_imgLoad.png"))
 	# imgLoad_final = AstroImages.AstroImage(joinpath(projectdir(), "notebooks/clamped_img.png")) doesn't work
 		imgLoad_rotated = ImageTransformations.imrotate(imgLoad_retrieved, -π/2) # π)
 		imgLoad_final = OffsetArrays.no_offset_view(imgLoad_rotated)
@@ -470,7 +470,14 @@ begin
 	const sao = SAOImageDS9
 	
 	# Connect to DS9
-	sao.connect()
+    # Connect to DS9
+    try
+        sao.connect()
+        println("Connected to DS9 successfully.")
+    catch e
+        println("Failed to connect to DS9: ", e)
+    end
+
 end
 
 # ╔═╡ 43d073eb-8c37-48c3-a69c-da632ec2838d
@@ -483,10 +490,16 @@ end
 begin
     # Delete all regions before sending new ones
     sao.set("regions", "delete all")
-    println("All regions deleted successfully.")
+    # println("All regions deleted successfully.")
 	DS9_SendAndVerify(regFile_1)
 	DS9_SendAndVerify(regFile_2)
 end
+
+# ╔═╡ d7b817a2-247b-4ee0-8718-4b287397e8f7
+sao.set("regions", "delete all")
+
+# ╔═╡ a9b6c67e-6900-4907-a061-d7d8f52ffa95
+sao.connect()
 
 # ╔═╡ 2c8480c7-9c28-416e-848d-b8456c58539b
 sort(bright16_good)[1:nBrightest]
@@ -589,6 +602,8 @@ bright_ind[2401]
 # ╠═326975a2-b8b6-4b72-a467-d33a7f959370
 # ╠═43d073eb-8c37-48c3-a69c-da632ec2838d
 # ╠═8bb7f9c8-c356-4941-a3a8-dbf9f629498b
+# ╠═d7b817a2-247b-4ee0-8718-4b287397e8f7
+# ╠═a9b6c67e-6900-4907-a061-d7d8f52ffa95
 # ╠═2c8480c7-9c28-416e-848d-b8456c58539b
 # ╠═b9f31c3b-900d-4dc3-b310-740977bea1c1
 # ╠═7557dcba-206d-4c80-80c6-10db579a32a2

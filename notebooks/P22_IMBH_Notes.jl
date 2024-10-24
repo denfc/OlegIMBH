@@ -354,11 +354,15 @@ md"""
 ### DS9 (23 October)
 !!! note ""
     [(Julia) Linux installation instructions here.](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
-	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0)  
+	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0) 
+	- [JWST Near Infrared Camera](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
+	  - [NIRCAM Filters] (https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters#gsc.tab=0) 
+	  - central wavelength in tenths of microns!
 	- [SAO "Regions" here.](https://ds9.si.edu/doc/ref/region.html)
 !!! tip ""
 	- ds9 & # in bash
       - might have also needed `sudo apt-get install saods9 libxpa-dev`
+	  - `xpaget xpans` # shows all ds9s that are running
 	- first program: /home/dfc123/Gitted/OlegIMBH/scripts/DS9_RegionTest.jl
 	  - can override `global` colors with local ones, e.g.,
 

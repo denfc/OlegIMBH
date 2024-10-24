@@ -1,0 +1,23 @@
+# Region file format: DS9 version 8.5.0
+# green is default but, e.g., could use `global color=red`; format: x y radius 
+global color=green
+circle 2702.67 18.53 25
+circle 1232.59 4425.13 25
+circle 2944.17 3739.96 25
+circle 2912.16 413.56 25
+circle 3441.12 3904.17 25
+circle 3045.44 1007.46 25
+circle 4450.91 3803.08 25
+circle 4022.74 3692.8 25
+circle 3002.78 1112.61 25
+circle 3433.3 1755.52 25
+circle 3893.21 2017.54 25
+circle 2961.85 1896.96 25
+circle 431.39 2512.9 25
+circle 3813.54 327.79 25
+circle 2323.65 1018.64 25
+circle 2671.5 3328.2 25
+circle 716.76 4038.74 25
+circle 2492.11 2341.69 25
+circle 3578.0 4041.6 25
+circle 2361.45 2491.96 25
