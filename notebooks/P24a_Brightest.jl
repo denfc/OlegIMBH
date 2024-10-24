@@ -160,19 +160,21 @@ begin
 	# to widen cell width; https://discourse.julialang.org/t/cell-width-in-pluto-notebook/49761/4
 	html"""
 	<style>
+		@media screen {
 		main {
 			margin: 0 auto;
 			max-width: 2000px;
 	    	padding-left: max(160px, 10%);
 	    	padding-right: max(160px, 10%);
 		}
-	        # 383px to accomodate TableOfContents(aside=true)
-	        # 313px on vertical display
-			# 160px on vertical display overlaps but gives sufficient space
+	}
 	</style>
 	"""
 	md" ###### Widens cell width proportionately to window width."
 end
+# 383px to accomodate TableOfContents(aside=true)
+# 313px on vertical display
+# 160px on vertical display overlaps but gives sufficient space
 
 # ╔═╡ 6008384b-131c-4930-81a6-fb680420df33
 	md"""
@@ -318,6 +320,9 @@ for i in eachindex(objectType)
 	println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
 end
 
+# ╔═╡ 19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
+md" #####  `bright_good`"
+
 # ╔═╡ 3ecc7ee6-20c2-45fb-89c5-8ff0470dbd5c
 bright_ind = findall(x -> x == 1, df.Column11)
 
@@ -335,9 +340,6 @@ begin
 	bright_Q200_flag = df.Column24[bright_ind]
 	bright_Q444_flag = df.Column37[bright_ind]
 end
-
-# ╔═╡ 19bc80c4-1eb5-4e59-a706-cf9343fa3ad1
-md" #####  `bright_good`"
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
 nBrightest = 20
@@ -492,8 +494,14 @@ sort(bright16_good)[1:nBrightest]
 # ╔═╡ b9f31c3b-900d-4dc3-b310-740977bea1c1
 bright_good_ind
 
+# ╔═╡ 7557dcba-206d-4c80-80c6-10db579a32a2
+bright_ind[bright_good_ind]
+
 # ╔═╡ 49ebb357-ff18-4546-a423-0b3ae6536895
-findmin(df.Column29)
+findmin(df.Column29), findmin(df.Column16)
+
+# ╔═╡ feb0bb94-8431-4c91-9599-1e284f9bc737
+findmin(bright16)
 
 # ╔═╡ f6715f7b-8fe7-4913-93d3-afb23fa6f520
 df[4136, :]
@@ -583,7 +591,9 @@ bright_ind[2401]
 # ╠═8bb7f9c8-c356-4941-a3a8-dbf9f629498b
 # ╠═2c8480c7-9c28-416e-848d-b8456c58539b
 # ╠═b9f31c3b-900d-4dc3-b310-740977bea1c1
+# ╠═7557dcba-206d-4c80-80c6-10db579a32a2
 # ╠═49ebb357-ff18-4546-a423-0b3ae6536895
+# ╠═feb0bb94-8431-4c91-9599-1e284f9bc737
 # ╠═f6715f7b-8fe7-4913-93d3-afb23fa6f520
 # ╠═bd697c8d-a227-4eaa-8a12-8398a7c84eba
 # ╠═06750c4f-703f-4b9b-8e87-60ad48e56af4
