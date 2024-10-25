@@ -353,19 +353,34 @@ begin
 end
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
-nBrightest = 31
+nBrightest = 4
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
 	bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
 	bright16_good = bright16[bright_good_ind]
 	bright29_good = bright29[bright_good_ind]
-	brightest10_16 = sort(bright16_good)[1:nBrightest]
-	brightest10_29 = sort(bright29_good)[1:nBrightest]
+	sorted16_indices = sortperm(bright16_good)
+	sorted29_indices = sortperm(bright29_good)
+	brightest10_16 = bright16_good[sorted16_indices][1:nBrightest]
+	brightest10_29 = bright29_good[sorted29_indices][1:nBrightest]
 	brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
 	brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
 	brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
 	brightest10_29_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
+end
+
+# ╔═╡ 494a1901-abc2-4d4f-a342-e1f0c546cc71
+bright16_good[sorted16_indices][1:nBrightest] == sort(bright16_good)[1:nBrightest]
+
+# ╔═╡ 3ae5f772-d538-42fd-99ac-686caf6cbbc3
+begin
+	# Sort bright16_good and get the indices
+
+	sorted16_bright_ind = bright_ind[bright_good_ind][sorted16_indices]
+
+	sorted29_bright_ind = bright_ind[bright_good_ind][sorted29_indices]
+	# Now sorted_bright_ind contains the indices of bright_ind corresponding to the sorted bright16_good
 end
 
 # ╔═╡ cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
@@ -494,6 +509,7 @@ begin
 	sao.set("file $imgFilePath") # loads the file into DS9
 	sao.set("zoom to fit") # sets the zoom level to fit
 	sao.set("grid yes") # turns on the grid
+	sao.set("cmap color") # sets the color map to "color"
 end
 
 # ╔═╡ 43d073eb-8c37-48c3-a69c-da632ec2838d
@@ -521,13 +537,17 @@ sort(bright16_good)[1:nBrightest]
 md" ### `sortperm`"
 
 # ╔═╡ b9cd3cb5-4650-44b0-ba70-c924c2d7df7b
-begin
-	# Sort bright16_good and get the indices
-	sorted_indices = sortperm(bright16_good)
-	sorted_bright_ind = bright_ind[bright_good_ind][sorted_indices]
-	
-	# Now sorted_bright_ind contains the indices of bright_ind corresponding to the sorted bright16_good
-end
+# begin
+# 	# Sort bright16_good and get the indices
+# 	sorted16_indices = sortperm(bright16_good)
+# 	sorted16_bright_ind = bright_ind[bright_good_ind][sorted16_indices]
+# 	sorted29_indices = sortperm(bright29_good)
+# 	sorted29_bright_ind = bright_ind[bright_good_ind][sorted29_indices]
+# 	# Now sorted_bright_ind contains the indices of bright_ind corresponding to the sorted bright16_good
+# end
+
+# ╔═╡ d1b9c31d-1198-4c73-8c05-d5b70540b6bb
+
 
 # ╔═╡ 601e4b8d-ea9b-46cb-8438-11dec78edd89
 md"""
@@ -536,7 +556,7 @@ md"""
 """
 
 # ╔═╡ ece6d6c7-8f8e-4c04-92b1-f0ae94d33795
-bright16_good[sorted_indices][1:3] == sort(bright16_good)[1:nBrightest]
+bright16_good[sorted16_indices][1:4] == sort(bright16_good)[1:nBrightest]
 
 # ╔═╡ b9f31c3b-900d-4dc3-b310-740977bea1c1
 bright_ind, length(bright_ind)
@@ -613,6 +633,8 @@ bright_ind[2401]
 # ╠═371147b6-a208-433c-b178-252c56a45a4f
 # ╠═6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
 # ╠═3223682d-a23e-4f5c-b4e2-d7687b6000f2
+# ╠═494a1901-abc2-4d4f-a342-e1f0c546cc71
+# ╠═3ae5f772-d538-42fd-99ac-686caf6cbbc3
 # ╠═cc6a8f37-9c70-43c8-bf13-6cabe10f80e4
 # ╠═07c4870f-499c-49a3-9532-025ef4b2de00
 # ╠═101b6526-edac-4b55-b98c-df586bf643dc
@@ -646,6 +668,7 @@ bright_ind[2401]
 # ╠═2c8480c7-9c28-416e-848d-b8456c58539b
 # ╠═0e3ae6a4-011b-4d6f-839c-c3dd5c9c0a88
 # ╠═b9cd3cb5-4650-44b0-ba70-c924c2d7df7b
+# ╠═d1b9c31d-1198-4c73-8c05-d5b70540b6bb
 # ╠═601e4b8d-ea9b-46cb-8438-11dec78edd89
 # ╠═ece6d6c7-8f8e-4c04-92b1-f0ae94d33795
 # ╠═b9f31c3b-900d-4dc3-b310-740977bea1c1
