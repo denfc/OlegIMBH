@@ -481,14 +481,18 @@ begin
 	const sao = SAOImageDS9
 	
 	# Connect to DS9
-    # Connect to DS9
+	# servers = readchomp(`xpaaccess -n ds9`)
+	# if servers == "0" error("No DS9 servers found.") end
+	println(readchomp(`xpaget xpans`))
+
     try
         sao.connect()
         println("Connected to DS9 successfully.")
     catch e
         println("Failed to connect to DS9: ", e)
     end
-
+	sao.set("file $imgFilePath") # loads the file into DS9
+	sao.set("grid yes") # turns on the grid
 end
 
 # ╔═╡ 43d073eb-8c37-48c3-a69c-da632ec2838d
