@@ -353,7 +353,7 @@ begin
 end
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
-nBrightest = 3
+nBrightest = 31
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
@@ -483,7 +483,7 @@ begin
 	# Connect to DS9
 	# servers = readchomp(`xpaaccess -n ds9`)
 	# if servers == "0" error("No DS9 servers found.") end
-	println(readchomp(`xpaget xpans`))
+	println("Running DS9 servers: ", readchomp(`xpaget xpans`))
 
     try
         sao.connect()
@@ -492,6 +492,7 @@ begin
         println("Failed to connect to DS9: ", e)
     end
 	sao.set("file $imgFilePath") # loads the file into DS9
+	sao.set("zoom to fit") # sets the zoom level to fit
 	sao.set("grid yes") # turns on the grid
 end
 
@@ -512,9 +513,6 @@ end
 
 # ╔═╡ d7b817a2-247b-4ee0-8718-4b287397e8f7
 sao.set("regions", "delete all")
-
-# ╔═╡ a9b6c67e-6900-4907-a061-d7d8f52ffa95
-sao.connect()
 
 # ╔═╡ 2c8480c7-9c28-416e-848d-b8456c58539b
 sort(bright16_good)[1:nBrightest]
@@ -645,7 +643,6 @@ bright_ind[2401]
 # ╠═43d073eb-8c37-48c3-a69c-da632ec2838d
 # ╠═8bb7f9c8-c356-4941-a3a8-dbf9f629498b
 # ╠═d7b817a2-247b-4ee0-8718-4b287397e8f7
-# ╠═a9b6c67e-6900-4907-a061-d7d8f52ffa95
 # ╠═2c8480c7-9c28-416e-848d-b8456c58539b
 # ╠═0e3ae6a4-011b-4d6f-839c-c3dd5c9c0a88
 # ╠═b9cd3cb5-4650-44b0-ba70-c924c2d7df7b
