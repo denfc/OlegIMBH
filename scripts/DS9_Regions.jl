@@ -1,9 +1,18 @@
 """
-For now (26 October 2024) at least, assume `DS9_start` has run (and so the project has been activated), the ds9 window is open, and the image is loaded with the default settings.
+26 October 2024)
+Cab assume `DS9_start` has run (and so the project has been activated), the ds9 window is open, and the image is loaded with the default settings.  But if that's not the case, it will srun DS9_start.jl to get everything set up.
+
 Taken from `P24a_Brightest.jl``
 """
 
+if !@isdefined(sao) # wimpy 
+	startPath = joinpath(homedir(), "Gitted/OlegIMBH/scripts/DS9_start.jl")
+	include(startPath)
+end
+
 using CSV
+using DataFrames
+using Random
 include(srcdir("writeDS9RegFile.jl"))
 include(srcdir("verifyRegFileSent.jl"))
 
@@ -32,20 +41,36 @@ bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 
 
 bright16_good = bright16[bright_good_ind]
 bright29_good = bright29[bright_good_ind]
-sorted16_indices = sortperm(bright16_good)
-sorted29_indices = sortperm(bright29_good)
 
-nBrightest = 4
+nBrightest = 50
+randBright = true # true  # Set this to true for random selection, false for sorted selection
 
-brightest10_16 = bright16_good[sorted16_indices][1:nBrightest]
-brightest10_29 = bright29_good[sorted29_indices][1:nBrightest]
-brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
-brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
-brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
-brightest10_29_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
+if randBright
+    # Generate random indices
+    random_indices_16 = rand(1:length(bright16_good), nBrightest)
+    random_indices_29 = rand(1:length(bright29_good), nBrightest)
 
-regFile_1 = DS9_writeRegionFile(brightest10_16_Xvalues, brightest10_16_Yvalues, 25, "F200"; color = green)
-regFile_2 = DS9_writeRegionFile(brightest10_29_Xvalues, brightest10_29_Yvalues, 25, "F444"; color = red)
+    brightest10_16 = bright16_good[random_indices_16]
+    brightest10_29 = bright29_good[random_indices_29]
+    brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][random_indices_16]
+    brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][random_indices_16]
+    brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][random_indices_29]
+    brightest10_29_Yvalues = df.Column4[bright_ind][bright_good_ind][random_indices_29]
+else
+    # Sort by value
+    sorted16_indices = sortperm(bright16_good)
+    sorted29_indices = sortperm(bright29_good)
+
+    brightest10_16 = bright16_good[sorted16_indices][1:nBrightest]
+    brightest10_29 = bright29_good[sorted29_indices][1:nBrightest]
+    brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
+    brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
+    brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
+    brightest10_29_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]
+end
+
+regFile_1 = DS9_writeRegionFile(brightest10_16_Xvalues, brightest10_16_Yvalues, 25, "F200"; color = "green")
+regFile_2 = DS9_writeRegionFile(brightest10_29_Xvalues, brightest10_29_Yvalues, 25, "F444"; color = "red")
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")
