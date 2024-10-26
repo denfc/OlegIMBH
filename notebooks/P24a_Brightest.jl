@@ -523,8 +523,8 @@ begin
     # Delete all regions before sending new ones
     sao.set("regions", "delete all")
     # println("All regions deleted successfully.")
-	DS9_SendAndVerify(regFile_1)
-	DS9_SendAndVerify(regFile_2)
+	DS9_SendRegAndVerify(regFile_1)
+	DS9_SendRegAndVerify(regFile_2)
 end
 
 # ╔═╡ d7b817a2-247b-4ee0-8718-4b287397e8f7

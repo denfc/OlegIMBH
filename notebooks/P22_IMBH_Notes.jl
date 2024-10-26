@@ -241,12 +241,12 @@ md"""
 
         - for i in eachindex(df[df\_rowBtoA, "Catalog A labels"])  println("$i) ", df[df\_rowBtoA, "Catalog A labels"][i, 1], " ", df[df\_rowBtoA, "Catalog B matching labels"][i, 1:NN\_level]) end
 
-      -- And, BTW, `/home/dfc123/Gitted/OlegIMBH/src/MAST/buildDuplicateDict.jl` has an uncommented comment line that prevents it from running.
+      -- And, BTW, `/home/dfc123/Gitted/OlegIMBH/src/GalCen/buildDuplicateDict.jl` has an uncommented comment line that prevents it from running.
 
 #### DOLPHOT
 !!! note ""
     - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf); [JWST specifics when running](https://dolphot-jwst.readthedocs.io/en/latest/search.html?q=FITS&check_keywords=yes&area=default)) production of Omega Cen data.  I had not realized that the previous data were of the galactic center, so previous data and code moved into:
-    `MAST` directory created in `OlegIMBH/data/exp_raw` and `MASTter`s in `scripts` and `src` directories.
+    `GalacticCenter` directory created in `OlegIMBH/data/exp_raw` and `GalCenter`s in `scripts` and `src` directories.
 !!! warning "Where (and how) to back up the original data, i.e., those stored in \data\exp_raw?"
 !!! tip ""
     - Google Drive: G:\My Drive\Articles\Astrophysics\_New\IMBH\_Data_Backup
@@ -358,11 +358,13 @@ md"""
 	- [JWST Near Infrared Camera](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
 	  - [NIRCAM Filters] (https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters#gsc.tab=0) 
 	  - central wavelength in tenths of microns!
+	  - "Hold down the right mouse button and drag the mouse up or down to adjust the contrast."
 	- [SAO "Regions" here.](https://ds9.si.edu/doc/ref/region.html)
 !!! tip ""
 	- ds9 & # in bash
       - might have also needed `sudo apt-get install saods9 libxpa-dev`
 	  - `xpaget xpans` # shows all ds9s that are running
+	  - `pgrep -f ds9`, `pkill -f ds9` # "p" is for process & "-f" is for "full" (which is needed)
 	- first program: /home/dfc123/Gitted/OlegIMBH/scripts/DS9_RegionTest.jl
 	  - can override `global` colors with local ones, e.g.,
 
@@ -392,7 +394,7 @@ md"""
 ### Image pixel size (25 October)
 !!! note "From the header of the fits file jw04343-o002_t001_nircam_clear-f200w_i2d.fits "
 	"PIXAR_A2= 0.000945196963760956 / Nominal pixel area in arcsec^2"
-	  - which corresponds to 0.030744055746777393 = 0.031 arcseconds per pixel arcsecond (32.5 pixels per arcsecond)
+	  - which corresponds to 0.030744055746777393 = 0.031 arcseconds per pixel (32.5 pixels per arcsecond)
 	  - which is consistent with [Table 1](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
 """
 
@@ -419,6 +421,6 @@ md"""
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
-# ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╠═f654239b-14d5-4eec-bf65-0d237ff32746
