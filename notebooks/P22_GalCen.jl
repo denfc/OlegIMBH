@@ -34,11 +34,11 @@ end
 # ╔═╡ baec53cc-f36a-4dce-84d4-f41dc6d919df
 begin
 	using PlutoUI
-	TableOfContents(title = "P22_GalCen", depth = 6)
+	TableOfContents(title = "P22_MAST", depth = 6)
 end
 
 # ╔═╡ 6cabc13b-9bb7-4f74-b7b6-f98435e94d5e
-include(srcdir("GalCen/crossmatches.jl"));
+include(srcdir("MAST/crossmatches.jl"));
 
 # ╔═╡ 7b98ed8c-7a38-463d-91e9-9915901a0047
 md"""
@@ -79,7 +79,7 @@ cd(joinpath(homedir(), "Gitted/OlegIMBH"))
 md" ### dataDir\_T45\_f1130"
 
 # ╔═╡ 38a15a7b-5a81-4db1-968e-0312f703ab10
-dataDir_T45_f1130 = joinpath(datadir(), "exp_raw/GalacticCenter/MAST_2024-09-20T1145")
+dataDir_T45_f1130 = joinpath(datadir(), "exp_raw/MAST/MAST_2024-09-20T1145")
 
 # ╔═╡ df744749-bf44-4c80-ae3b-982103f938c9
 six_f1130 = readdir(dataDir_T45_f1130)

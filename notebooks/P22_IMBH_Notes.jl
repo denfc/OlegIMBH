@@ -241,12 +241,12 @@ md"""
 
         - for i in eachindex(df[df\_rowBtoA, "Catalog A labels"])  println("$i) ", df[df\_rowBtoA, "Catalog A labels"][i, 1], " ", df[df\_rowBtoA, "Catalog B matching labels"][i, 1:NN\_level]) end
 
-      -- And, BTW, `/home/dfc123/Gitted/OlegIMBH/src/GalCen/buildDuplicateDict.jl` has an uncommented comment line that prevents it from running.
+      -- And, BTW, `/home/dfc123/Gitted/OlegIMBH/src/MAST/buildDuplicateDict.jl` has an uncommented comment line that prevents it from running.
 
 #### DOLPHOT
 !!! note ""
     - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf); [JWST specifics when running](https://dolphot-jwst.readthedocs.io/en/latest/search.html?q=FITS&check_keywords=yes&area=default)) production of Omega Cen data.  I had not realized that the previous data were of the galactic center, so previous data and code moved into:
-    `GalacticCenter` directory created in `OlegIMBH/data/exp_raw` and `GalCenter`s in `scripts` and `src` directories.
+    `MAST` directory created in `OlegIMBH/data/exp_raw` and `MASTter`s in `scripts` and `src` directories.
 !!! warning "Where (and how) to back up the original data, i.e., those stored in \data\exp_raw?"
 !!! tip ""
     - Google Drive: G:\My Drive\Articles\Astrophysics\_New\IMBH\_Data_Backup

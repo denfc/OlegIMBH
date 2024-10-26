@@ -87,7 +87,7 @@ end
 
 # ╔═╡ 21c7fe2b-631b-46aa-8e77-a2a350c825c4
 begin
-	include(srcdir("GalCen/logXFitHisto.jl"))
+	include(srcdir("MAST/logXFitHisto.jl"))
 	# using Statistics
 	# using StatsBase
 	# using LinearAlgebra
