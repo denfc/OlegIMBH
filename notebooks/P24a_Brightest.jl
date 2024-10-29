@@ -14,20 +14,6 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
-begin
-	using DrWatson
-	md" ###### `using` DrWatson"
-end
-
-# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
-begin
-	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
-	projectDir = "Gitted/OlegIMBH"
-	project_path = joinpath(homedir(), projectDir)
-	quickactivate(project_path)
-end
-
 # ╔═╡ dce8dbce-c8b4-11ed-3263-65232dc16f8d
 begin
 	# using Base.Threads
@@ -84,6 +70,20 @@ begin
 	# using Unitful # ditto
 	md" ###### `using` packages"
 end	
+
+# ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
+begin
+	using DrWatson
+	md" ###### `using` DrWatson"
+end
+
+# ╔═╡ ace018d2-003c-496f-b8aa-69eb71fb9057
+begin
+	# projectDir = "Gitted/Illustris/Fractals_DrW"  # first DrW project directory
+	projectDir = "Gitted/OlegIMBH"
+	project_path = joinpath(homedir(), projectDir)
+	quickactivate(project_path)
+end
 
 # ╔═╡ 21c7fe2b-631b-46aa-8e77-a2a350c825c4
 begin
@@ -353,7 +353,7 @@ begin
 end
 
 # ╔═╡ 6f1080c4-1e65-4c0d-a124-09b1e3ebd1ab
-nBrightest = 4
+nBrightest = 10
 
 # ╔═╡ 3223682d-a23e-4f5c-b4e2-d7687b6000f2
 begin
@@ -531,7 +531,10 @@ end
 sao.set("regions", "delete all")
 
 # ╔═╡ 2c8480c7-9c28-416e-848d-b8456c58539b
-sort(bright16_good)[1:nBrightest]
+sort(bright29_good)[1:nBrightest]
+
+# ╔═╡ 11e862de-bfca-48a7-adb6-47f269f63298
+extrema(bright29_good)
 
 # ╔═╡ 0e3ae6a4-011b-4d6f-839c-c3dd5c9c0a88
 md" ### `sortperm`"
@@ -556,7 +559,7 @@ md"""
 """
 
 # ╔═╡ ece6d6c7-8f8e-4c04-92b1-f0ae94d33795
-bright16_good[sorted16_indices][1:4] == sort(bright16_good)[1:nBrightest]
+bright16_good[sorted16_indices][1:10] == sort(bright16_good)[1:nBrightest]
 
 # ╔═╡ b9f31c3b-900d-4dc3-b310-740977bea1c1
 bright_ind, length(bright_ind)
@@ -666,6 +669,7 @@ bright_ind[2401]
 # ╠═8bb7f9c8-c356-4941-a3a8-dbf9f629498b
 # ╠═d7b817a2-247b-4ee0-8718-4b287397e8f7
 # ╠═2c8480c7-9c28-416e-848d-b8456c58539b
+# ╠═11e862de-bfca-48a7-adb6-47f269f63298
 # ╠═0e3ae6a4-011b-4d6f-839c-c3dd5c9c0a88
 # ╠═b9cd3cb5-4650-44b0-ba70-c924c2d7df7b
 # ╠═d1b9c31d-1198-4c73-8c05-d5b70540b6bb

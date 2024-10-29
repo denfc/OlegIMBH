@@ -391,11 +391,13 @@ md"""
 
 # ╔═╡ f654239b-14d5-4eec-bf65-0d237ff32746
 md"""
-### Image pixel size (25 October)
+### NIRCam Image pixel size (25 October)
 !!! note "From the header of the fits file jw04343-o002_t001_nircam_clear-f200w_i2d.fits "
 	"PIXAR_A2= 0.000945196963760956 / Nominal pixel area in arcsec^2"
 	  - which corresponds to 0.030744055746777393 = 0.031 arcseconds per pixel (32.5 pixels per arcsecond)
 	  - which is consistent with [Table 1](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
+	  - which corresponds to an image size of about 2.34 minutess of arc on a side
+        - (doesn't look exactly square, but close enough)
 """
 
 # ╔═╡ Cell order:

@@ -25,7 +25,9 @@ for i in eachindex(objectType)
     println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
 end
 
-bright_ind = findall(x -> x == 1, df.Column11)
+objectTypeIndex = 2
+bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
+# below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
 
 # 16. Instrumental VEGAMAG magnitude, NIRCAM_F200W
 # 29. Instrumental VEGAMAG magnitude, NIRCAM_F444W
@@ -38,8 +40,11 @@ bright_SharpSq = df.Column7[bright_ind].^2
 bright_Q200_flag = df.Column24[bright_ind]
 bright_Q444_flag = df.Column37[bright_ind]
 
+bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
+
 # Filter out indices where the value in bright16 or bright29 is 99.999
-bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright16))
+bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright_ind))
+# below: println("number of good ones: ", length(bright_good_ind))
 
 # Function to generate random or sorted values
 function generate_values(randBright::Bool, nBrightest::Int)
@@ -74,8 +79,8 @@ function generate_values(randBright::Bool, nBrightest::Int)
 end
 
 # Example usage
-randBright = true  # Set this to true for random selection, false for sorted selection
-nBrightest = 30
+randBright = false  # Set this to true for random selection, false for sorted selection
+nBrightest = 100
 
 # Could put these lines in a function, too, to call from the REPL.
 # Generate values
@@ -87,5 +92,14 @@ regFile_2 = DS9_writeRegionFile(brightest10_29_Xvalues, brightest10_29_Yvalues, 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")
 # println("All regions deleted successfully.")
+# DS9_SendRegAndVerify(regFile_2)
 DS9_SendRegAndVerify(regFile_1)
 DS9_SendRegAndVerify(regFile_2)
+
+# regFile_test = "/home/dfc123/Gitted/OlegIMBH/data/sims/F444_save.reg"
+# DS9_SendRegAndVerify(regFile_test)
+
+println()
+printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_ind), "; ", color = :cyan)
+printstyled("number of good ones: ", length(bright_good_ind), "; ", color = :cyan)
+if randBright printstyled("random selection of ", nBrightest, ".", color = :cyan) else printstyled("sorted selection of ", nBrightest, ".", color = :cyan) end
