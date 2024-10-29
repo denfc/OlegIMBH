@@ -1,4 +1,4 @@
-function load_zoom_grid_color_scale_view(file; z = "zoom to fit", g = "grid yes", c = "cmap color", s = "scale sqrt", v = "view vertical")
+function load_zoom_grid_color_scale_view(file; z = "zoom to fit", g = "grid no", c = "cmap scm_greyC", s = "scale log", v = "view vertical")
 	sao.set("file $file") # loads the file into DS9
 	sao.set(v)  # sets the view (to vertical)
 	sao.set(g) 	# turns on the grid

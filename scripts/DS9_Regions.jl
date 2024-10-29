@@ -1,14 +1,11 @@
 """
 26 October 2024)
-Cab assume `DS9_start` has run (and so the project has been activated), the ds9 window is open, and the image is loaded with the default settings.  But if that's not the case, it will srun DS9_start.jl to get everything set up.
+Cab assume `DS9_start` has run (and so the project has been activated), the ds9 window is open, and the image is loaded with the default settings.  But if that's not the case, it will run DS9_start.jl to get everything set up.
 
 Taken from `P24a_Brightest.jl``
 """
 
-if !@isdefined(sao) # wimpy 
-	startPath = joinpath(homedir(), "Gitted/OlegIMBH/scripts/DS9_start.jl")
-	include(startPath)
-end
+include(joinpath(homedir(), "Gitted/OlegIMBH/src/intro.jl"))
 
 using CSV
 using DataFrames
@@ -18,14 +15,16 @@ include(srcdir("verifyRegFileSent.jl"))
 
 # Read and process the data once
 columnsToRead = 1:37
-df = CSV.read(joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
+if !isdefined(Main, :df)
+    df = CSV.read(joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
+end
 
 objectType = ["bright star", "faint star ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
 for i in eachindex(objectType)
     println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
 end
 
-objectTypeIndex = 2
+objectTypeIndex = 1
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 # below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
 
@@ -42,9 +41,11 @@ bright_Q444_flag = df.Column37[bright_ind]
 
 bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
 
+println("\nwith 99.999: $(length(bright_good_ind))")
 # Filter out indices where the value in bright16 or bright29 is 99.999
-bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright_ind))
+bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright_good_ind))
 # below: println("number of good ones: ", length(bright_good_ind))
+println("without 99.999: $(length(bright_good_ind))\n")
 
 # Function to generate random or sorted values
 function generate_values(randBright::Bool, nBrightest::Int)
@@ -64,8 +65,13 @@ function generate_values(randBright::Bool, nBrightest::Int)
         brightest10_29_Yvalues = df.Column4[bright_ind][bright_good_ind][random_indices_29]
     else
         # Sort by value
-        sorted16_indices = sortperm(bright16_good)
-        sorted29_indices = sortperm(bright29_good)
+		if objectTypeIndex == 2
+            sorted16_indices = sortperm(bright16_good, rev=true)
+            sorted29_indices = sortperm(bright29_good, rev=true)
+        else
+            sorted16_indices = sortperm(bright16_good)
+            sorted29_indices = sortperm(bright29_good)
+        end
 
         brightest10_16 = bright16_good[sorted16_indices][1:nBrightest]
         brightest10_29 = bright29_good[sorted29_indices][1:nBrightest]
@@ -80,14 +86,14 @@ end
 
 # Example usage
 randBright = false  # Set this to true for random selection, false for sorted selection
-nBrightest = 100
+nBrightest = 147
 
 # Could put these lines in a function, too, to call from the REPL.
 # Generate values
-brightest10_16_Xvalues, brightest10_16_Yvalues, brightest10_29_Xvalues, brightest10_29_Yvalues = generate_values(randBright, nBrightest)
+selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = generate_values(randBright, nBrightest)
 
-regFile_1 = DS9_writeRegionFile(brightest10_16_Xvalues, brightest10_16_Yvalues, 25, "F200"; color = "green")
-regFile_2 = DS9_writeRegionFile(brightest10_29_Xvalues, brightest10_29_Yvalues, 25, "F444"; color = "red")
+regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
+regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")

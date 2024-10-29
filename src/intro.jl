@@ -4,8 +4,8 @@ using DrWatson
 import SAOImageDS9
 const sao = SAOImageDS9
 
-include(srcdir("connectDS9.jl"))
 include(srcdir("load_zoom_grid_color.jl"))
+include(srcdir("connectDS9.jl"))
 
 println(
 """
