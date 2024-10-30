@@ -1,17 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.20.1
+# v0.20.3
 
 using Markdown
 using InteractiveUtils
 
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
+    #! format: off
     quote
         local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
+    #! format: on
 end
 
 # ╔═╡ 572dbcee-cb58-4b21-8993-5d159f02228b
@@ -36,6 +38,7 @@ begin
 	using Plots
 	using PlotThemes  # PlotThemes needs Plots to work.
 	theme(:default) # :dark)
+	using HypertextLiteral
 	# using Printf
 	
     # AstroIO
@@ -136,23 +139,33 @@ begin
 =#
 end
 
-# ╔═╡ 43981055-f016-46e6-a019-9ac4501db0ad
+# ╔═╡ b4f6e44a-6da5-4b1a-bf5b-af31d35f391e
+@bind screenWidth @htl("""
+<div>
+    <script>
+        var div = currentScript.parentElement
+        div.value = screen.width
+    </script>
+</div>
+Cell 1 of 2 for widening.
+""")
+
+# ╔═╡ 87fd42a3-0a6c-41ae-a040-503403eabe07
+@bind cellWidth Slider(500:25:1100, show_value=true, default=775)
+
+# ╔═╡ db3e8f5a-88a7-494a-9d50-640d91aac997
 begin
-	# to widen cell width; https://discourse.julialang.org/t/cell-width-in-pluto-notebook/49761/4
-	html"""
-	<style>
-		main {
-			margin: 0 auto;
-			max-width: 2000px;
-	    	padding-left: max(160px, 10%);
-	    	padding-right: max(160px, 10%);
-		}
-	        # 383px to accomodate TableOfContents(aside=true)
-	        # 313px on vertical display
-			# 160px on vertical display overlaps but gives sufficient space
-	</style>
-	"""
-	md" ###### Widens cell width proportionately to window width."
+    # cellWidth = min(1000, screenWidth * 0.50)
+    @htl("""
+    <style>
+    pluto-notebook {
+		margin-left: 10px;
+        # margin: auto;
+        width: $(cellWidth)px;
+    }
+    </style>
+	Cell 2 of 2 for widening.
+    """)
 end
 
 # ╔═╡ 6008384b-131c-4930-81a6-fb680420df33
@@ -434,7 +447,9 @@ md"""
 # ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
 # ╟─e0a42a3c-00de-4ff6-8862-46fcd0596315
 # ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
-# ╠═43981055-f016-46e6-a019-9ac4501db0ad
+# ╠═b4f6e44a-6da5-4b1a-bf5b-af31d35f391e
+# ╠═87fd42a3-0a6c-41ae-a040-503403eabe07
+# ╠═db3e8f5a-88a7-494a-9d50-640d91aac997
 # ╟─6008384b-131c-4930-81a6-fb680420df33
 # ╟─94062cd4-b278-444d-b93e-694d26d30b50
 # ╟─1afaf901-30f0-4b58-98a5-a8ae88f3fccb
@@ -446,7 +461,7 @@ md"""
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
-# ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
 # ╠═5a22ed1e-a50f-40c6-857a-d85675385890
