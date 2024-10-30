@@ -400,6 +400,29 @@ md"""
         - (doesn't look exactly square, but close enough)
 """
 
+# ╔═╡ 5a22ed1e-a50f-40c6-857a-d85675385890
+md"""
+### Current Confusion (29 October)
+!!! note ""
+    - data file:
+	- relevant columns
+	- list default culling have 99.999s in one wavelength or the other
+	- plot 31 sorted brightest (lowest magnitude), get left/right segration
+	- instead plot random, get random
+	  - show 32, 100
+	- remove every row with a 99.999 in either eavelength, ok.
+		- but does that make any sense
+	- the "faint" ones are equally confusing, but in a different way
+	  - down to only 147 after 99.999 removal
+	  - they concentrate twoard the edges
+	  - again random ok
+    QUESTIONS
+	1) what does the 99.999 signify?
+	1) What exactly is meant by "faint" and "bright"
+    1) if the non-99.999 value is valid, why do we have the segregation?
+	1) One can imagine, I suppose, that the "faint" ones avoid the middle, but why would than form a square?
+"""
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
 # ╟─754dbb34-631a-4aea-8660-443f70f11ea9
@@ -425,4 +448,5 @@ md"""
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
 # ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
-# ╠═f654239b-14d5-4eec-bf65-0d237ff32746
+# ╟─f654239b-14d5-4eec-bf65-0d237ff32746
+# ╠═5a22ed1e-a50f-40c6-857a-d85675385890

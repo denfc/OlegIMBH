@@ -1,6 +1,6 @@
 """
 26 October 2024)
-Cab assume `DS9_start` has run (and so the project has been activated), the ds9 window is open, and the image is loaded with the default settings.  But if that's not the case, it will run DS9_start.jl to get everything set up.
+If DS9 not running, will open a new one.
 
 Taken from `P24a_Brightest.jl``
 """
@@ -24,7 +24,7 @@ for i in eachindex(objectType)
     println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
 end
 
-objectTypeIndex = 1
+objectTypeIndex = 2
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 # below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
 
@@ -92,8 +92,11 @@ nBrightest = 147
 # Generate values
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = generate_values(randBright, nBrightest)
 
+testString = "test\ntest3"
+
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
 regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
+regFile_3 = DS9_writeRegionFile(-150, 250, 75, "text";  text = testString)
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")
@@ -101,6 +104,7 @@ sao.set("regions", "delete all")
 # DS9_SendRegAndVerify(regFile_2)
 DS9_SendRegAndVerify(regFile_1)
 DS9_SendRegAndVerify(regFile_2)
+DS9_SendRegAndVerify(regFile_3)
 
 # regFile_test = "/home/dfc123/Gitted/OlegIMBH/data/sims/F444_save.reg"
 # DS9_SendRegAndVerify(regFile_test)
