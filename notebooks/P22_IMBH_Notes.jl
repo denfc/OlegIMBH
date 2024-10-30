@@ -255,8 +255,8 @@ md"""
 
 #### DOLPHOT
 !!! note ""
-    - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf); [JWST specifics when running](https://dolphot-jwst.readthedocs.io/en/latest/search.html?q=FITS&check_keywords=yes&area=default)) production of Omega Cen data.  I had not realized that the previous data were of the galactic center, so previous data and code moved into:
-    `GalacticCenter` directory created in `OlegIMBH/data/exp_raw` and `GalCenter`s in `scripts` and `src` directories.
+    - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf); [JWST specifics when running](https://dolphot-jwst.readthedocs.io/en/latest/search.html?q=FITS&check_keywords=yes&area=default)) production of Omega Cen data.  Previous data and code moved into:
+    `MAST` directory created in `OlegIMBH/data/exp_raw` and `MASTr`s in `scripts` and `src` directories.
 !!! warning "Where (and how) to back up the original data, i.e., those stored in \data\exp_raw?"
 !!! tip ""
     - Google Drive: G:\My Drive\Articles\Astrophysics\_New\IMBH\_Data_Backup
@@ -365,7 +365,6 @@ md"""
 !!! note ""
     [(Julia) Linux installation instructions here.](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
 	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0)
-	  - [region descriptions](https://ds9.si.edu/doc/ref/region.html)
 	- [JWST Near Infrared Camera](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
 	  - [NIRCAM Filters] (https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters#gsc.tab=0) 
 	  - central wavelength in tenths of microns!
@@ -413,25 +412,115 @@ md"""
 
 # ╔═╡ 5a22ed1e-a50f-40c6-857a-d85675385890
 md"""
-### Current Confusion (29 October)
+dfc 30 October 2024
+### Current Confusion (29--30 October)
+!!! note "Part 1: Data and Culling"
+    The relevant columns of the output file `omega_cen_phot`
+	1) Column 3: Object X position
+	1) Column 4: Object y position
+	1) Column 6: Signal-to-noise
+	1) Column 7: Object sharness
+	1) Column 10: Crowding
+	1) Column 11: Object type (1=bright star, 2=faint, 3=elongated, 4=hot pixel, 5=extended)
+	1) Column 16: Instrumental VEGAMAG magnitude, NIRCAM_F200W
+	1) Column 29:  Instrumental VEGAMAG magnitude, NIRCAM_F444W
+	1) Column 24: Photometry quality flag, NIRCAM_F200W
+	1) Column 37: Photometry quality flag, NIRCAM_F444W
+
+	[Culling](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html) to yield "A loose, completeness-oriented, selection to reject obvious outliers but preserve as many stars as possible can be done using the following parameters:"
+
+	- SNR >=4
+	- Sharp^2 <= 0.1
+	- Crowding <= 2.25
+	- Flag <= 3
+	- Type <= 2
+
+Julia code: bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Crowding[i] <= 2.25 && bright\_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright\_Q444\_flag[i] <= 3, 1:length(bright\_ind) )
+
+!!! note "Part 2: "bright" stars"
+    When the brightest (object type 1) 31 stars at F200 (green circles) and at F440 (red circles) are place on the image (below), a strange picture results.  All the red circles are on the left side and all but four of the green circles are on the right side.  When the number is increased to 32, a red circle appears on the right-hand side (not shown).
+"""
+
+# ╔═╡ 9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
+begin
+	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
+	imageName = "bright_31_sorted_inc99.png"
+	imagePath = joinpath(imageFolder, imageName)
+	LocalResource(imagePath)
+end
+
+# ╔═╡ 6cdb1f4a-b5c4-4fd5-be8c-88dcbd755d57
+md"""
 !!! note ""
-    - data file:
-	- relevant columns
-	- list default culling have 99.999s in one wavelength or the other
-	- plot 31 sorted brightest (lowest magnitude), get left/right segration
-	- instead plot random, get random
-	  - show 32, 100
-	- remove every row with a 99.999 in either eavelength, ok.
-		- but does that make any sense
-	- the "faint" ones are equally confusing, but in a different way
-	  - down to only 147 after 99.999 removal
-	  - they concentrate twoard the edges
-	  - again random ok
-    QUESTIONS
-	1) what does the 99.999 signify?
-	1) What exactly is meant by "faint" and "bright"
-    1) if the non-99.999 value is valid, why do we have the segregation?
-	1) One can imagine, I suppose, that the "faint" ones avoid the middle, but why would than form a square?
+	Some of these culled, "good" stars, however, show a 99.999 value in the magnitude column in one of the wavelengths, i.e., in the one that does not appear on the image.  What does that number mean?  The only description I found lies in the DOLPHOT JWST section on "Artificial Star Tests," which states ([here](https://dolphot-jwst.readthedocs.io/en/latest/asts/output.html)) "Stars which are not detected in the output photometry will have magnitude measurements of 99.999."  Presumably it carries the same meaning here, that the star has not been detected at one wavelength.  (Or did test stars somehow migrate into our image?)
+
+	What happens if we remove these stars from the already-culled selection? (For one thing, the number classified as "good" drops from about 580,000 to about 430,000.) First, in the image below (contrast increased to let the circles show more easily), about half the stars are now common to both wavelengths, having both red and green circles (which at a quick glance by non-color-blind eyes will look yellow). Second, although the green ones still tend more toward the right-hand side, the reds are distributed across the image.
+
+Julia code: `bright\_good\_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright\_good\_ind))`
+"""
+
+# ╔═╡ 7aca6436-c98c-4212-b6ee-77c6235ff110
+let
+	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
+	imageName = "bright_31_sorted_no99.png"
+	imagePath = joinpath(imageFolder, imageName)
+	LocalResource(imagePath)
+end
+
+# ╔═╡ 35bdb6da-6ca6-43cd-b1be-dd9fdacf1ee6
+md"""
+!!! note ""
+	What if instead of sorting by magnitude, we take 31 randomly? The following image shows what we expected at the start, a random distribution of stars.
+"""
+
+# ╔═╡ e831f3ec-2a23-44b3-a5cc-c036aac608a7
+let
+	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
+	imageName = "bright_31_random_no99.png"
+	imagePath = joinpath(imageFolder, imageName)
+	LocalResource(imagePath)
+end
+
+# ╔═╡ 0dc469c0-466d-49f7-81dd-56df3af96943
+md"""
+!!! note ""
+	If we return to the stars sorted by magnitude and triple the number to 123, below we see a distribution more random than the previously sorted one.
+"""
+
+# ╔═╡ b0062abc-a10a-4f55-b0b6-a12554a38bdf
+let
+	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
+	imageName = "bright_123_random_no99.png"
+	imagePath = joinpath(imageFolder, imageName)
+	LocalResource(imagePath)
+end
+
+# ╔═╡ ec7e248f-2173-43cb-abb4-50427fdf675e
+md"""
+!!! note "Part 3: "faint" stars."
+	Before the removal of the 99.999s, only about 1500 stars clasified as "faint" remain, and after the removal of the 99.999s, only 147 of those are left, so to encounter another mystery, let us plot all of them, below.  If selected randomly, we would see a mix of red, green, and yellow because some are selected more than once, but reassuringly, all 147 of the sorted ones overlap.
+
+	The distribtion of the stars in the image, however, does not reassure us.  One can imagine, I suppose, that "faint" stars avoid the middle of the image and possibly would extend out in some roughtly circular manner, but how can they concentrate toward the edges of the square image?
+"""
+
+# ╔═╡ 47da4df4-f263-498c-bcf3-3a07fba8d723
+let
+	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
+	imageName = "faint_147_sorted_no99.png"
+	imagePath = joinpath(imageFolder, imageName)
+	LocalResource(imagePath)
+end
+
+# ╔═╡ e9f4e8b9-6388-454f-9808-7abba0f1dcc1
+md"""
+!!! note "Part 4: Questions"
+	1) Does the "99.999" mean anything more than "not detected"?  If that's all it means, how can one explain why the brightest stars observed at one wavelength and not observed at the other fall on one side of the image?
+	    - Is there any possibility that some test stars leaked into the image?
+	1) What exactly are the criteria applied for "bright" and "faint" object types?
+	1) A possible next step: try more stringent culling parameters (that are mentioned in the documentation) and see if the original segmentation vanishes. Even if it does, however, we would still be left with explaining that original segmentation.
+	1) Faint stars at the edges?!
+	1) How much confidence do we have that the objects plotted are members of the cluster and not foreground or background objects? Could some be galaxies?
+	1) And a bonus: how many programming errors have I made?
 """
 
 # ╔═╡ Cell order:
@@ -458,7 +547,17 @@ md"""
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
-# ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
-# ╠═5a22ed1e-a50f-40c6-857a-d85675385890
+# ╟─5a22ed1e-a50f-40c6-857a-d85675385890
+# ╟─9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
+# ╟─6cdb1f4a-b5c4-4fd5-be8c-88dcbd755d57
+# ╟─7aca6436-c98c-4212-b6ee-77c6235ff110
+# ╟─35bdb6da-6ca6-43cd-b1be-dd9fdacf1ee6
+# ╟─e831f3ec-2a23-44b3-a5cc-c036aac608a7
+# ╟─0dc469c0-466d-49f7-81dd-56df3af96943
+# ╟─b0062abc-a10a-4f55-b0b6-a12554a38bdf
+# ╟─ec7e248f-2173-43cb-abb4-50427fdf675e
+# ╟─47da4df4-f263-498c-bcf3-3a07fba8d723
+# ╟─e9f4e8b9-6388-454f-9808-7abba0f1dcc1

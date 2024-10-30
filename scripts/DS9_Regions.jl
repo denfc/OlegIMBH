@@ -86,7 +86,7 @@ end
 
 # Example usage
 randBright = false  # Set this to true for random selection, false for sorted selection
-nBrightest = 20
+nBrightest = 147
 
 # Could put these lines in a function, too, to call from the REPL.
 # Generate values
