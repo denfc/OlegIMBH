@@ -86,17 +86,18 @@ end
 
 # Example usage
 randBright = false  # Set this to true for random selection, false for sorted selection
-nBrightest = 147
+nBrightest = 20
 
 # Could put these lines in a function, too, to call from the REPL.
 # Generate values
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = generate_values(randBright, nBrightest)
 
-testString = "test\ntest3"
+if randBright ds9String = "$nBrightest random\n" else ds9String = "$nBrightest sorted\n" end
+ds9String = "$(objectType[objectTypeIndex])\n"*ds9String*"$(length(bright_good_ind)) good"
 
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
 regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
-regFile_3 = DS9_writeRegionFile(-150, 250, 75, "text";  text = testString)
+regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String) # default font_size = 24 can be changed)
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")

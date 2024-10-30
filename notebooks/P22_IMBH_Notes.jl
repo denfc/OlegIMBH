@@ -139,35 +139,6 @@ begin
 =#
 end
 
-# ╔═╡ b4f6e44a-6da5-4b1a-bf5b-af31d35f391e
-@bind screenWidth @htl("""
-<div>
-    <script>
-        var div = currentScript.parentElement
-        div.value = screen.width
-    </script>
-</div>
-Cell 1 of 2 for widening.
-""")
-
-# ╔═╡ 87fd42a3-0a6c-41ae-a040-503403eabe07
-@bind cellWidth Slider(500:25:1100, show_value=true, default=775)
-
-# ╔═╡ db3e8f5a-88a7-494a-9d50-640d91aac997
-begin
-    # cellWidth = min(1000, screenWidth * 0.50)
-    @htl("""
-    <style>
-    pluto-notebook {
-		margin-left: 10px;
-        # margin: auto;
-        width: $(cellWidth)px;
-    }
-    </style>
-	Cell 2 of 2 for widening.
-    """)
-end
-
 # ╔═╡ 6008384b-131c-4930-81a6-fb680420df33
 	md"""
 	###### Dark Theme Plot Choice
@@ -211,6 +182,32 @@ begin
 	  "
 end
   ╠═╡ =#
+
+# ╔═╡ 87fd42a3-0a6c-41ae-a040-503403eabe07
+@bind cellWidth Slider(500:25:1100, show_value=true, default=775)
+
+# ╔═╡ db3e8f5a-88a7-494a-9d50-640d91aac997
+begin
+	@bind screenWidth @htl("""
+<div>
+    <script>
+        var div = currentScript.parentElement
+        div.value = screen.width
+    </script>
+</div>
+""")
+    # cellWidth = min(1000, screenWidth * 0.50)
+    @htl("""
+    <style>
+    pluto-notebook {
+		margin-left: 10px;
+        # margin: auto;
+        width: $(cellWidth)px;
+    }
+    </style>
+	Widening cell.
+    """)
+end
 
 # ╔═╡ 9a46221b-68f7-4101-b30a-13cc6d87f213
 md" ###### Begin New Coding Here."
@@ -367,7 +364,8 @@ md"""
 ### DS9 (23 October)
 !!! note ""
     [(Julia) Linux installation instructions here.](https://juliaastro.org/SAOImageDS9.jl/stable/install/)
-	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0) 
+	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0)
+	  - [region descriptions](https://ds9.si.edu/doc/ref/region.html)
 	- [JWST Near Infrared Camera](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
 	  - [NIRCAM Filters] (https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters#gsc.tab=0) 
 	  - central wavelength in tenths of microns!
@@ -447,21 +445,20 @@ md"""
 # ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
 # ╟─e0a42a3c-00de-4ff6-8862-46fcd0596315
 # ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
-# ╠═b4f6e44a-6da5-4b1a-bf5b-af31d35f391e
-# ╠═87fd42a3-0a6c-41ae-a040-503403eabe07
-# ╠═db3e8f5a-88a7-494a-9d50-640d91aac997
+# ╟─db3e8f5a-88a7-494a-9d50-640d91aac997
 # ╟─6008384b-131c-4930-81a6-fb680420df33
 # ╟─94062cd4-b278-444d-b93e-694d26d30b50
 # ╟─1afaf901-30f0-4b58-98a5-a8ae88f3fccb
 # ╟─f22ea8e5-e458-47bc-950a-3c8e0de06df3
 # ╟─d68c548a-71a3-45e6-9ec5-a6d9358a716a
+# ╠═87fd42a3-0a6c-41ae-a040-503403eabe07
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
 # ╟─c3b4a98c-4025-43bf-96dc-2b3c9b376c59
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
-# ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
 # ╠═5a22ed1e-a50f-40c6-857a-d85675385890

@@ -17,7 +17,7 @@ function DS9_writeRegionFile(x::Vector{Float64}, y::Vector{Float64}, radius::Int
 	end
 end
 
-function DS9_writeRegionFile(x::Int64, y::Int64, radius::Int64, fName::String; text = "")
+function DS9_writeRegionFile(x::Int64, y::Int64, radius::Int64, fName::String; text = "", font_size = 20)
 	region_file = joinpath(datadir("sims"), fName)
 	region_file = region_file * ".reg"
 	open(region_file, "w") do f
@@ -25,7 +25,8 @@ function DS9_writeRegionFile(x::Int64, y::Int64, radius::Int64, fName::String; t
 		# Split the text into multiple lines
 		lines = split(text, "\n")
 		for (i, line) in enumerate(lines)
-			write(f, "text($x, $(y - i * 100)) # text={$line}\n")
+			# write(f, "text($x, $(y - i * 100)) # text={$line} font=\"helvetica $font_size normal\" justify=left\n")  # couldn't get left justification to work
+			write(f, "text($x, $(y - i * 150)) # text={$line} font=\"helvetica $font_size normal\"\n")
 		end
 		if isfile(region_file)
 			println("Region file created successfully at $region_file.")
