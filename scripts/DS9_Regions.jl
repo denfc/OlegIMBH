@@ -19,12 +19,12 @@ if !isdefined(Main, :df)
     df = CSV.read(joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
 end
 
-objectType = ["bright star", "faint star ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
+objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
 for i in eachindex(objectType)
     println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
 end
 
-objectTypeIndex = 2
+objectTypeIndex = 1
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 # below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
 
@@ -85,8 +85,8 @@ function generate_values(randBright::Bool, nBrightest::Int)
 end
 
 # Example usage
-randBright = false  # Set this to true for random selection, false for sorted selection
-nBrightest = 147
+randBright = true  # Set this to true for random selection, false for sorted selection
+nBrightest = 250
 
 # Could put these lines in a function, too, to call from the REPL.
 # Generate values

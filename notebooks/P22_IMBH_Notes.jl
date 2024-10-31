@@ -412,14 +412,14 @@ md"""
 
 # ╔═╡ 5a22ed1e-a50f-40c6-857a-d85675385890
 md"""
-dfc 30 October 2024
+# dfc 31 October 2024
 ### Current Confusion (29--30 October)
 !!! note "Part 1: Data and Culling"
-    The relevant columns of the output file `omega_cen_phot`
+    The relevant columns of the output file `omega_cen_phot`:
 	1) Column 3: Object X position
-	1) Column 4: Object y position
+	1) Column 4: Object Y position
 	1) Column 6: Signal-to-noise
-	1) Column 7: Object sharness
+	1) Column 7: Object sharpness
 	1) Column 10: Crowding
 	1) Column 11: Object type (1=bright star, 2=faint, 3=elongated, 4=hot pixel, 5=extended)
 	1) Column 16: Instrumental VEGAMAG magnitude, NIRCAM_F200W
@@ -435,10 +435,10 @@ dfc 30 October 2024
 	- Flag <= 3
 	- Type <= 2
 
-Julia code: bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Crowding[i] <= 2.25 && bright\_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright\_Q444\_flag[i] <= 3, 1:length(bright\_ind) )
+Julia code: `bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Crowding[i] <= 2.25 && bright\_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright\_Q444\_flag[i] <= 3, 1:length(bright\_ind) )`
 
 !!! note "Part 2: "bright" stars"
-    When the brightest (object type 1) 31 stars at F200 (green circles) and at F440 (red circles) are place on the image (below), a strange picture results.  All the red circles are on the left side and all but four of the green circles are on the right side.  When the number is increased to 32, a red circle appears on the right-hand side (not shown).
+    When the brightest (object type 1) 31 stars at F200 (green circles) and at F440 (red circles) are place on the image (below), a strange picture results.  All the red circles are on the left side and all but four of the green circles are on the right side.  When the number of stars is increased to 32, a red circle appears on the right-hand side (not shown).
 """
 
 # ╔═╡ 9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
@@ -470,7 +470,7 @@ end
 # ╔═╡ 35bdb6da-6ca6-43cd-b1be-dd9fdacf1ee6
 md"""
 !!! note ""
-	What if instead of sorting by magnitude, we take 31 randomly? The following image shows what we expected at the start, a random distribution of stars.
+	What if instead of sorting by magnitude, we take 31 randomly? The following image shows what we (mostly) expected at the start, a random distribution of stars with maybe a slight concentration again to the right that vanishes with a larger number of stars (not shown).
 """
 
 # ╔═╡ e831f3ec-2a23-44b3-a5cc-c036aac608a7
@@ -484,7 +484,7 @@ end
 # ╔═╡ 0dc469c0-466d-49f7-81dd-56df3af96943
 md"""
 !!! note ""
-	If we return to the stars sorted by magnitude and triple the number to 123, below we see a distribution more random than the previously sorted one.
+	If we return to the stars sorted by magnitude and triple the number to 123, below we see a distribution more random than the previously sorted one (though still perhaps with a slight concentraion toward the right-hand side).
 """
 
 # ╔═╡ b0062abc-a10a-4f55-b0b6-a12554a38bdf
@@ -497,10 +497,10 @@ end
 
 # ╔═╡ ec7e248f-2173-43cb-abb4-50427fdf675e
 md"""
-!!! note "Part 3: "faint" stars."
-	Before the removal of the 99.999s, only about 1500 stars clasified as "faint" remain, and after the removal of the 99.999s, only 147 of those are left, so to encounter another mystery, let us plot all of them, below.  If selected randomly, we would see a mix of red, green, and yellow because some are selected more than once, but reassuringly, all 147 of the sorted ones overlap.
+!!! note "Part 3: "faint"."
+	Before the removal of the 99.999s, only about 1500 objects clasified as "faint" remain --- the classification written above, "faint" is the correct one, not the "faint star" that the (two) images shown --- and after the removal of the 99.999s, only 147 of those are left, so to encounter another mystery, let us plot all of them, below.  If selected randomly, we would see a mix of red, green, and yellow because some are selected more than once, but reassuringly, all 147 of the sorted ones overlap.
 
-	The distribtion of the stars in the image, however, does not reassure us.  One can imagine, I suppose, that "faint" stars avoid the middle of the image and possibly would extend out in some roughtly circular manner, but how can they concentrate toward the edges of the square image?
+	The distribtion of the objects in the image, however, does not reassure us.  One can imagine, I suppose, that "faint" objects avoid the middle of the image and possibly would extend out in some roughly circular manner, but how can they concentrate toward the edges of a square image?
 """
 
 # ╔═╡ 47da4df4-f263-498c-bcf3-3a07fba8d723
@@ -514,13 +514,14 @@ end
 # ╔═╡ e9f4e8b9-6388-454f-9808-7abba0f1dcc1
 md"""
 !!! note "Part 4: Questions"
-	1) Does the "99.999" mean anything more than "not detected"?  If that's all it means, how can one explain why the brightest stars observed at one wavelength and not observed at the other fall on one side of the image?
-	    - Is there any possibility that some test stars leaked into the image?
-	1) What exactly are the criteria applied for "bright" and "faint" object types?
+	1) Does the "99.999" mean anything more than "not detected"? If that's all it means, how can one explain why the brightest stars observed at one wavelength and not observed at the other fall on one side of the image?
+	    - Is there any possibility that test stars leaked into the image? (It would be nice to find another reference to a magnitude of 99.999 outside of the documentation's test-star section.)
+	1) What exactly are the criteria applied for the "bright star" and "faint" object types?
 	1) A possible next step: try more stringent culling parameters (that are mentioned in the documentation) and see if the original segmentation vanishes. Even if it does, however, we would still be left with explaining that original segmentation.
 	1) Faint stars at the edges?!
 	1) How much confidence do we have that the objects plotted are members of the cluster and not foreground or background objects? Could some be galaxies?
-	1) And a bonus: how many programming errors have I made?
+	    - Even so, we would not expect the kind of spatial segregation that we see.
+	1) And a bonus: how many programming errors have I made?  If you have any ideas on how to check the consistency of these results, please let me know.
 """
 
 # ╔═╡ Cell order:
