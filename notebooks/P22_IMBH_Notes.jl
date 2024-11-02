@@ -413,7 +413,7 @@ md"""
 # ╔═╡ 5a22ed1e-a50f-40c6-857a-d85675385890
 md"""
 # dfc 31 October 2024
-### Current Confusion (29--30 October)
+### Current Confusion (29--30 October; report to Oleg)
 !!! note "Part 1: Data and Culling"
     The relevant columns of the output file `omega_cen_phot`:
 	1) Column 3: Object X position

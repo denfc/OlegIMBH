@@ -25,6 +25,11 @@ for i in eachindex(objectType)
 end
 
 objectTypeIndex = 1
+include99s =  true
+randBright = false  # Set this to true for random selection, false for sorted selection
+nBrightest = 31
+gross_limits = false # true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
+
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 # below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
 
@@ -39,13 +44,40 @@ bright_SharpSq = df.Column7[bright_ind].^2
 bright_Q200_flag = df.Column24[bright_ind]
 bright_Q444_flag = df.Column37[bright_ind]
 
-bright_good_ind = findall(i -> bright_SNR[i] >= 4 && bright_Crowding[i] <= 2.25 && bright_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright_Q444_flag[i] <= 3, 1:length(bright_ind) )
+# Define dictionaries with numerical limits
 
-println("\nwith 99.999: $(length(bright_good_ind))")
+limits = if gross_limits
+    Dict(
+        "SNR" => 4,
+        "Crowding" => 2.25,
+        "SharpSq" => 2.25,
+        "Q200_flag" => 3,
+        "Q444_flag" => 3
+    )
+else
+    Dict(
+        "SNR" => 5,
+        "Crowding" => 0.5,
+        "SharpSq" => 0.01,
+        "Q200_flag" => 3,
+        "Q444_flag" => 3
+    )
+end
+
+bright_good_ind = findall(i -> bright_SNR[i] >= limits["SNR"] &&
+                               bright_Crowding[i] <= limits["Crowding"] &&
+                               bright_SharpSq[i] <= limits["SharpSq"] &&
+                               bright_Q200_flag[i] <= limits["Q200_flag"] &&
+                               bright_Q444_flag[i] <= limits["Q444_flag"], 1:length(bright_ind))
+
+print("\nwith 99.999: $(length(bright_good_ind)) under ")
+if gross_limits println("gross limits\n") else println("stringent limits") end
 # Filter out indices where the value in bright16 or bright29 is 99.999
-bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright_good_ind))
-# below: println("number of good ones: ", length(bright_good_ind))
-println("without 99.999: $(length(bright_good_ind))\n")
+if !include99s
+	bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright_good_ind))
+	println("without 99.999: $(length(bright_good_ind))\n")
+end
+
 
 # Function to generate random or sorted values
 function generate_values(randBright::Bool, nBrightest::Int)
@@ -84,16 +116,13 @@ function generate_values(randBright::Bool, nBrightest::Int)
     return brightest10_16_Xvalues, brightest10_16_Yvalues, brightest10_29_Xvalues, brightest10_29_Yvalues
 end
 
-# Example usage
-randBright = true  # Set this to true for random selection, false for sorted selection
-nBrightest = 250
-
 # Could put these lines in a function, too, to call from the REPL.
 # Generate values
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = generate_values(randBright, nBrightest)
 
 if randBright ds9String = "$nBrightest random\n" else ds9String = "$nBrightest sorted\n" end
-ds9String = "$(objectType[objectTypeIndex])\n"*ds9String*"$(length(bright_good_ind)) good"
+ds9String = "$(objectType[objectTypeIndex])\n"*ds9String*"$(length(bright_good_ind)) good\nincludes 99s is $include99s"
+if gross_limits ds9String *= "\ngross limits" else ds9String *= "\nstringent limits" end
 
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
 regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
