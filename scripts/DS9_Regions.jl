@@ -25,10 +25,10 @@ for i in eachindex(objectType)
 end
 
 objectTypeIndex = 1
-include99s =  true
+include99s =  true # false
 randBright = false  # Set this to true for random selection, false for sorted selection
 nBrightest = 31
-gross_limits = false # true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
+gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 # below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
@@ -50,7 +50,7 @@ limits = if gross_limits
     Dict(
         "SNR" => 4,
         "Crowding" => 2.25,
-        "SharpSq" => 2.25,
+        "SharpSq" => 0.1,
         "Q200_flag" => 3,
         "Q444_flag" => 3
     )

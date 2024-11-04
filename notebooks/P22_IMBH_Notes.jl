@@ -414,6 +414,7 @@ md"""
 md"""
 # dfc 31 October 2024
 ### Current Confusion (29--30 October; report to Oleg)
+#### 3 November: some original images replaced by more "stringent" criteria
 !!! note "Part 1: Data and Culling"
     The relevant columns of the output file `omega_cen_phot`:
 	1) Column 3: Object X position
@@ -428,6 +429,7 @@ md"""
 	1) Column 37: Photometry quality flag, NIRCAM_F444W
 
 	[Culling](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html) to yield "A loose, completeness-oriented, selection to reject obvious outliers but preserve as many stars as possible can be done using the following parameters:"
+!!! warning " add `stringent` numbers; delineate below"
 
 	- SNR >=4
 	- Sharp^2 <= 0.1
@@ -444,7 +446,7 @@ Julia code: `bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Cro
 # ╔═╡ 9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
 begin
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_31_sorted_inc99.png"
+	imageName = "bright_31_sorted_inc99_stringent.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -462,7 +464,7 @@ Julia code: `bright\_good\_ind = filter(i -> bright16[i] != 99.999 && bright29[i
 # ╔═╡ 7aca6436-c98c-4212-b6ee-77c6235ff110
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_31_sorted_no99.png"
+	imageName = "bright_31_sorted_no99_gross.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -476,7 +478,7 @@ md"""
 # ╔═╡ e831f3ec-2a23-44b3-a5cc-c036aac608a7
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_31_random_no99.png"
+	imageName = "bright_31_random_no99_gross.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -490,7 +492,7 @@ md"""
 # ╔═╡ b0062abc-a10a-4f55-b0b6-a12554a38bdf
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_123_random_no99.png"
+	imageName = "bright_123_random_no99_gross.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -506,7 +508,7 @@ md"""
 # ╔═╡ 47da4df4-f263-498c-bcf3-3a07fba8d723
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "faint_147_sorted_no99.png"
+	imageName = "faint_57_sorted_no99_gross.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -522,6 +524,12 @@ md"""
 	1) How much confidence do we have that the objects plotted are members of the cluster and not foreground or background objects? Could some be galaxies?
 	    - Even so, we would not expect the kind of spatial segregation that we see.
 	1) And a bonus: how many programming errors have I made?  If you have any ideas on how to check the consistency of these results, please let me know.
+"""
+
+# ╔═╡ b016d6af-ae80-4b69-8378-b3155e3051c0
+md"""
+### "Stringent Criteria (3 Nov 2024)"
+!!! warning "From paper [], more stringent criteria implemented, some used above in images.  Need to read paper and modify these notes slightly."
 """
 
 # ╔═╡ Cell order:
@@ -562,3 +570,4 @@ md"""
 # ╟─ec7e248f-2173-43cb-abb4-50427fdf675e
 # ╟─47da4df4-f263-498c-bcf3-3a07fba8d723
 # ╟─e9f4e8b9-6388-454f-9808-7abba0f1dcc1
+# ╠═b016d6af-ae80-4b69-8378-b3155e3051c0
