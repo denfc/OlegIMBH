@@ -429,13 +429,14 @@ md"""
 	1) Column 37: Photometry quality flag, NIRCAM_F444W
 
 	[Culling](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html) to yield "A loose, completeness-oriented, selection to reject obvious outliers but preserve as many stars as possible can be done using the following parameters:"
-!!! warning " add `stringent` numbers; delineate below"
-
-	- SNR >=4
-	- Sharp^2 <= 0.1
-	- Crowding <= 2.25
-	- Flag <= 3
-	- Type <= 2
+!!! warning "  delineate use below"
+| Criterion | "gross" limit | "stringent" limit|
+|:----------:|:---------:|:---------:|
+|SNR   |     >=4|        >= 5|
+|Sharp^2 |<= 0.1  |       <= 0.01|
+|Crowding| <= 2.25 |     <= 0.5|
+|Flag| <= 3  |            <= 3|
+|Type| <= 2 |            <= 2|
 
 Julia code: `bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Crowding[i] <= 2.25 && bright\_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright\_Q444\_flag[i] <= 3, 1:length(bright\_ind) )`
 
@@ -532,6 +533,12 @@ md"""
 !!! warning "From paper [], more stringent criteria implemented, some used above in images.  Need to read paper and modify these notes slightly."
 """
 
+# ╔═╡ ac029dc2-9601-4f7d-964f-3139ebf56214
+md"""
+5 nov\
+[M92](https://archive.stsci.edu/hlsp/jwststars)
+"""
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
 # ╟─754dbb34-631a-4aea-8660-443f70f11ea9
@@ -553,13 +560,13 @@ md"""
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
 # ╟─c3b4a98c-4025-43bf-96dc-2b3c9b376c59
-# ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
+# ╠═1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
 # ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
-# ╟─5a22ed1e-a50f-40c6-857a-d85675385890
+# ╠═5a22ed1e-a50f-40c6-857a-d85675385890
 # ╟─9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
 # ╟─6cdb1f4a-b5c4-4fd5-be8c-88dcbd755d57
 # ╟─7aca6436-c98c-4212-b6ee-77c6235ff110
@@ -571,3 +578,4 @@ md"""
 # ╟─47da4df4-f263-498c-bcf3-3a07fba8d723
 # ╟─e9f4e8b9-6388-454f-9808-7abba0f1dcc1
 # ╠═b016d6af-ae80-4b69-8378-b3155e3051c0
+# ╠═ac029dc2-9601-4f7d-964f-3139ebf56214
