@@ -528,7 +528,7 @@ md"""
 
 # ╔═╡ b016d6af-ae80-4b69-8378-b3155e3051c0
 md"""
-### "Stringent Criteria (3 Nov 2024)"
+### "Stringent" Criteria (3 Nov 2024)
 !!! warning "From paper [], more stringent criteria implemented, some used above in images.  Need to read paper and modify these notes slightly."
 """
 
