@@ -410,7 +410,7 @@ md"""
 
 # ╔═╡ 5a22ed1e-a50f-40c6-857a-d85675385890
 md"""
-# dfc 31 October 2024
+###### here at one # to have print on new page; dfc 31 October 2024
 ### Current Confusion (29--30 October; report to Oleg)
 #### 3 November: some original images replaced by more "stringent" criteria
 !!! note "Part 1: Data and Culling"
@@ -533,19 +533,29 @@ md"""
 
 # ╔═╡ ac029dc2-9601-4f7d-964f-3139ebf56214
 md"""
-4 nov\
-[M92](https://archive.stsci.edu/hlsp/jwststars)
-
-
+### M92 (4 November)
+!!! note ""
+[WST Resolved Stellar Populations Early Release Science](https://archive.stsci.edu/hlsp/jwststars)
 """
 
 # ╔═╡ a54f0123-9a04-495e-bd00-0b50dd721ea6
 md"""
 ### 5 November 2024
+!!! note "Artifical Star Tests; see LiquidText, Intermediate_Black_Holes, Weisz_2024_ApJS_271_47; verbatim excerpts below:"
+	- Characterizing uncertainties for crowded-field stellar photometry requires artificial star tests (ASTs). ASTs are synthetic  stars with known positions and magnitudes that are inserted  into real JWST science images and then recovered by  DOLPHOT.
+	- 3.7. Artificial Star Tests.  While DOLPHOT provides an estimate of photometric  uncertainties based on the goodness of fit and the noise  characteristics of the data, a much better characterization of the  photometric measurement uncertainties and selection function  is accomplished through ASTs. This long-established approach  (e.g., Stetson 1987; Stetson & Harris 1988) represents the “gold standard” in the field of resolved stellar population photometry.  It relies on the injection of mock stellar sources into the raw  images, which are then recovered using the identical photometric procedure used to construct the raw and stellar  DOLPHOT catalogs.
+	- The first step in running ASTs is to create a suitable input  star catalog. For each target and camera, we created a list of  $\lesssim 4 \times 10^5$ mock stars (see Table 4), with positions drawn from  uniform spatial distributions on the NIRCam/NIRISS footprints, aside from gaps between the chips and modules.
+	- The artificial stars are then injected into all science (i.e., cal) images ...
+!!! note "6418 Have 99.999 in both Col 16 & 19"
+	- indices = findall(row -> row.Column16 == 99.999 && row.Column29 == 99.999, eachrow(df))
+	  - 6418-element Vector{Int64}
+	- looking at the last one (row 748335), for both F200W and F200W separately, individual Total counts, Normalized count rate, Signal-to-noise, and Sharpness are negative, and the Photometry quality flag equals 0 --- but the overall Signal-to-Noise (Column 6) is 14.5 and while the overal Object Sharpness (Column 7) is negative, the Sharpness of F44W (Column 34) is 0.245.
+
 !!! note "Chip coordinates"
 	[McMaster ref](https://physics.mcmaster.ca/~harris/dolphot_primer.txt): NOTE: as said above, for the reference image there is no 'chip 2'.
     It's already been combined into a single image.  Each chip has an internal (x,y) coordinate system where x runs from 1--> 4096 and y runs from 1--> 2048. But the reference image is (4096x4096), more or less.  Thus when DOLPHOT converts the coordinates of each star into the reference-image scale, the y-values for chip 2 are increased by approximately 2048  to put them onto the reference image scale.  That is, in the final output photometry files, 
-** the (x,y) values for all the chip2 data are properly shifted to the reference image system! **
+    
+    ** the (x,y) values for all the chip2 data are properly shifted to the reference image system! **
 """
 
 # ╔═╡ 4ac99015-fa97-4905-9abf-f680a5231c5e
@@ -590,6 +600,6 @@ md"""
 # ╟─47da4df4-f263-498c-bcf3-3a07fba8d723
 # ╟─e9f4e8b9-6388-454f-9808-7abba0f1dcc1
 # ╠═b016d6af-ae80-4b69-8378-b3155e3051c0
-# ╠═ac029dc2-9601-4f7d-964f-3139ebf56214
+# ╟─ac029dc2-9601-4f7d-964f-3139ebf56214
 # ╠═a54f0123-9a04-495e-bd00-0b50dd721ea6
 # ╠═4ac99015-fa97-4905-9abf-f680a5231c5e
