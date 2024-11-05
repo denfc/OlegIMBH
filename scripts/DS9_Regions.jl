@@ -25,6 +25,8 @@ for i in eachindex(objectType)
 end
 
 objectTypeIndex = 1
+
+# include99 and only99s should not contradict each otherwise
 include99s =  true # false
 only99s = true
 randBright = true  # Set this to true for random selection, false for sorted selection
