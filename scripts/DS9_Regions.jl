@@ -26,8 +26,10 @@ end
 
 objectTypeIndex = 1
 include99s =  true # false
-randBright = false  # Set this to true for random selection, false for sorted selection
-nBrightest = 31
+only99s = true
+randBright = true  # Set this to true for random selection, false for sorted selection
+nStart = 1
+nBrightest = 100
 gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
@@ -68,16 +70,20 @@ bright_good_ind = findall(i -> bright_SNR[i] >= limits["SNR"] &&
                                bright_Crowding[i] <= limits["Crowding"] &&
                                bright_SharpSq[i] <= limits["SharpSq"] &&
                                bright_Q200_flag[i] <= limits["Q200_flag"] &&
-                               bright_Q444_flag[i] <= limits["Q444_flag"], 1:length(bright_ind))
+                               bright_Q444_flag[i] <= limits["Q444_flag"], eachindex(bright_ind))
 
 print("\nwith 99.999: $(length(bright_good_ind)) under ")
 if gross_limits println("gross limits\n") else println("stringent limits") end
+
 # Filter out indices where the value in bright16 or bright29 is 99.999
 if !include99s
-	bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, 1:length(bright_good_ind))
-	println("without 99.999: $(length(bright_good_ind))\n")
+    bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, eachindex(bright_good_ind))
+    println("without 99.999: $(length(bright_good_ind))\n")
 end
-
+if only99s
+    bright_good_ind = filter(i -> bright16[i] == 99.999 || bright29[i] == 99.999, eachindex(bright_good_ind))
+    println("only 99.999: $(length(bright_good_ind))\n")
+end
 
 # Function to generate random or sorted values
 function generate_values(randBright::Bool, nBrightest::Int)
@@ -104,9 +110,9 @@ function generate_values(randBright::Bool, nBrightest::Int)
             sorted16_indices = sortperm(bright16_good)
             sorted29_indices = sortperm(bright29_good)
         end
-
-        brightest10_16 = bright16_good[sorted16_indices][1:nBrightest]
-        brightest10_29 = bright29_good[sorted29_indices][1:nBrightest]
+		nFinish = nStart - 1 + nBrightest
+        brightest10_16 = bright16_good[sorted16_indices][nStart: nFinish]
+        brightest10_29 = bright29_good[sorted29_indices][nStart: nFinish]
         brightest10_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
         brightest10_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightest10_16, bright16_good)]
         brightest10_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightest10_29, bright29_good)]

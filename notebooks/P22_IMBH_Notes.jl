@@ -333,9 +333,7 @@ md"""
 	- After executing full Plotly "Logo" example (link above), spent time messing with my fits image, but didn't get it work and decided to try another tack of simply overlaying files."
 !!! tip "Using `AstroImages.load(file)` rather than `AstroImages.AstroImage(file)` allows simple addition of one file to another."
 	- Assume that the image loaded with `AstroImage` has the correct orientation, and rotate the image loaded with `load` to match it.  The rotation causes type-matching problems that require a couple of functions to correct so that the "overlay" addition can succeed.
-	- `load` here gave a black and white image because it had been clamped!: `typeof(imgLoad)`: Matrix{Gray{N0f8}} (alias for Array{Gray{Normed{UInt8, 8}}, 2}), whereas `typeof(imgAI)` yields
-AstroImageMat{Float32, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}, Y{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}}, Tuple{}, Matrix{Float32}, Tuple{X{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}, Y{Sampled{Int64, OneTo{Int64}, ForwardOrdered, Regular{Int64}, Points, NoMetadata}}}} (alias for AstroImage{Float32, 2, Tuple{X{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}, Y{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}}, Tuple{}, Array{Float32, 2}, Tuple{X{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}, Y{DimensionalData.Dimensions.Lookups.Sampled{Int64, Base.OneTo{Int64}, DimensionalData.Dimensions.Lookups.ForwardOrdered, DimensionalData.Dimensions.Lookups.Regular{Int64}, DimensionalData.Dimensions.Lookups.Points, DimensionalData.Dimensions.Lookups.NoMetadata}}}})
-
+	- `load` here gave a black and white image because it had been clamped!: `typeof(imgLoad)`: Matrix{Gray{N0f8}} (alias for Array{Gray{Normed{UInt8, 8}}, 2}), whereas `typeof(imgAI)` yields over 20 lines in the type definition, mostly DimensionalData.Dimensions.Lookups folowed by .ForwardOrdered or .Regular{Int64}, or .NoMetadata.
 !!! tip ""
     - but after being rotated via `ImageTransformations.imrotate`, the new type is OffsetMatrix{Gray{N0f8}, Matrix{Gray{N0f8}}} (alias for OffsetArray{Gray{Normed{UInt8, 8}}, 2, Array{Gray{Normed{UInt8, 8}}, 2}}).
 	  - the offset has to be removed: `imgLoad_rotated_noOffset = OffsetArrays.no_offset_view(imgLoad_rotated)`, and to add it to a (resized) plot image, the image has to be made into a regular array:  `imgLoad_final = Array(imgLoad_rotated_noOffset)`.
@@ -535,9 +533,23 @@ md"""
 
 # ╔═╡ ac029dc2-9601-4f7d-964f-3139ebf56214
 md"""
-5 nov\
+4 nov\
 [M92](https://archive.stsci.edu/hlsp/jwststars)
+
+
 """
+
+# ╔═╡ a54f0123-9a04-495e-bd00-0b50dd721ea6
+md"""
+### 5 November 2024
+!!! note "Chip coordinates"
+	[McMaster ref](https://physics.mcmaster.ca/~harris/dolphot_primer.txt): NOTE: as said above, for the reference image there is no 'chip 2'.
+    It's already been combined into a single image.  Each chip has an internal (x,y) coordinate system where x runs from 1--> 4096 and y runs from 1--> 2048. But the reference image is (4096x4096), more or less.  Thus when DOLPHOT converts the coordinates of each star into the reference-image scale, the y-values for chip 2 are increased by approximately 2048  to put them onto the reference image scale.  That is, in the final output photometry files, 
+** the (x,y) values for all the chip2 data are properly shifted to the reference image system! **
+"""
+
+# ╔═╡ 4ac99015-fa97-4905-9abf-f680a5231c5e
+
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -560,10 +572,10 @@ md"""
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
 # ╟─c3b4a98c-4025-43bf-96dc-2b3c9b376c59
-# ╠═1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
+# ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
-# ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
 # ╠═5a22ed1e-a50f-40c6-857a-d85675385890
@@ -579,3 +591,5 @@ md"""
 # ╟─e9f4e8b9-6388-454f-9808-7abba0f1dcc1
 # ╠═b016d6af-ae80-4b69-8378-b3155e3051c0
 # ╠═ac029dc2-9601-4f7d-964f-3139ebf56214
+# ╠═a54f0123-9a04-495e-bd00-0b50dd721ea6
+# ╠═4ac99015-fa97-4905-9abf-f680a5231c5e
