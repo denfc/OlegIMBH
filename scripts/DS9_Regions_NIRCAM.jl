@@ -27,11 +27,11 @@ end
 objectTypeIndex = 1
 
 # include99 and only99s should not contradict each otherwise
-include99s =  true # false
+include99s =  false
 only99s = true
 randBright = true  # Set this to true for random selection, false for sorted selection
 nStart = 1
-nBrightest = 100
+nBrightest = 31
 gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
@@ -82,7 +82,7 @@ if !include99s
     bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, eachindex(bright_good_ind))
     println("without 99.999: $(length(bright_good_ind))\n")
 end
-if only99s
+if only99s && include99s
     bright_good_ind = filter(i -> bright16[i] == 99.999 || bright29[i] == 99.999, eachindex(bright_good_ind))
     println("only 99.999: $(length(bright_good_ind))\n")
 end
@@ -128,9 +128,13 @@ end
 # Generate values
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = generate_values(randBright, nBrightest)
 
-if randBright ds9String = "$nBrightest random\n" else ds9String = "$nBrightest sorted\n" end
-ds9String = "$(objectType[objectTypeIndex])\n"*ds9String*"$(length(bright_good_ind)) good\nincludes 99s is $include99s"
-if gross_limits ds9String *= "\ngross limits" else ds9String *= "\nstringent limits" end
+ds9String = "NIRCAM\n"
+ds9String *= "$(objectType[objectTypeIndex])\n"
+if randBright ds9String *= "$nBrightest random\n" else ds9String *= "$nBrightest sorted\n" end
+ds9String *= "includes 99s is $include99s\n"
+if include99s && only99s ds9String *= "only 99.999\n" end
+ds9String *= "$(length(bright_good_ind)) good\n"
+if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits" end
 
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
 regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
