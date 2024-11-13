@@ -37,7 +37,7 @@ only99s = false
 randBright = false # Set this to true for random selection, false for sorted selection
 nStart = 1
 nBrightest = 31
-gross_limits =  false  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
+gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 # below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
