@@ -365,7 +365,7 @@ md"""
 	- [SAO Documentation here.](https://sites.google.com/cfa.harvard.edu/saoimageds9/documentation?authuser=0)
 	- [JWST Near Infrared Camera](https://jwst-docs.stsci.edu/jwst-near-infrared-camera#gsc.tab=0)
 	  - [NIRCAM Filters] (https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters#gsc.tab=0) 
-	  - central wavelength in tenths of microns!
+	  - central wavelength in tens of nanometers!
 	  - "Hold down the right mouse button and drag the mouse up or down to adjust the contrast."
 	- [SAO "Regions" here.](https://ds9.si.edu/doc/ref/region.html)
 !!! tip ""
@@ -445,7 +445,7 @@ Julia code: `bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Cro
 # ╔═╡ 9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
 begin
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_31_sorted_inc99_stringent.png"
+	imageName = "bright_31_sorted_inc99_stringent_NIRCAM.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -463,7 +463,7 @@ Julia code: `bright\_good\_ind = filter(i -> bright16[i] != 99.999 && bright29[i
 # ╔═╡ 7aca6436-c98c-4212-b6ee-77c6235ff110
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_31_sorted_no99_gross.png"
+	imageName = "bright_31_sorted_no99_gross_NIRCAM.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -477,7 +477,7 @@ md"""
 # ╔═╡ e831f3ec-2a23-44b3-a5cc-c036aac608a7
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_31_random_no99_gross.png"
+	imageName = "bright_31_random_no99_gross_NIRCAM.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
@@ -491,7 +491,7 @@ md"""
 # ╔═╡ b0062abc-a10a-4f55-b0b6-a12554a38bdf
 let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
-	imageName = "bright_123_random_no99_gross.png"
+	imageName = "bright_123_random_no99_gross_NIRCAM.png"
 	imagePath = joinpath(imageFolder, imageName)
 	LocalResource(imagePath)
 end
