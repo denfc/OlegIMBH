@@ -35,7 +35,6 @@ nBrightest = 31
 gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
-# below: print("\"$(objectType[objectTypeIndex])\" number: ", length(bright_ind), "; ")
 
 # 16. Instrumental VEGAMAG magnitude, NIRCAM_F200W
 # 29. Instrumental VEGAMAG magnitude, NIRCAM_F444W
