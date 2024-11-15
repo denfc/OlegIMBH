@@ -5,7 +5,9 @@ If DS9 not running, will open a new one.
 Taken from `P24a_Brightest.jl``
 """
 
-include(joinpath(homedir(), "Gitted/OlegIMBH/src/intro.jl"))
+# include(joinpath(homedir(), "Gitted/OlegIMBH/src/intro.jl"))
+using DrWatson
+@quickactivate "OlegIMBH"
 
 using CSV
 using DataFrames
@@ -15,9 +17,9 @@ include(srcdir("verifyRegFileSent.jl"))
 
 # Read and process the data once
 columnsToRead = 1:37
-if !isdefined(Main, :df)
+# if !isdefined(Main, :df)
     df = CSV.read(joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
-end
+# end
 
 objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
 for i in eachindex(objectType)
@@ -27,11 +29,11 @@ end
 objectTypeIndex = 1
 
 # include99 and only99s should not contradict each otherwise
-include99s =  false
+include99s =  true
 only99s = true
-randBright = true  # Set this to true for random selection, false for sorted selection
+randBright = false  # Set this to true for random selection, false for sorted selection
 nStart = 1
-nBrightest = 31
+nBrightest = 100
 gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
