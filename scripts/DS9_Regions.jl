@@ -1,40 +1,76 @@
 """
-26 October 2024)
+26 October 2024
 If DS9 not running, will open a new one.
 
-Taken from `P24a_Brightest.jl``
+Taken from `P24a_Brightest.jl`
+
+15 November 2024
+Jazzed up.  Now can handle either NIRCAM or MIRI, killing the earlier version that was specific to one or the other when the instrument is changed.  Of course, could also modify it to handle both at once using two frames.
 """
 
-# include(joinpath(homedir(), "Gitted/OlegIMBH/src/intro.jl"))
-using DrWatson
-@quickactivate "OlegIMBH"
-
-using CSV
-using DataFrames
-using Random
-include(srcdir("writeDS9RegFile.jl"))
-include(srcdir("verifyRegFileSent.jl"))
+if !@isdefined(current_ds9_instrument)
+    global current_ds9_instrument = ""
+end
+include(joinpath(homedir(), "Gitted/OlegIMBH/src/intro.jl"))
+instruments = ["NIRCAM", "MIRI"]
+instrument = instruments[2]
+objectTypeIndex = 1
+# include99 and only99s should not contradict each otherwise
+include99s =  true
+only99s = false
+randBright = false  # Set this to true for random selection, false for sorted selection
+nStart = 1
+nBrightest = 31
+gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 # Read and process the data once
 columnsToRead = 1:37
-# if !isdefined(Main, :df)
-    df = CSV.read(joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
-# end
+# Track current instrument state (no need to initialize)
+global current_df_instrument
+
+# Function to check and read DataFrame if needed
+function get_df(instrument)
+    global df, current_df_instrument
+    local FITSfile  # Declare FITSfile at function scope
+    
+    if !@isdefined(df) || current_df_instrument != instrument
+        if instrument == "NIRCAM"
+            FITSfile = datadir("exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits")
+            df = CSV.read(joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot"), 
+                         DataFrame; 
+                         header=false, 
+                         delim=" ", 
+                         ignorerepeated=true, 
+                         select=columnsToRead)
+        else
+            FITSfile = datadir("exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits")
+            df = CSV.read(joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri"), 
+                         DataFrame; 
+                         header=false, 
+                         delim=" ", 
+                         ignorerepeated=true, 
+                         select=columnsToRead)
+        end
+        current_df_instrument = instrument
+    else
+        # Set FITSfile even when not reading new data
+        FITSfile = 
+		if instrument == "NIRCAM"
+            datadir("exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits")
+        else
+            datadir("exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits")
+        end
+    end
+    return FITSfile
+end
+FITSfile = get_df(instrument)
+connectDS9(FITSfile, instrument)
+
 
 objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
 for i in eachindex(objectType)
     println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
 end
-
-objectTypeIndex = 1
-
-# include99 and only99s should not contradict each otherwise
-include99s =  true
-only99s = true
-randBright = false  # Set this to true for random selection, false for sorted selection
-nStart = 1
-nBrightest = 100
-gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
 bright_ind = findall(x -> x == objectTypeIndex, df.Column11)
 
@@ -129,7 +165,7 @@ end
 # Generate values
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = generate_values(randBright, nBrightest)
 
-ds9String = "NIRCAM\n"
+ds9String = "$instrument\n"
 ds9String *= "$(objectType[objectTypeIndex])\n"
 if randBright ds9String *= "$nBrightest random\n" else ds9String *= "$nBrightest sorted\n" end
 ds9String *= "includes 99s is $include99s\n"
@@ -139,7 +175,9 @@ if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits"
 
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
 regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
-regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String) # default font_size = 24 can be changed)
+if instrument == "NIRCAM" regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
+else regFile_3 = DS9_writeRegionFile(-124, 950, 35, "text";  text = ds9String)
+end # default font_size = 24 can be changed)
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")

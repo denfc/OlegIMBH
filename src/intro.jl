@@ -3,10 +3,16 @@ using DrWatson
 @quickactivate "OlegIMBH"
 import SAOImageDS9
 const sao = SAOImageDS9
+using CSV
+using DataFrames
+using Random
 
 include(srcdir("load_zoom_grid_color.jl"))
 include(srcdir("connectDS9.jl"))
+include(srcdir("writeDS9RegFile.jl"))
+include(srcdir("verifyRegFileSent.jl"))
 
+println()
 println(
 """
 Currently active project is: $(projectname())
