@@ -4,7 +4,7 @@
 """
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introTranslate.jl"))
-global instruments = ["NIRCAM", "MIRI"]
+global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
     instrNumber::Int
     obTyn::Int

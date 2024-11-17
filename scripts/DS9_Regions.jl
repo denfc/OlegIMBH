@@ -14,7 +14,7 @@ if !@isdefined(current_ds9_instrument)
     global current_ds9_instrument = ""
 end
 
-global instruments = ["NIRCAM", "MIRI"]
+global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
     instrNumber::Int
     obTyn::Int
