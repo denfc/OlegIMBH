@@ -2,26 +2,32 @@
 26 October 2024
 If DS9 not running, will open a new one.
 
-Taken from `P24a_Brightest.jl`
+Taken originally from `P24a_Brightest.jl`
 
 15 November 2024
 Jazzed up.  Now can handle either NIRCAM or MIRI, killing the earlier version that was specific to one or the other when the instrument is changed.  Of course, could also modify it to handle both at once using two frames.
 """
 
+include(joinpath(homedir(), "Gitted/OlegIMBH/src/introRegions.jl"))
+# If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
 if !@isdefined(current_ds9_instrument)
     global current_ds9_instrument = ""
 end
-include(joinpath(homedir(), "Gitted/OlegIMBH/src/intro.jl"))
-instruments = ["NIRCAM", "MIRI"]
-instrument = instruments[2]
-objectTypeIndex = 1
-# include99 and only99s should not contradict each otherwise
-include99s =  true
-only99s = false
-randBright = false  # Set this to true for random selection, false for sorted selection
-nStart = 1
-nBrightest = 31
-gross_limits =  true  # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
+
+global instruments = ["NIRCAM", "MIRI"]
+struct ChoiceParams
+    instrNumber::Int
+    obTyn::Int
+    inc99s::Bool
+    onl99s::Bool
+    randB::Bool
+    nStrt::Int
+    nB::Int
+    grossLim::Bool
+end
+params = ChoiceParams(1, 1, false, false, false, 1, 31, false)
+
+instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(params)
 
 # Read and process the data once
 columnsToRead = 1:37

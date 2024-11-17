@@ -4,17 +4,40 @@
 """
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introTranslate.jl"))
+global instruments = ["NIRCAM", "MIRI"]
+struct ChoiceParams
+    instrNumber::Int
+    obTyn::Int
+    inc99s::Bool
+    onl99s::Bool
+    randB::Bool
+    nStrt::Int
+    nB::Int
+    grossLim::Bool
+end
+params = ChoiceParams(2, 1, false, false, false, 1, 31, false)
+instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(params)
+
+if instrument == "NIRCAM"
+	FITSfile = datadir("exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits")
+	data_file = joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot")
+	output_file = joinpath(datadir(), "sims/NIRCAM_RADec.jld2")
+else
+	FITSfile = datadir("exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits")
+	data_file = joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri")
+	output_file = joinpath(datadir(), "sims/MIRI_RADec.jld2")
+end
 
 # Read the FITS file with AstroImages.AstroImage
-fits_path = joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits")
-img = AstroImage(fits_path)
-
-data_file = joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri")
-output_file = joinpath(datadir(), "sims/output.jld2")
+img = AstroImage(FITSfile)
 
 # Read the data file into a DataFrame
 columnsToRead = 1:37
+
 df = CSV.read(joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
+
+
+
 
 # Extract the x and y columns
 x = df[:, :Column3]
