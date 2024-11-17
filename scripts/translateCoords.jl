@@ -2,67 +2,63 @@
 	dfc 16 November 2024 a mess below, but the ingredients, some duplicated,  are there
 
 """
-using AstroImages
-using DataFrames
-using JLD2
 
-# Read the FITS file
-fits_path = "/home/dfc123/Gitted/OlegIMBH/data/exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits"
+include(joinpath(homedir(), "Gitted/OlegIMBH/src/introTranslate.jl"))
+
+# Read the FITS file with AstroImages.AstroImage
+fits_path = joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits")
 img = AstroImage(fits_path)
 
-data_file = "/path/to/your/datafile.csv"  # Replace with the actual path to your data file
-output_file = "/path/to/output.jld2"
-
-# Get WCS transformation from AstroImages
-# wcs(img)
+data_file = joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri")
+output_file = joinpath(datadir(), "sims/output.jld2")
 
 # Read the data file into a DataFrame
-df = DataFrame(CSV.File(data_file))  # --- copy this from earlier code	
+columnsToRead = 1:37
+df = CSV.read(joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
 
 # Extract the x and y columns
-x = df[:, :x]
-y = df[:, :y]
+x = df[:, :Column3]
+y = df[:, :Column4]
+
+# Stack x and y into a 2×N array where each column is a coordinate pair
+pixcoords = vcat(x', y')  # Transpose and vertical concatenation because the pix_to_world function expects the coordinates in a specific array format where each column represents a coordinate pair.
+
+#= To see the WCS transformation from AstroImages, you could do:
+wcs(img)
+=#
 
 # Translate the x and y columns into degrees
-ra, dec = pix_to_world(img, [x, y])
+raDec = pix_to_world(img, pixcoords)
+raDec = raDec'  # Transpose the result to get a 2×N array where one column is the RA and the other is the Dec
 
-# Select the specified columns
-selected_columns = df[:, [:x, :y, 6, 7, 8, 10, 11, 16, 20, 21, 22, 23, 24, 29]]
-
-# Add the translated coordinates to the DataFrame
-selected_columns[:, :ra] = ra
-selected_columns[:, :dec] = dec
+# columns to keep in the output DataFrame: 3, 4, 6, 7, 8, 10, 11, 16, 20, 21, 22, 23, 24, 29
 
 # Write the selected columns and translated coordinates to a JLD2 file
-@save output_file selected_columns
-
-# Convert x,y to world coordinates
-coords = Vector{Tuple{Float64,Float64}}()
-for i in 1:nrow(df)
-    ra, dec = WCS.pix_to_world(wcs, df.x[i], df.y[i])
-    push!(coords, (ra, dec))
-end
 
 # Create output DataFrame
-result = DataFrame(
-    x = df.x,
-    y = df.y,
-    ra = getindex.(coords, 1),
-    dec = getindex.(coords, 2),
-    col6 = df[:,6],
-    col7 = df[:,7],
-    col8 = df[:,8],
-    col10 = df[:,10],
-    col11 = df[:,11],
-    col16 = df[:,16],
-    col20 = df[:,20],
-    col21 = df[:,21],
-    col22 = df[:,22],
-    col23 = df[:,23],
-    col24 = df[:,24],
-    col29 = df[:,29]
+newColumnGroup = DataFrame(
+    x = df[:, 3],
+    y = df[:, 4],
+    ra = raDec[:, 1],
+    dec = raDec[:, 2],
+    col6 = df[:, 6],
+    col7 = df[:, 7],
+    col8 = df[:, 8],
+    col10 = df[:, 10],
+    col11 = df[:, 11],
+    col16 = df[:, 16],
+    col20 = df[:, 20],
+    col21 = df[:, 21],
+    col22 = df[:, 22],
+    col23 = df[:, 23],
+    col24 = df[:, 24],
+    col29 = df[:, 29]
 )
 
-# Save to JLD2 file
-save("transformed_coordinates.jld2", "data", result)
-close(f)
+# Save to JLD2 file (semicolon is key)
+jldsave(datadir("exp_pro/transformed_coordinates.jld2"); newColumnGroup)
+
+# jldopen("transformed_coordinates.jld2"), for testing
+# For testing the saved data with full precision display:
+io = IOContext(stdout, :limit=>false, :compact=>false)
+show(io, MIME("text/plain"), df[1:3, [:ra, :dec]])
