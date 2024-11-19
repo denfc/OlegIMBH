@@ -1,22 +1,12 @@
 """
-	dfc 16 November 2024 a mess below, but the ingredients, some duplicated,  are there
-
+	- dfc 16 November 2024 a mess below, but the ingredients, some duplicated, are there
+	- dfc 18 Nov; rethinking: will now just use this code once to gerate the two files and then will operate the filters with them.
 """
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introTranslate.jl"))
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
-struct ChoiceParams
-    instrNumber::Int
-    obTyn::Int
-    inc99s::Bool
-    onl99s::Bool
-    randB::Bool
-    nStrt::Int
-    nB::Int
-    grossLim::Bool
-end
-params = ChoiceParams(2, 1, false, false, false, 1, 31, false)
-instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(params)
+instrument = INSTRUMENTS[1]
+
 
 if instrument == "NIRCAM"
 	FITSfile = datadir("exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits")
@@ -81,9 +71,9 @@ newColumnGroup = DataFrame(
 )
 
 # Save to JLD2 file (semicolon is key)
-jldsave(datadir("exp_pro/transformed_coordinates.jld2"); newColumnGroup)
+jldsave(output_file; newColumnGroup)
 
-# jldopen("transformed_coordinates.jld2"), for testing
-# For testing the saved data with full precision display:
+df = jldopen(output_file)["newColumnGroup"] #, for testing
+# For testing seeing the saved data with full precision display:
 io = IOContext(stdout, :limit=>false, :compact=>false)
 show(io, MIME("text/plain"), df[1:3, [:ra, :dec]])
