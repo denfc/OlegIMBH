@@ -34,10 +34,12 @@ img = AstroImage(FITSfile)
 # Read the data file into a DataFrame
 columnsToRead = 1:37
 
-df = CSV.read(joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri"), DataFrame; header=false, delim=" ", ignorerepeated = true, select = columnsToRead)
-
-
-
+df = CSV.read(joinpath(datadir(), "exp_raw/Archive_MIRI_Ocen_dolphot/omega_cen_phot_miri"),
+	DataFrame;
+	header=false,
+	delim=" ",
+	ignorerepeated = true,
+	select = columnsToRead)
 
 # Extract the x and y columns
 x = df[:, :Column3]

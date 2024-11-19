@@ -7,11 +7,14 @@ using CSV
 using DataFrames
 using Random
 
+include(srcdir("get_df.jl"))
 include(srcdir("choices.jl"))
 include(srcdir("load_zoom_grid_color.jl"))
 include(srcdir("connectDS9.jl"))
 include(srcdir("writeDS9RegFile.jl"))
 include(srcdir("verifyRegFileSent.jl"))
+include(srcdir("filter_objects.jl"))
+include(srcdir("generateValues.jl"))
 
 println()
 println(

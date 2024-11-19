@@ -7,6 +7,7 @@ using JLD2
 cd(joinpath(homedir(), "Gitted/OlegIMBH"))
 
 include(srcdir("choices.jl"))
+include(srcdir("filter_objects.jl"))
 
 
 # println()
