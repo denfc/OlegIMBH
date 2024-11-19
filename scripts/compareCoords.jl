@@ -1,12 +1,13 @@
 """
-dfc 26 October 2024
-If DS9 not running, will open a new one.
-
-Taken originally from `P24a_Brightest.jl`
-
-15 November 2024
-Jazzed up.  Now can handle either NIRCAM or MIRI, killing the earlier version that was specific to one or the other when the instrument is changed.  Of course, could also modify it to handle both at once using two frames.
+dfc 19 November 2023 -- taken from DS9Regions
 """
+
+dfMIRI = jldopen(joinpath(datadir("sims/MIRI_RAD
+
+
+ec.jld2")))["newColumnGroup"]
+dfNIRCAM = jldopen(joinpath(datadir("sims/NIRCAM_RADec.jld2")))["newColumnGroup"]
+
 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
@@ -21,7 +22,8 @@ struct ChoiceParams
 end
 params = ChoiceParams(2, 1, false, true, false, 1, 30, false)
 
-include(joinpath(homedir(), "Gitted/OlegIMBH/src/introRegions.jl"))
+include(joinpath(homedir(), "Gitted/OlegIMBH/src/introCompare.jl"))
+using DataFrames
 # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
 if !@isdefined(current_ds9_instrument)
     global current_ds9_instrument = ""

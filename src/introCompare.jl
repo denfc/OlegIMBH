@@ -1,13 +1,20 @@
+"""
+	dfc 19 November 2024
+	- taken from introRegions.dl
+"""
+
+cd(joinpath(homedir(), "Gitted/OlegIMBH"))
 using DrWatson
 @quickactivate "OlegIMBH"
-using CSV
-using AstroImages
+# using CSV
 using DataFrames
-using JLD2
-using DataStructures # for OrderedDict
-cd(joinpath(homedir(), "Gitted/OlegIMBH"))
+using Random
 
-# println()
+include(srcdir("choices.jl"))
+include(srcdir("filter_objects.jl"))
+include(srcdir("generateValues.jl"))
+
+println()
 println(
 """
 Currently active project is: $(projectname())
