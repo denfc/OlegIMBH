@@ -2,7 +2,7 @@
 
 julia_version = "1.11.1"
 manifest_format = "2.0"
-project_hash = "2c62b322585facd24378a6e3af60d9e89dcefdda"
+project_hash = "811b08ef8b841a642f1b10824419a097f8e145d8"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -124,6 +124,12 @@ deps = ["AbstractFFTs", "AstroAngles", "ColorSchemes", "DimensionalData", "FITSI
 git-tree-sha1 = "2973b639f56a9aa5563db8be100c8c9a166486af"
 uuid = "fe3fc30c-9b16-11e9-1c73-17dabf39f4ad"
 version = "0.5.0"
+
+[[deps.AstroLib]]
+deps = ["Dates", "DelimitedFiles", "LinearAlgebra", "Printf", "StaticArrays"]
+git-tree-sha1 = "690241982681c0fec3d064ee6995d6029b86d80d"
+uuid = "c7932e45-9af1-51e7-9da9-f004cd3a462b"
+version = "0.4.2"
 
 [[deps.AxisAlgorithms]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "WoodburyMatrices"]
@@ -493,9 +499,9 @@ version = "0.0.20230411+0"
 
 [[deps.ExceptionUnwrapping]]
 deps = ["Test"]
-git-tree-sha1 = "dcb08a0d93ec0b1cdc4af184b26b591e9695423a"
+git-tree-sha1 = "d36f682e590a83d63d1c7dbd287573764682d12a"
 uuid = "460bff9d-24e4-43bc-9d9f-a8973cb893f4"
-version = "0.1.10"
+version = "0.1.11"
 
 [[deps.Expat_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -1915,9 +1921,26 @@ git-tree-sha1 = "b07be17ad1c4dd3e2d11aff5aa06157838ee6a6a"
 uuid = "aed68c70-c8b0-4309-8cd1-d392a74f991a"
 version = "0.2.0"
 
+[[deps.SkyCoords]]
+deps = ["AstroAngles", "ConstructionBase", "LinearAlgebra", "Rotations", "StaticArrays"]
+git-tree-sha1 = "409895b57dcc8baa683ff7e722080b2ef514926d"
+uuid = "fc659fc5-75a3-5475-a2ea-3da92c065361"
+version = "1.4.0"
+weakdeps = ["Accessors", "Unitful"]
+
+    [deps.SkyCoords.extensions]
+    AccessorsExt = "Accessors"
+    UnitfulExt = "Unitful"
+
 [[deps.Sockets]]
 uuid = "6462fe0b-24de-5631-8697-dd941f90decc"
 version = "1.11.0"
+
+[[deps.SortMerge]]
+deps = ["Printf", "ProgressMeter", "SparseArrays", "StatsBase"]
+git-tree-sha1 = "3613cb84733487f147d907de5d48052b3ecf70df"
+uuid = "041a2d23-8c6e-5597-be73-bf96b5e0dfd4"
+version = "1.4.0"
 
 [[deps.SortingAlgorithms]]
 deps = ["DataStructures"]

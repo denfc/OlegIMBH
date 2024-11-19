@@ -2,12 +2,8 @@
 dfc 19 November 2023 -- taken from DS9Regions
 """
 
-dfMIRI = jldopen(joinpath(datadir("sims/MIRI_RAD
-
-
-ec.jld2")))["newColumnGroup"]
+dfMIRI = jldopen(joinpath(datadir("sims/MIRI_RADec.jld2")))["newColumnGroup"]
 dfNIRCAM = jldopen(joinpath(datadir("sims/NIRCAM_RADec.jld2")))["newColumnGroup"]
-
 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
@@ -36,10 +32,6 @@ columnsToRead = 1:37
 # Track current instrument state (no need to initialize)
 global current_df_instrument
 
-
-FITSfile = get_df(instrument)
-connectDS9(FITSfile, instrument)
-
 objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
 for i in eachindex(objectType)
     println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
@@ -61,23 +53,6 @@ ds9String *= "includes 99s is $include99s\n"
 if include99s && only99s ds9String *= "only 99.999\n" end
 ds9String *= "$(length(bright_good_ind)) good\n"
 if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits" end
-
-regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
-regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
-if instrument == "NIRCAM" regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
-else regFile_3 = DS9_writeRegionFile(-124, 950, 35, "text";  text = ds9String)
-end # default font_size = 24 can be changed)
-
-# Delete all regions before sending new ones
-sao.set("regions", "delete all")
-# println("All regions deleted successfully.")
-# DS9_SendRegAndVerify(regFile_2)
-DS9_SendRegAndVerify(regFile_1)
-DS9_SendRegAndVerify(regFile_2)
-DS9_SendRegAndVerify(regFile_3)
-
-# regFile_test = "/home/dfc123/Gitted/OlegIMBH/data/sims/F444_save.reg"
-# DS9_SendRegAndVerify(regFile_test)
 
 println()
 printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_ind), "; ", color = :cyan)
