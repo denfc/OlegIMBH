@@ -73,7 +73,8 @@ newColumnGroup = DataFrame(
 # Save to JLD2 file (semicolon is key)
 jldsave(output_file; newColumnGroup)
 
-df = jldopen(output_file)["newColumnGroup"] #, for testing
+# Testing
+df = jldopen(output_file)["newColumnGroup"]
 # For testing seeing the saved data with full precision display:
 io = IOContext(stdout, :limit=>false, :compact=>false)
 show(io, MIME("text/plain"), df[1:3, [:ra, :dec]])
