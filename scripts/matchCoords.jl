@@ -1,7 +1,8 @@
 """
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 """
-
+const THRESHOLD_ARCSEC = 1.0
+const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
     instrNumber::Int
@@ -13,7 +14,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(2, 1, false, true, false, 1, 30, false)
+params = ChoiceParams(1, 1, false, true, false, 1, 30, false)
 dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
@@ -68,15 +69,20 @@ nircam_col_map = Dict{Symbol,Symbol}(
 
 # Get filtered data
 
-bright_good_ind, bright16, bright29, dfM, bright_ind = filtered_data_MIRI  # Destructure the tuple
+
 
 # Generate values using the filtered data
-selected_values = generate_values(filtered_data_MIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
+if instrument == "MIRI" 
+	selected_values = generate_values(filtered_data_MIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
+
+	bright_good_ind, bright16, bright29, dfM, bright_ind = filtered_data_MIRI
+else 
+	selected_values = generate_values(filtered_data_NIRCAM, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map) 
+
+	bright_good_ind, bright16, bright29, dfN, bright_ind = filtered_data_NIRCAM
+end
+
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_values
-
-# let's match just the MIRI values to start!
-
-
 
 ds9String = "$instrument\n"
 ds9String *= "$(objectType[objectTypeIndex])\n"
@@ -90,3 +96,7 @@ println()
 printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_ind), "; ", color = :light_cyan)
 printstyled("number of good ones: ", length(bright_good_ind), "; ", color = :light_cyan)
 if randBright printstyled("random selection of ", nBrightest, ".", color = :light_cyan) else printstyled("sorted selection of ", nBrightest, ".", color = :light_cyan) end
+
+
+# let's match just within MIRI and withing NIRCAM to start
+j = sortMergeMatch(selected_16_Yvalues, selected_16_Xvalues, selected_29_Yvalues, selected_29_Xvalues)

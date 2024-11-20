@@ -10,10 +10,13 @@ using DrWatson
 using JLD2
 using DataFrames
 using Random
+using SortMerge
+using AstroLib
 
 include(srcdir("choices.jl"))
 include(srcdir("filter_objects.jl"))
 include(srcdir("generateValues.jl"))
+include(srcdir("sortMergeMatch.jl"))
 
 println()
 println(
