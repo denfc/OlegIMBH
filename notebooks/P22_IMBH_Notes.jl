@@ -559,7 +559,13 @@ md"""
 """
 
 # ╔═╡ 4ac99015-fa97-4905-9abf-f680a5231c5e
+md"""
+### 20 November 2024
+!!! note "Translating and Matching Coordinates"
+	- From the `AstroImages` package, used `pix_to_world` in `/home/dfc123/Gitted/OlegIMBH/scripts/translateCoords.jl` to build two NIRCAM and MIRI `DataFrame` jld2 files that contain RA and Dec coordinates corresponding to the x and y positions.
+	- Learned about 
 
+"""
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16

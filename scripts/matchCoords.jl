@@ -1,9 +1,6 @@
 """
-dfc 19 November 2023 -- taken from DS9Regions
+dfc 19 November 2023 -- selection stuff taken from DS9Regions
 """
-
-dfMIRI = jldopen(joinpath(datadir("sims/MIRI_RADec.jld2")))["newColumnGroup"]
-dfNIRCAM = jldopen(joinpath(datadir("sims/NIRCAM_RADec.jld2")))["newColumnGroup"]
 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
@@ -18,8 +15,10 @@ struct ChoiceParams
 end
 params = ChoiceParams(2, 1, false, true, false, 1, 30, false)
 
-include(joinpath(homedir(), "Gitted/OlegIMBH/src/introCompare.jl"))
-using DataFrames
+include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
+dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
+dfNIRCAM = jldopen(joinpath(datadir("exp_pro/NIRCAM_RADec.jld2")))["newColumnGroup"]
+
 # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
 if !@isdefined(current_ds9_instrument)
     global current_ds9_instrument = ""
@@ -44,6 +43,9 @@ bright_good_ind, bright16, bright29, df, bright_ind = filtered_data  # Destructu
 # Generate values using the filtered data
 selected_values = generate_values(filtered_data, params.randB, params.nB, params.nStrt, params.obTyn)
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_values
+
+
+
 
 
 ds9String = "$instrument\n"

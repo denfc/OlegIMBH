@@ -7,6 +7,7 @@ cd(joinpath(homedir(), "Gitted/OlegIMBH"))
 using DrWatson
 @quickactivate "OlegIMBH"
 # using CSV
+using JLD2
 using DataFrames
 using Random
 
