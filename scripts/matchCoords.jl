@@ -1,5 +1,5 @@
 """
-dfc 19 November 2023 -- selection stuff taken from DS9Regions
+dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 """
 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
@@ -14,37 +14,67 @@ struct ChoiceParams
     grossLim::Bool
 end
 params = ChoiceParams(2, 1, false, true, false, 1, 30, false)
+dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
 dfNIRCAM = jldopen(joinpath(datadir("exp_pro/NIRCAM_RADec.jld2")))["newColumnGroup"]
 
-# If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
-if !@isdefined(current_ds9_instrument)
-    global current_ds9_instrument = ""
-end
+# # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
+# if !@isdefined(current_ds9_instrument)
+#     global current_ds9_instrument = ""
+# end
 
 instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(params)
 
-# Read and process the data once
-columnsToRead = 1:37
-# Track current instrument state (no need to initialize)
-global current_df_instrument
+miri_col_map = Dict{Symbol,Symbol}(
+	:Column11 => :obType,
+    :Column16 => :mag770,
+    :Column29 => :mag1500,
+    :Column6 => :SNR,
+    :Column10 => :crowd,
+    :Column7 => :sharp,
+    :Column24 => :Qual770,
+    :Column37 => :Qual1500
+	)
 
-objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
-for i in eachindex(objectType)
-    println("$i (", objectType[i], "): ", length(findall(x -> x == i, df.Column11)))
-end
+nircam_col_map = Dict{Symbol,Symbol}(
+	:Column11 => :obType,
+	:Column16 => :mag200,
+	:Column29 => :mag444,
+	:Column6 => :SNR,
+	:Column10 => :crowd,
+	:Column7 => :sharp,
+	:Column24 => :Qual200,
+	:Column37 => :Qual444
+	)
+
+    XY_col_map = Dict(
+        :Column3 => :ra,  # Object type
+        :Column4 => :dec,  # Magnitude
+    )
+
+	objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
+	for i in eachindex(objectType)
+		println("$i (", objectType[i], "): ", length(findall(x -> x == i, dfMIRI.obType)))
+	end
+	println()
+	for i in eachindex(objectType)
+		println("$i (", objectType[i], "): ", length(findall(x -> x == i, dfNIRCAM.obType)))
+	end
+	# Usage:
+	filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
+	filtered_data_NIRCAM = filter_objects(dfNIRCAM, params; col_map=nircam_col_map)
 
 # Get filtered data
-filtered_data = filter_objects(df, params)
-bright_good_ind, bright16, bright29, df, bright_ind = filtered_data  # Destructure the tuple
+
+bright_good_ind, bright16, bright29, dfM, bright_ind = filtered_data_MIRI  # Destructure the tuple
 
 # Generate values using the filtered data
-selected_values = generate_values(filtered_data, params.randB, params.nB, params.nStrt, params.obTyn)
+selected_values = generate_values(filtered_data_MIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_values
 
-
+# let's match just the MIRI values to start!
 
 
 
@@ -57,6 +87,6 @@ ds9String *= "$(length(bright_good_ind)) good\n"
 if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits" end
 
 println()
-printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_ind), "; ", color = :cyan)
-printstyled("number of good ones: ", length(bright_good_ind), "; ", color = :cyan)
-if randBright printstyled("random selection of ", nBrightest, ".", color = :cyan) else printstyled("sorted selection of ", nBrightest, ".", color = :cyan) end
+printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_ind), "; ", color = :light_cyan)
+printstyled("number of good ones: ", length(bright_good_ind), "; ", color = :light_cyan)
+if randBright printstyled("random selection of ", nBrightest, ".", color = :light_cyan) else printstyled("sorted selection of ", nBrightest, ".", color = :light_cyan) end

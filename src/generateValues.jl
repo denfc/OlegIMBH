@@ -1,5 +1,16 @@
 # Function to generate random or sorted values
-function generate_values(filtered_data, randBright::Bool, nBrightest::Int, nStart::Int, objectTypeIndex::Int)
+function generate_values(filtered_data, randBright::Bool, nBrightest::Int, nStart::Int, objectTypeIndex::Int;
+    col_map::AbstractDict{Symbol,Symbol}=Dict{Symbol,Symbol}()
+)
+
+    # Define defaults inside function
+    default_cols = Dict(
+        :Column3 => :Column3,  # Object type
+        :Column4 => :Column4,  # Magnitude
+    )
+
+    # Merge with any provided mappings
+    cols = merge(default_cols, col_map)
 
     # Destructure the tuple
     bright_good_ind, bright16, bright29, df, bright_ind = filtered_data
@@ -15,10 +26,10 @@ function generate_values(filtered_data, randBright::Bool, nBrightest::Int, nStar
 
         brightestetN_16 = bright16_good[random_indices_16]
         brightestetN_29 = bright29_good[random_indices_29]
-        brightestetN_16_Xvalues = df.Column3[bright_ind][bright_good_ind][random_indices_16]
-        brightestetN_16_Yvalues = df.Column4[bright_ind][bright_good_ind][random_indices_16]
-        brightestetN_29_Xvalues = df.Column3[bright_ind][bright_good_ind][random_indices_29]
-        brightestetN_29_Yvalues = df.Column4[bright_ind][bright_good_ind][random_indices_29]
+        brightestetN_16_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][random_indices_16]
+        brightestetN_16_Yvalues = df[!, cols[:Column4]][bright_good_ind][random_indices_16]
+        brightestetN_29_Xvalues = df[!, cols[:Column3]][bright_good_ind][random_indices_29]
+        brightestetN_29_Yvalues = df[!, cols[:Column4]][bright_good_ind][random_indices_29]
     else
         # Sort by value
 		if objectTypeIndex == 2
@@ -31,10 +42,10 @@ function generate_values(filtered_data, randBright::Bool, nBrightest::Int, nStar
 		nFinish = nStart - 1 + nBrightest
         brightestetN_16 = bright16_good[sorted16_indices][nStart: nFinish]
         brightestetN_29 = bright29_good[sorted29_indices][nStart: nFinish]
-        brightestetN_16_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightestetN_16, bright16_good)]
-        brightestetN_16_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightestetN_16, bright16_good)]
-        brightestetN_29_Xvalues = df.Column3[bright_ind][bright_good_ind][findall(x -> x in brightestetN_29, bright29_good)]
-        brightestetN_29_Yvalues = df.Column4[bright_ind][bright_good_ind][findall(x -> x in brightestetN_29, bright29_good)]
+        brightestetN_16_Xvalues = df[!, cols[:Column3]][bright_good_ind][findall(x -> x in brightestetN_16, bright16_good)]
+        brightestetN_16_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestetN_16, bright16_good)]
+        brightestetN_29_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestetN_29, bright29_good)]
+        brightestetN_29_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestetN_29, bright29_good)]
     end
 
     return brightestetN_16_Xvalues, brightestetN_16_Yvalues, brightestetN_29_Xvalues, brightestetN_29_Yvalues

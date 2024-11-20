@@ -1,18 +1,48 @@
-function filter_objects(df::DataFrame, params::ChoiceParams)
+"""
+	dfc 20 November 2024
+	- taken from DS9Regions.jl
+		- added `col_map` parameter to allow for column name mapping so that it can be used both with its original script, DS9Regions.jl, and with MatchCoords.jl.  Note that the default parameter is set blank so that the longish dictionary can be assigned inside the function.
+
+
+"""
+function filter_objects(
+    df::DataFrame, 
+    params::ChoiceParams;
+    col_map::AbstractDict{Symbol,Symbol}=Dict{Symbol,Symbol}()
+)
+
+    # Define defaults inside function
+    default_cols = Dict(
+        :Column11 => :Column11,  # Object type
+        :Column16 => :Column16,  # Magnitude
+        :Column29 => :Column29,  # Another magnitude
+        :Column6 => :Column6,    # SNR
+        :Column10 => :Column10,  # Crowding
+        :Column7 => :Column7,    # Sharp
+        :Column24 => :Column24,  # Q200 flag
+        :Column37 => :Column37   # Q444 flag
+    )
+
+    # Merge with any provided mappings
+    cols = merge(default_cols, col_map)
 
 	# Find indices of rows matching object type
-	bright_ind = findall(x -> x == params.obTyn, df.Column11)
+	# bright_ind = findall(x -> x == params.obTyn, df.Column11)
 
 	# Extract values for selected bright objects
 	# 16. Instrumental VEGAMAG magnitude, NIRCAM_F200W
-	bright16 = df[!, :Column16][bright_ind]
-	bright29 = df[!, :Column29][bright_ind]
 
-    bright_SNR = df.Column6[bright_ind]
-    bright_Crowding = df.Column10[bright_ind]
-    bright_SharpSq = df.Column7[bright_ind].^2
-    bright_Q200_flag = df.Column24[bright_ind]
-    bright_Q444_flag = df.Column37[bright_ind]
+    # Use mapped column names
+    bright_ind = findall(x -> x == params.obTyn, df[!, cols[:Column11]])
+
+    bright16 = df[!, cols[:Column16]][bright_ind]
+    bright29 = df[!, cols[:Column29]][bright_ind] 
+    
+    bright_SNR = df[!, cols[:Column6]][bright_ind]
+    bright_Crowding = df[!, cols[:Column10]][bright_ind]
+    bright_SharpSq = df[!, cols[:Column7]][bright_ind].^2
+    bright_Q200_flag = df[!, cols[:Column24]][bright_ind]
+    bright_Q444_flag = df[!, cols[:Column37]][bright_ind]
 
     # Based on grossLim flag, define dictionaries with numerical limits for each parameter
 
@@ -42,16 +72,16 @@ function filter_objects(df::DataFrame, params::ChoiceParams)
                                   bright_Q444_flag[i] <= limits["Q444_flag"], 
                                   eachindex(bright_ind))
 
-    println("\nwith 99.999: $(length(bright_good_ind)) under $(params.grossLim ? "gross limits" : "stringent limits")\n")
+    printstyled("\nwith 99.999: $(length(bright_good_ind)) under $(params.grossLim ? "gross limits" : "stringent limits")\n", color = :cyan)
 
     # Handle 99.999 values, i.e., filter out indices where the value in bright16 or bright29 is 99.999
     if !params.inc99s
         bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, eachindex(bright_good_ind))
-        println("without 99.999: $(length(bright_good_ind))\n")
+        printstyled("without 99.999: $(length(bright_good_ind))\n", color = :magenta)
     end
     if params.onl99s && params.inc99s
         bright_good_ind = filter(i -> bright16[i] == 99.999 || bright29[i] == 99.999, eachindex(bright_good_ind))
-        println("only 99.999: $(length(bright_good_ind))\n")
+        printstyled("only 99.999: $(length(bright_good_ind))\n", color = :cyan)
     end
 
     return (
