@@ -44,22 +44,22 @@ function connectDS9(file::String, instrument::String)
     
     try
         ds9_servers = readchomp(`xpaget xpans`)
-        printstyled("DEBUG: Found DS9 servers: $ds9_servers\n", color=:green)
+        printstyled("Found DS9 servers: $ds9_servers\n", color=:green)
         
         if !occursin("DS9", ds9_servers)
-            printstyled("DEBUG: No DS9 servers found in response\n", color=:yellow)
+            printstyled("No DS9 servers found in response\n", color=:yellow)
             needs_restart = true
         elseif current_ds9_instrument != instrument
-            printstyled("DEBUG: Instrument change needed\n", color=:yellow)
+            printstyled("Instrument change needed\n", color=:yellow)
             try
                 run(`pkill -f ds9`)
             catch
-                printstyled("DEBUG: pkill failed but continuing\n", color=:yellow)
+                printstyled("pkill failed but continuing\n", color=:yellow)
             end
             needs_restart = true 
         end
     catch e
-        printstyled("DEBUG: Error message: $e\n", color=:yellow)
+        printstyled("Error message: $e\n", color=:yellow)
         needs_restart = true
     end
     

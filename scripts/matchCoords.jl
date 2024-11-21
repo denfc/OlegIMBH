@@ -14,7 +14,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, true, false, 1, 30, false)
+params = ChoiceParams(1, 1, false, false, false, 1, 100, false)
 dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
@@ -63,7 +63,7 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	for i in eachindex(objectType)
 		println("$i (", objectType[i], "): ", length(findall(x -> x == i, dfNIRCAM.obType)))
 	end
-	# Usage:
+	
 	filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
 	filtered_data_NIRCAM = filter_objects(dfNIRCAM, params; col_map=nircam_col_map)
 
