@@ -563,8 +563,24 @@ md"""
 ### 20 November 2024
 !!! note "Translating and Matching Coordinates"
 	- From the `AstroImages` package, used `pix_to_world` in `/home/dfc123/Gitted/OlegIMBH/scripts/translateCoords.jl` to build two NIRCAM and MIRI `DataFrame` jld2 files that contain RA and Dec coordinates corresponding to the x and y positions.
-	- Learned about 
+	- the result of `SortMerge` is of type `SortMerged.Matched`, which contains
+      - orig_sizes :: Vector{Int64}
+      - matched    :: Vector{Vector{Int64}}
+      - cmatch     :: Vector{SparseArrays.SparseVector{Int64, Int64}}
+      - minmult    :: Vector{Int64}
+      - maxmult    :: Vector{Int64}
+      - nunique    :: Vector{Int64}
+"""
 
+# ╔═╡ ee6cf51b-c90e-486e-8234-b794838c75c0
+md"""
+### 21 November 2024
+!!! note "Looks Like Its Working"
+	- First, NIRCAM image 30 brightest 444 versus 30 brightest 200 shows (DS9) no overlap.
+	  - When we go to 3xx, we see one.
+	  - Coordinate comparison consistent with 30 vs 31, i.e., shows zero in common at 30, one in common at 31.
+!!! warning ""
+	Side note: in `matchCoords`, NIRCAM 31 shows 31, but 32 shows 33 input to both 1 & 1.
 """
 
 # ╔═╡ Cell order:
@@ -609,3 +625,4 @@ md"""
 # ╟─ac029dc2-9601-4f7d-964f-3139ebf56214
 # ╠═a54f0123-9a04-495e-bd00-0b50dd721ea6
 # ╠═4ac99015-fa97-4905-9abf-f680a5231c5e
+# ╠═ee6cf51b-c90e-486e-8234-b794838c75c0

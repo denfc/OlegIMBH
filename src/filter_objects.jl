@@ -1,7 +1,7 @@
 """
 	dfc 20 November 2024
 	- taken from DS9Regions.jl
-		- added `col_map` parameter to allow for column name mapping so that it can be used both with its original script, DS9Regions.jl, and with MatchCoords.jl.  Note that the default parameter is set blank so that the longish dictionary can be assigned inside the function.
+		- added `col_map` parameter to allow for column name mapping so that it can be used both with its original script, `DS9Regions.jl`, and with MatchCoords.jl.  Note that the default parameter is set blank so that the longish dictionary can be assigned inside the function.
 
 
 """
@@ -19,8 +19,8 @@ function filter_objects(
         :Column6 => :Column6,    # SNR
         :Column10 => :Column10,  # Crowding
         :Column7 => :Column7,    # Sharp
-        :Column24 => :Column24,  # Q200 flag
-        :Column37 => :Column37   # Q444 flag
+        :Column24 => :Column24,  # qWL1 flag
+        :Column37 => :Column37   # qWL2 flag
     )
 
     # Merge with any provided mappings
@@ -41,8 +41,8 @@ function filter_objects(
     bright_SNR = df[!, cols[:Column6]][bright_ind]
     bright_Crowding = df[!, cols[:Column10]][bright_ind]
     bright_SharpSq = df[!, cols[:Column7]][bright_ind].^2
-    bright_Q200_flag = df[!, cols[:Column24]][bright_ind]
-    bright_Q444_flag = df[!, cols[:Column37]][bright_ind]
+    bright_qWL1_flag = df[!, cols[:Column24]][bright_ind]
+    bright_qWL2_flag = df[!, cols[:Column37]][bright_ind]
 
     # Based on grossLim flag, define dictionaries with numerical limits for each parameter
 
@@ -51,16 +51,16 @@ function filter_objects(
             "SNR" => 4,
             "Crowding" => 2.25,
             "SharpSq" => 0.1,
-            "Q200_flag" => 3,
-            "Q444_flag" => 3
+            "qWL1_flag" => 3,
+            "qWL2_flag" => 3
         )
     else
         Dict(
             "SNR" => 5,
             "Crowding" => 0.5,
             "SharpSq" => 0.01,
-            "Q200_flag" => 3,
-            "Q444_flag" => 3
+            "qWL1_flag" => 3,
+            "qWL2_flag" => 3
         )
     end
 
@@ -68,8 +68,8 @@ function filter_objects(
     bright_good_ind = findall(i -> bright_SNR[i] >= limits["SNR"] &&
                                   bright_Crowding[i] <= limits["Crowding"] &&
                                   bright_SharpSq[i] <= limits["SharpSq"] &&
-                                  bright_Q200_flag[i] <= limits["Q200_flag"] &&
-                                  bright_Q444_flag[i] <= limits["Q444_flag"], 
+                                  bright_qWL1_flag[i] <= limits["qWL1_flag"] &&
+                                  bright_qWL2_flag[i] <= limits["qWL2_flag"], 
                                   eachindex(bright_ind))
 
     printstyled("\nwith 99.999: $(length(bright_good_ind)) under $(params.grossLim ? "gross limits" : "stringent limits")\n", color = :cyan)
