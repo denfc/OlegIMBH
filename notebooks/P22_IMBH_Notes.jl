@@ -577,11 +577,14 @@ md"""
 ### 21 November 2024
 !!! note "Looks Like Its Working"
 	- First, NIRCAM image 30 brightest 444 versus 30 brightest 200 shows (DS9) no overlap.
-	  - When we go to 3xx, we see one.
-	  - Coordinate comparison consistent with 30 vs 31, i.e., shows zero in common at 30, one in common at 31.
+	  - Coordinate comparison consistent with 30 vs 3xx, i.e., shows zero in common at 30, one in common at 31.
+	  - Need to use 77 (which, by the way, shows 78 for each) to find the first common coordinate. 
 !!! warning ""
-	Side note: in `matchCoords`, NIRCAM 31 shows 31, but 32 shows 33 input to both 1 & 1.
+	Side note: in `matchCoords`, NIRCAM @ 31 shows 31, but 32 shows 33 input to both 1 & 2.
 """
+
+# ╔═╡ d25077c7-78b2-4b72-bd18-6392857091f7
+
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -626,3 +629,4 @@ md"""
 # ╠═a54f0123-9a04-495e-bd00-0b50dd721ea6
 # ╠═4ac99015-fa97-4905-9abf-f680a5231c5e
 # ╠═ee6cf51b-c90e-486e-8234-b794838c75c0
+# ╠═d25077c7-78b2-4b72-bd18-6392857091f7

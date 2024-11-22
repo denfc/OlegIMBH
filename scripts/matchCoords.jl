@@ -1,7 +1,7 @@
 """
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 """
-const THRESHOLD_ARCSEC = 1.0
+const THRESHOLD_ARCSEC = 0.018 # 0.011499064327948718
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
@@ -14,7 +14,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, false, false, 1, 100, false)
+params = ChoiceParams(1, 1, false, false, false, 1, 77, false)
 dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
@@ -99,4 +99,12 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 
 
 # let's match just within MIRI and withing NIRCAM to start
+# this is Dec RA; want to switch for production run
 j = sortMergeMatch(selected_16_Yvalues, selected_16_Xvalues, selected_29_Yvalues, selected_29_Xvalues)
+
+# 201.7108045242068 and 201.71079979915106
+# 13h 26m 50.6s      
+
+# -47.46737490673237 is -47 deg 28' 02.54'
+# gcirc(2, selected_16_Xvalues[24], selected_16_Yvalues[24], selected_29_Xvalues[21], selected_29_Yvalues[21])
+# 0.01701020069639246 is the `gcirc` value with all the digits

@@ -73,7 +73,7 @@ function connectDS9(file::String, instrument::String)
 				println()
 				printstyled("Connected to DS9 successfully.\n", color = :green)
 				sao.set("raise")
-				load_zoom_grid_color_scale_view(file) # default kwargs are ; z = "zoom to fit", g = "grid no", c = "cmap scm_greyC", s = "scale pow", v = "view vertical", level = "99.5"
+				load_zoom_grid_color_scale_view(file) # default kwargs are z = "zoom to fit", g = "grid no", c = "cmap scm_greyC", s = "scale pow", v = "view vertical", level = "99.5", a = "align no")
 				current_ds9_instrument = instrument
 				return true
 			catch e
