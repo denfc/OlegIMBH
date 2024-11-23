@@ -580,9 +580,9 @@ md"""
 	  - Coordinate comparison consistent with 30 vs 3xx, i.e., shows zero in common at 30, one in common at 31.
 	  - Need to use 77 (which, by the way, shows 78 for each) to find the first common coordinate. 
 !!! note ""
-	Side note: in `matchCoords`, NIRCAM with an input of the 31 brightest stars shows 31 sets of coordinates matched, but when 32 are input, it shows 33 to match
-	- `brightestN_16` lists the 32 brightest magnitudes with 5 significant figures. `bright16_good` has the same number of elements at `bright_good_ind`, which in this case is 108,588.  When I ask which of the `brightestN_16` are found in the `bright`6_good`, I get 33 because the 32 brightest yield 43 matches, 17 of which are duplicates, but 33 survive.   Since 
-	  - brightestN_16_Xvalues = df[!, :ra]][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
+	Side note: in `matchCoords`, NIRCAM with an input of the 31 brightest stars shows 31 sets of coordinates where a match was attempted, but when 32 are input, it shows 33 to match.
+	- `brightestN_16` lists the 32 brightest magnitudes with 5 significant figures; `bright16_good` has the same number of elements at `bright_good_ind`, which in this case is 108,588.  When I ask which of the `brightestN_16` are found in the `bright16_good`, I get 33 because the 32 brightest would yield 43 matches, 17 of which are duplicates, but 33 survive.  I `unique`ed out the duplicates in `bright16_good`, but at 33 I still, of course, pick up a duplicate.  I get the first match with 77 brightest using 0.018 arcseconds as the threshold.
+	  - `brightestN_16_Xvalues = df[!, :ra]][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)`]
 
 """
 
