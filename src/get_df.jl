@@ -1,6 +1,6 @@
 # Function to check and read DataFrame if needed
 function get_df(instrument)
-    global df, current_df_instrument
+    global current_df_instrument
     local FITSfile  # Declare FITSfile at function scope
     
     if !@isdefined(df) || current_df_instrument != instrument
@@ -31,5 +31,5 @@ function get_df(instrument)
             datadir("exp_raw/Archive_MIRI_Ocen_dolphot/jw04343-o001_t001_miri_f770w_i2d.fits")
         end
     end
-    return FITSfile
+    return df, FITSfile
 end

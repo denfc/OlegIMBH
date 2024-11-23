@@ -2,9 +2,8 @@
 	dfc 20 November 2024
 	- taken from DS9Regions.jl
 		- added `col_map` parameter to allow for column name mapping so that it can be used both with its original script, `DS9Regions.jl`, and with MatchCoords.jl.  Note that the default parameter is set blank so that the longish dictionary can be assigned inside the function.
-
-
 """
+
 function filter_objects(
     df::DataFrame, 
     params::ChoiceParams;
@@ -84,11 +83,5 @@ function filter_objects(
         printstyled("only 99.999: $(length(bright_good_ind))\n", color = :cyan)
     end
 
-    return (
-    bright_good_ind,  # Creates field named 'bright_good_ind'
-    bright16,
-    bright29,
-    df,
-    bright_ind
-	)
+    return (bright_good_ind, bright16, bright29, bright_ind)
 end

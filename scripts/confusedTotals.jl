@@ -1,0 +1,24 @@
+"""
+dfc 22 November 2024
+	Trying to understand why 32 in `brightestN_16` ultimately yielded 33 coordinate sets in `/home/dfc123/Gitted/OlegIMBH/src/generateValues.jl`
+	-> not because of the duplicates in `brigthestN_16`, but those found when looking in `bright16_good`.  Removed the duplicate magnitudes in `brightestN_16`, but those in `bright16_good` yield additional coordinate sets.
+"""
+
+include(srcdir("find_duplicates.jl"))
+
+d = []
+for (i, val) in enumerate(brightestN_16)
+	c = findall(x-> x==val, bright16_good)
+	println("$i: $c")
+	# for j in c
+	# 	push!(d, j)
+	# 	println("$i) $val  $j ")
+	# end
+	# println(dfNIRCAM[!, :ra][bright_ind][bright_good_ind][c])
+	for j in eachindex(c)
+		push!(d, dfNIRCAM[!, :ra][bright_ind][bright_good_ind][c[j]])
+	end
+end
+printstyled("length(d): $(length(d)) ",  color=:green)
+printstyled("unique d: ", length(unique(d)), "\n", color = :red)
+find_duplicates(d)

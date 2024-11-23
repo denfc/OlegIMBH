@@ -6,6 +6,8 @@ Taken originally from `P24a_Brightest.jl`
 
 15 November 2024
 Jazzed up.  Now can handle either NIRCAM or MIRI, killing the earlier version that was specific to one or the other when the instrument is changed.  Of course, could also modify it to handle both at once using two frames.
+
+22 Nov 2024 removed `df`` as global
 """
 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
@@ -34,8 +36,7 @@ columnsToRead = 1:37
 # Track current instrument state (no need to initialize)
 global current_df_instrument
 
-
-FITSfile = get_df(instrument)
+df, FITSfile = get_df(instrument) 
 connectDS9(FITSfile, instrument)
 
 objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
@@ -45,10 +46,10 @@ end
 
 # Get filtered data
 filtered_data = filter_objects(df, params)
-bright_good_ind, bright16, bright29, df, bright_ind = filtered_data  # Destructure the tuple
+bright_good_ind, bright16, bright29, bright_ind = filtered_data  # Destructure the tuple
 
 # Generate values using the filtered data
-selected_values = generate_values(filtered_data, params.randB, params.nB, params.nStrt, params.obTyn)
+selected_values = generate_values(filtered_data, df, params.randB, params.nB, params.nStrt, params.obTyn)
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_values
 
 

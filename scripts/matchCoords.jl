@@ -1,7 +1,7 @@
 """
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 """
-const THRESHOLD_ARCSEC = 0.018 # 0.011499064327948718
+const THRESHOLD_ARCSEC = 0.018  # 0.011499064327948718 ? seemed to be the gcirc distans, but now it's 0.017
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
 global INSTRUMENTS = ["NIRCAM", "MIRI"]
 struct ChoiceParams
@@ -67,19 +67,15 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
 	filtered_data_NIRCAM = filter_objects(dfNIRCAM, params; col_map=nircam_col_map)
 
-# Get filtered data
-
-
-
 # Generate values using the filtered data
 if instrument == "MIRI" 
-	selected_values = generate_values(filtered_data_MIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
+	selected_values = generate_values(filtered_data_MIRI, dfMIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
 
-	bright_good_ind, bright16, bright29, dfM, bright_ind = filtered_data_MIRI
+	bright_good_ind, bright16, bright29, bright_ind = filtered_data_MIRI
 else 
-	selected_values = generate_values(filtered_data_NIRCAM, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map) 
+	selected_values = generate_values(filtered_data_NIRCAM, dfNIRCAM, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map) 
 
-	bright_good_ind, bright16, bright29, dfN, bright_ind = filtered_data_NIRCAM
+	bright_good_ind, bright16, bright29, bright_ind = filtered_data_NIRCAM
 end
 
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_values
