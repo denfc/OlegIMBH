@@ -9,6 +9,9 @@ include(srcdir("find_duplicates.jl"))
 bright16_good = bright16[bright_good_ind]
 sorted16_indices = sortperm(bright16_good)
 
+selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_XYvalues # remember that these are what go into the `sortMergeMatch` function
+
+
 nFinish = nStart - 1 + nBrightest
 brightestN_16 = bright16_good[sorted16_indices][nStart: nFinish]
 brightestN_16 = unique(brightestN_16)
