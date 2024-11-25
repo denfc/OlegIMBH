@@ -8,7 +8,7 @@ function choices(params::ChoiceParams)
     # Set this to true for random selection, false for sorted selection
     # the original limits, from JWSt; otherwise, the more stringent limits of the xxx paper are used
 
-    # in calling code: global INSTRUMENTS = ["NIRCAM", "MIRI"]
+    # in calling code: global INSTRUMENTS = ["NIRCam", "MIRI"]
     instr = INSTRUMENTS[params.instrNumber]
     return instr, params.obTyn, params.inc99s, params.onl99s, params.randB, params.nStrt, params.nB, params.grossLim
 end

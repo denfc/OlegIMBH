@@ -29,7 +29,7 @@ function filter_objects(
 	# bright_ind = findall(x -> x == params.obTyn, df.Column11)
 
 	# Extract values for selected bright objects
-	# 16. Instrumental VEGAMAG magnitude, NIRCAM_F200W
+	# 16. Instrumental VEGAMAG magnitude, NIRCam_F200W
 
     # Use mapped column names
     bright_ind = findall(x -> x == params.obTyn, df[!, cols[:Column11]])

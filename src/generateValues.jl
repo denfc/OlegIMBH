@@ -1,5 +1,5 @@
 # Function to generate random or sorted values
-function generate_values(filtered_data, df::DataFrame, randBright::Bool, nBrightest::Int, nStart::Int, objectTypeIndex::Int;
+function generate_XYvalues(filtered_data, df::DataFrame, randBright::Bool, nBrightest::Int, nStart::Int, objectTypeIndex::Int;
     col_map::AbstractDict{Symbol,Symbol}=Dict{Symbol,Symbol}()
 )
 # right now df is global, which might be silly; othrewise add `df::DataFrame``,  into above
@@ -42,9 +42,9 @@ function generate_values(filtered_data, df::DataFrame, randBright::Bool, nBright
         end
 		nFinish = nStart - 1 + nBrightest
         brightestN_16 = bright16_good[sorted16_indices][nStart: nFinish]
-	brightestN_16 = unique(brightestN_16)
+		brightestN_16 = unique(brightestN_16)
 		brightestN_29 = bright29_good[sorted29_indices][nStart: nFinish]
-	brightestN_29 = unique(brightestN_29)
+		brightestN_29 = unique(brightestN_29)
 		brightestN_16_Xvalues = df[!, cols[:Column3]][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
         brightestN_16_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
         brightestN_29_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]

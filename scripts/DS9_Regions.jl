@@ -5,12 +5,12 @@ If DS9 not running, will open a new one.
 Taken originally from `P24a_Brightest.jl`
 
 15 November 2024
-Jazzed up.  Now can handle either NIRCAM or MIRI, killing the earlier version that was specific to one or the other when the instrument is changed.  Of course, could also modify it to handle both at once using two frames.
+Jazzed up.  Now can handle either NIRCam or MIRI, killing the earlier version that was specific to one or the other when the instrument is changed.  Of course, could also modify it to handle both at once using two frames.
 
 22 Nov 2024 removed `df`` as global
 """
 
-global INSTRUMENTS = ["NIRCAM", "MIRI"]
+global INSTRUMENTS = ["NIRCam", "MIRI"]
 struct ChoiceParams
     instrNumber::Int
     obTyn::Int
@@ -21,7 +21,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, false, false, 1, 77, false)
+params = ChoiceParams(1, 1, false, false, false, 1, 30, false)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introRegions.jl"))
 # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
@@ -49,8 +49,8 @@ filtered_data = filter_objects(df, params)
 bright_good_ind, bright16, bright29, bright_ind = filtered_data  # Destructure the tuple
 
 # Generate values using the filtered data
-selected_values = generate_values(filtered_data, df, params.randB, params.nB, params.nStrt, params.obTyn)
-selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_values
+selected_XYvalues = generate_XYvalues(filtered_data, df, params.randB, params.nB, params.nStrt, params.obTyn)
+selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_XYvalues
 
 
 ds9String = "$instrument\n"
@@ -63,7 +63,7 @@ if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits"
 
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
 regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
-if instrument == "NIRCAM" regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
+if instrument == "NIRCam" regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
 else regFile_3 = DS9_writeRegionFile(-124, 950, 35, "text";  text = ds9String)
 end # default font_size = 24 can be changed)
 

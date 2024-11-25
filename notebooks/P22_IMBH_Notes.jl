@@ -577,7 +577,7 @@ md"""
 ### 21-22 November 2024
 !!! note "Looks Like Its Working"
 	- First, NIRCAM image 30 brightest 444 versus 30 brightest 200 shows (DS9) no overlap.
-	  - Coordinate comparison consistent with 30 vs 3xx, i.e., shows zero in common at 30, one in common at 31.
+	  - Coordinate comparison consistent, i.e., shows zero in common at 76, one in common at 31.
 	  - Need to use 77 (which, by the way, shows 78 for each) to find the first common coordinate. 
 !!! note ""
 	Side note: in `matchCoords`, NIRCAM with an input of the 31 brightest stars shows 31 sets of coordinates where a match was attempted, but when 32 are input, it shows 33 to match.

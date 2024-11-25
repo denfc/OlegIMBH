@@ -4,17 +4,17 @@
 """
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introTranslate.jl"))
-global INSTRUMENTS = ["NIRCAM", "MIRI"]
+global INSTRUMENTS = ["NIRCam", "MIRI"]
 instrument = INSTRUMENTS[1]
 
 # Read the data file into a DataFrame
 columnsToRead = 1:37
-if instrument == "NIRCAM"
+if instrument == "NIRCam"
 	firstWL = "200"
 	secondWL = "444"
 	FITSfile = datadir("exp_raw/OmegaCen/jw04343-o002_t001_nircam_clear-f200w_i2d.fits")
 	data_file = joinpath(datadir(), "exp_raw/OmegaCen/omega_cen_phot")
-	output_file = joinpath(datadir(), "exp_pro/NIRCAM_RADec.jld2")
+	output_file = joinpath(datadir(), "exp_pro/NIRCam_RADec.jld2")
 else
 	firstWL = "770"
 	secondWL = "1500"

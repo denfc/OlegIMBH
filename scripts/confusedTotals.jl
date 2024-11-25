@@ -5,6 +5,13 @@ dfc 22 November 2024
 """
 
 include(srcdir("find_duplicates.jl"))
+# bright_good_ind, bright16, bright29, bright_ind = filtered_data_NIRCam
+bright16_good = bright16[bright_good_ind]
+sorted16_indices = sortperm(bright16_good)
+
+nFinish = nStart - 1 + nBrightest
+brightestN_16 = bright16_good[sorted16_indices][nStart: nFinish]
+brightestN_16 = unique(brightestN_16)
 
 d = []
 for (i, val) in enumerate(brightestN_16)
@@ -14,9 +21,9 @@ for (i, val) in enumerate(brightestN_16)
 	# 	push!(d, j)
 	# 	println("$i) $val  $j ")
 	# end
-	# println(dfNIRCAM[!, :ra][bright_ind][bright_good_ind][c])
+	# println(dfNIRCam[!, :ra][bright_ind][bright_good_ind][c])
 	for j in eachindex(c)
-		push!(d, dfNIRCAM[!, :ra][bright_ind][bright_good_ind][c[j]])
+		push!(d, dfNIRCam[!, :ra][bright_ind][bright_good_ind][c[j]])
 	end
 end
 printstyled("length(d): $(length(d)) ",  color=:green)
