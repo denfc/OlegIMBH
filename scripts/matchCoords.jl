@@ -1,7 +1,7 @@
 """
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 """
-const THRESHOLD_ARCSEC = 0.018 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distans, but now it's 0.017
+const THRESHOLD_ARCSEC = 0.018 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
 # NIRCam's resolution is 0.031 arcseconds per pixel
 # but see email from Oleg (0.2 in Dec, less in RA)
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
@@ -16,7 +16,8 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, false, false, 1, 78, false)
+params = ChoiceParams(1, 1, false, false, false, 1, 77
+, false)
 dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
@@ -99,7 +100,10 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 
 # let's match just within MIRI and withing NIRCam to start
 # this is Dec RA; want to switch for production run
-j = sortMergeMatch(selected_16_Yvalues, selected_16_Xvalues, selected_29_Yvalues, selected_29_Xvalues)
+# j = sortMergeMatch(selected_16_Yvalues, selected_16_Xvalues, selected_29_Yvalues, selected_29_Xvalues)
+
+# DOES IT MATTER?
+j = sortMergeMatch(selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues)
 
 #=
 The lines marked with Input 1 and Input 2 report, respectively:
