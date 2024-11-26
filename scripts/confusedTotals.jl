@@ -7,21 +7,24 @@ dfc 22 November 2024
 include(srcdir("find_duplicates.jl"))
 # bright_good_ind, bright16, bright29, bright_ind = filtered_data_NIRCam
 bright16_good = bright16[bright_good_ind]
+bright29_good = bright29[bright_good_ind]
 sorted16_indices = sortperm(bright16_good)
+sorted29_indices = sortperm(bright29_good)
 
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_XYvalues # remember that these are what go into the `sortMergeMatch` function
 
 
 nFinish = nStart - 1 + nBrightest
 brightestN_16 = bright16_good[sorted16_indices][nStart: nFinish]
-brightestN_16 = unique(brightestN_16)
+brightestN_29 = bright29_good[sorted29_indices][nStart: nFinish]
+brightestN_29 = unique(brightestN_29)
 
 d = []
-for (i, val) in enumerate(brightestN_16)
-	c = findall(x-> x==val, bright16_good)
+for (i, val) in enumerate(brightestN_29)
+	c = findall(x-> x==val, bright29_good)
 	println("$i: $c")
 	# for j in c
-	# 	push!(d, j)
+	# 	push!(d, j)43
 	# 	println("$i) $val  $j ")
 	# end
 	# println(dfNIRCam[!, :ra][bright_ind][bright_good_ind][c])

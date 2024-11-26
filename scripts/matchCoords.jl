@@ -16,12 +16,11 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, false, false, 1, 77
-, false)
+params = ChoiceParams(1, 1, false, false, false, 1, 5, false)
 dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
-dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
+# dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
 dfNIRCam = jldopen(joinpath(datadir("exp_pro/NIRCam_RADec.jld2")))["newColumnGroup"]
 
 # # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
@@ -54,21 +53,23 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	)
 
     XY_col_map = Dict(
-        :Column3 => :ra,  # Object type
-        :Column4 => :dec,  # Magnitude
+        :Column3 => :ra,
+        :Column4 => :dec,
     )
 
 	objectType = ["bright star", "faint      ", "elongated  ", "hot pixel  ", "extended   "] # Column 11
+	#=
 	printstyled("MIRI\n", color = :light_cyan)
 	for i in eachindex(objectType)
 		println("$i (", objectType[i], "): ", length(findall(x -> x == i, dfMIRI.obType)))
 	end
+	=#
 	printstyled("\nNIRCam\n", color = :light_cyan)
 	for i in eachindex(objectType)
 		println("$i (", objectType[i], "): ", length(findall(x -> x == i, dfNIRCam.obType)))
 	end
 	
-	filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
+	# filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
 	filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
 
 # Generate values using the filtered data
@@ -99,11 +100,12 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 
 
 # let's match just within MIRI and withing NIRCam to start
-# this is Dec RA; want to switch for production run
-# j = sortMergeMatch(selected_16_Yvalues, selected_16_Xvalues, selected_29_Yvalues, selected_29_Xvalues)
+# this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
+j = sortMergeMatch(selected_16_Yvalues, selected_16_Xvalues, selected_29_Yvalues, selected_29_Xvalues)
 
 # DOES IT MATTER?
-j = sortMergeMatch(selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues)
+# j = sortMergeMatch(selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues)
+# j = sortMergeMatch(selected_29_Xvalues, selected_29_Yvalues, selected_29_Xvalues, selected_29_Yvalues)
 
 #=
 The lines marked with Input 1 and Input 2 report, respectively:
