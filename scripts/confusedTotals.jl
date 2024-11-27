@@ -27,7 +27,8 @@ for (i, val) in enumerate(brightestN_29)
 	# 	push!(d, j)43
 	# 	println("$i) $val  $j ")
 	# end
-	# println(dfNIRCam[!, :ra][bright_ind][bright_good_ind][c])
+	println(dfNIRCam[!, :ra][bright_ind][bright_good_ind][c], 
+	dfNIRCam[!, :dec][bright_ind][bright_good_ind][c])
 	for j in eachindex(c)
 		push!(d, dfNIRCam[!, :ra][bright_ind][bright_good_ind][c[j]])
 	end

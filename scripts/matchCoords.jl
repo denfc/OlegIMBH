@@ -16,7 +16,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, false, false, 1, 5, false)
+params = ChoiceParams(1, 1, false, false, false, 1, 108588, false)
 dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))

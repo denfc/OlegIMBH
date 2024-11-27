@@ -13,7 +13,7 @@ function sortMergeMatch(lat1, long1, lat2, long2)
 		# threshold_deg = threshold_arcsec / 3600. # [deg]
 		# d = (v1[i1, 2] - v2[i2, 2]) / threshold_deg
 		d = (v1[i1, 2] - v2[i2, 2]) / THRESHOLD_DEG
-	printstyled("$d  $(v1[i1, 2])  $(v2[i2, 2])\n", color=:red)
+	#bprintstyled("$d  $(v1[i1, 2])  $(v2[i2, 2])\n", color=:red)
 		(abs(d) >= 1)  &&  (return sign(d))
 		dd = gcirc(2, v1[i1, 1], v1[i1, 2], v2[i2, 1], v2[i2, 2])
 		(dd < THRESHOLD_ARCSEC)  &&  (return 0)

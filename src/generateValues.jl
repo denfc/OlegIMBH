@@ -45,8 +45,12 @@ function generate_XYvalues(filtered_data, df::DataFrame, randBright::Bool, nBrig
 		brightestN_16 = unique(brightestN_16)
 		brightestN_29 = bright29_good[sorted29_indices][nStart: nFinish]
 		brightestN_29 = unique(brightestN_29)
-		brightestN_16_Xvalues = df[!, cols[:Column3]][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
+		brightestN_16_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
+	# println("brightestN_29_Xvalues: ", brightestN_16_Xvalues)
         brightestN_16_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
+		eleven = findall(x->x in brightestN_29, df[!, cols[:Column3]])
+        # brightestN_29_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]
+        # brightestN_29_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]
         brightestN_29_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]
         brightestN_29_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]
     end
