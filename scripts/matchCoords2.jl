@@ -1,5 +1,6 @@
 """
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
+dfc 27 November 2024 -- version 2 will do what we thought of originally, comparing MIRI to NIRCAM
 """
 const THRESHOLD_ARCSEC = 0.01 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
 # NIRCam's resolution is 0.031 arcseconds per pixel
