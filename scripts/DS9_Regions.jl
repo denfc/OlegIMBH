@@ -21,7 +21,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(1, 1, false, false, false, 1, 30, false)
+params = ChoiceParams(2, 1, true, true, false, 1, 1, false)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introRegions.jl"))
 # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
