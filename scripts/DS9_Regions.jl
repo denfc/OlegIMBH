@@ -21,7 +21,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(2, 1, true, true, false, 1, 1, false)
+params = ChoiceParams(2, 1, true, true, true, 1, 32, false)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introRegions.jl"))
 # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
@@ -61,11 +61,17 @@ if include99s && only99s ds9String *= "only 99.999\n" end
 ds9String *= "$(length(bright_good_ind)) good\n"
 if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits" end
 
-regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200"; color = "green")
-regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444"; color = "red")
-if instrument == "NIRCam" regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
-else regFile_3 = DS9_writeRegionFile(-124, 950, 35, "text";  text = ds9String)
+
+if instrument == "NIRCam"
+	regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
+	wlNames = ["F200", "F444"]
+else
+	regFile_3 = DS9_writeRegionFile(-124, 1200, 35, "text";  text = ds9String)
+	wlNames = ["F770", "F1500"]
 end # default font_size = 24 can be changed)
+
+regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, wlNames[1]; color = "green")
+regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, wlNames[2]; color = "red")
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")

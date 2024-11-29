@@ -79,7 +79,7 @@ function filter_objects(
         printstyled("without 99.999: $(length(bright_good_ind))\n", color = :magenta)
     end
     if params.onl99s && params.inc99s
-        bright_good_ind = filter(i -> bright16[i] == 99.999 || bright29[i] == 99.999, eachindex(bright_good_ind))
+        bright_good_ind = filter(i -> bright16[i] == 99.999 && bright29[i] == 99.999, eachindex(bright_good_ind))
         printstyled("only 99.999: $(length(bright_good_ind))\n", color = :cyan)
     end
 
