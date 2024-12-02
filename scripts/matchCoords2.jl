@@ -74,7 +74,7 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	
 	filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
 	# filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
-	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, ALL OF EM; col_map=nircam_col_map)
+	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, paramsALL; col_map=nircam_col_map)
 	
 # Generate values using the filtered data
 if instrument == "MIRI" 
@@ -102,8 +102,7 @@ printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_ind), "
 printstyled("number of good ones: ", length(bright_good_ind), "; ", color = :light_cyan)
 if randBright printstyled("random selection of ", nBrightest, ".", color = :light_cyan) else printstyled("sorted selection of ", nBrightest, ".", color = :light_cyan) end
 
-
-# let's match just within MIRI and withing NIRCam to start
+# let's match just within MIRI and within NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
 j = sortMergeMatch(selected_29_Yvalues, selected_29_Xvalues, selected_16_Yvalues, selected_16_Xvalues)
 
