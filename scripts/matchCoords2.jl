@@ -22,7 +22,9 @@ dump(params)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
-dfNIRCam = jldopen(joinpath(datadir("exp_pro/NIRCam_RADec.jld2")))["newColumnGroup"]
+# dfNIRCam = jldopen(joinpath(datadir("exp_pro/NIRCam_RADec.jld2")))["newColumnGroup"]
+dfNIRCamLimited = jldopen(joinpath(datadir("exp_pro/NIRCamLimited.jld2")))["dfNIRClimited"]
+
 
 # # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
 # if !@isdefined(current_ds9_instrument)
@@ -71,8 +73,9 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	end
 	
 	filtered_data_MIRI = filter_objects(dfMIRI, params; col_map=miri_col_map)
-	filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
-
+	# filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
+	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, ALL OF EM; col_map=nircam_col_map)
+	
 # Generate values using the filtered data
 if instrument == "MIRI" 
 	selected_XYvalues = generate_XYvalues(filtered_data_MIRI, dfMIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)

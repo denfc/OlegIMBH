@@ -19,8 +19,8 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	)
 
     XY_col_map = Dict(
-        :Column3 => :x,
-        :Column4 => :y,
+        :Column3 => :xMIRI,
+        :Column4 => :yMIRI,
     )
 # Get filtered data
 filtered_data = filter_objects(df, params; col_map=nircam_col_map)
@@ -30,8 +30,8 @@ bright_good_ind, bright16, bright29, bright_ind = filtered_data  # Destructure t
 selected_XYvalues = generate_XYvalues(filtered_data, df, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_XYvalues
 
-regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, "F200Lim"; color = "orange")
-regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, "F444Lim"; color = "cyan")
+regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 19, "F200Lim"; color = "cyan")
+regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 15, "F444Lim"; color = "orange")
 
 # DS9_SendRegAndVerify(regFile_2)
 DS9_SendRegAndVerify(regFile_1)

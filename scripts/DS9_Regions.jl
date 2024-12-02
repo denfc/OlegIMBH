@@ -21,7 +21,7 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-params = ChoiceParams(2, 1, true, true, true, 1, 32, false)
+params = ChoiceParams(2, 1, false, false, false,  1, 100, false)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introRegions.jl"))
 # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
@@ -65,13 +65,15 @@ if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits"
 if instrument == "NIRCam"
 	regFile_3 = DS9_writeRegionFile(-500, 3500, 75, "text";  text = ds9String)
 	wlNames = ["F200", "F444"]
+	circleRadii = [35, 30]
 else
 	regFile_3 = DS9_writeRegionFile(-124, 1200, 35, "text";  text = ds9String)
 	wlNames = ["F770", "F1500"]
+	circleRadii = [19, 15]
 end # default font_size = 24 can be changed)
 
-regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 29, wlNames[1]; color = "green")
-regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, 25, wlNames[2]; color = "red")
+regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, circleRadii[1], wlNames[1]; color = "green")
+regFile_2 = DS9_writeRegionFile(selected_29_Xvalues, selected_29_Yvalues, circleRadii[2], wlNames[2]; color = "red")
 
 # Delete all regions before sending new ones
 sao.set("regions", "delete all")

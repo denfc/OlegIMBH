@@ -25,6 +25,7 @@ end
 
 # Read the FITS file with AstroImages.AstroImage
 img = AstroImage(FITSfile)
+# see scripts/limitNIRCamCoords.jl: Using the explicit wcs object might be slightly more efficient if you're doing many transformations since it avoids extracting the WCS repeatedly.
 
 df = CSV.read(data_file,
 	DataFrame;
