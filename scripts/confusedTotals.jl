@@ -1,6 +1,6 @@
 """
 dfc 22 November 2024
-	Trying to understand why 32 in `brightestN_16` ultimately yielded 33 coordinate sets in `/home/dfc123/Gitted/OlegIMBH/src/generateValues.jl`
+	Trying to understand why 32 in `brightestN_16` ultimately yielded 33 coordinate sets in `/home/dfc123/Gitted/OlegIMBH/src/generateXYValues.jl`
 	-> not because of the duplicates in `brigthestN_16`, but those found when looking in `bright16_good`.  Removed the duplicate magnitudes in `brightestN_16`, but those in `bright16_good` yield additional coordinate sets.
 """
 

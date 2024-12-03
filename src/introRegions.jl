@@ -14,7 +14,7 @@ include(srcdir("connectDS9.jl"))
 include(srcdir("writeDS9RegFile.jl"))
 include(srcdir("verifyRegFileSent.jl"))
 include(srcdir("filter_objects.jl"))
-include(srcdir("generateValues.jl"))
+include(srcdir("generateXYValues.jl"))
 
 println()
 println(

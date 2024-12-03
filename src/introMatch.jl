@@ -15,7 +15,7 @@ using AstroLib
 
 include(srcdir("choices.jl"))
 include(srcdir("filter_objects.jl"))
-include(srcdir("generateValues.jl"))
+include(srcdir("generateXYValues.jl"))
 include(srcdir("sortMergeMatch.jl"))
 
 println()
