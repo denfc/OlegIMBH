@@ -3,7 +3,8 @@ dfc 20 November 2024, taken from script `SortMerge.jl`
 	  
     - called from matchCoords
 """
-function sortMergeMatch(lat1, long1, lat2, long2)
+#function sortMergeMatch(lat1, long1, lat2, long2)
+function sortMergeMatch(raDec_1, raDec_2)
 	# using SortMerge
 	# using AstroLib
 
@@ -25,6 +26,7 @@ function sortMergeMatch(lat1, long1, lat2, long2)
 	end
 	# @time j = sortmerge([lat1 long1], [lat2 long2], lt1=lt, lt2=lt, sd=sd, 1.)
 	println()
-	@time j = sortmerge([lat1 long1], [lat2 long2], lt1=lt, lt2=lt, sd=sd)
+	# @time j = sortmerge([lat1 long1], [lat2 long2], lt1=lt, lt2=lt, sd=sd)
+	@time j = sortmerge(raDec_1, raDec_2, lt1=lt, lt2=lt, sd=sd)
 	return j
 end

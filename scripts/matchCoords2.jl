@@ -2,7 +2,7 @@
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 dfc 27 November 2024 -- version 2 will do what we thought of originally, comparing MIRI to NIRCAM
 """
-const THRESHOLD_ARCSEC = 0.4 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
+const THRESHOLD_ARCSEC = 0.4 #0.35 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
 # NIRCam's resolution is 0.031 arcseconds per pixel
 # but see email from Oleg (0.2 in Dec, less in RA)
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
@@ -18,7 +18,7 @@ struct ChoiceParams
     grossLim::Bool
 end
 paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 99377, false)
-paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, 10, false)
+paramsMIRI = ChoiceParams(1, 1, false, false, false, 6, 30, false)
 dump(paramsMIRI)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
@@ -101,9 +101,15 @@ printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_indMIRI
 printstyled("number of good ones: ", length(bright_good_indMIRI), "; ", color = :light_cyan)
 if randBright printstyled("random selection of ", nBrightest, ".", color = :light_cyan) else printstyled("sorted selection of ", nBrightest, ".", color = :light_cyan) end
 
+# NOTE WELL: COULD MODIFY TO TAKE INFO FROM DATA FRAMES DIRECTLY; see https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
+
 # let's match just within MIRI and within NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
-j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
+# So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
+A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [ra dec]
+B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
+# j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
+j = sortMergeMatch(A, B)
 
 #=
 The lines marked with Input 1 and Input 2 report, respectively:
