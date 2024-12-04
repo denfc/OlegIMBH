@@ -43,20 +43,34 @@ function sortMergeMatch(raDec_1, raDec_2)
         end
     end
 
-    # Process each group to keep single matches or find closest
-    closest_matches = Vector{Tuple{Int,Int,Float64}}()
+    # Process each group to keep single matches or find closest; then calculate RA and Dec differences
+    closest_matches = Vector{Tuple{Int,Int,Float64,Float64,Float64}}()
     for (idx1, idx2s) in match_groups
         if length(idx2s) == 1
-            # Single match - keep it
+            idx2 = idx2s[1]
             dist = gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2], 
-                        raDec_2[idx2s[1], 1], raDec_2[idx2s[1], 2])
-            push!(closest_matches, (idx1, idx2s[1], dist))
+                        raDec_2[idx2, 1], raDec_2[idx2, 2])
+            # Calculate RA difference using gcirc at same Dec
+            ra_dist = gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2],
+                           raDec_2[idx2, 1], raDec_1[idx1, 2]) * 
+                           sign(raDec_2[idx2, 1] - raDec_1[idx1, 1])
+            # Calculate Dec difference using gcirc at same RA
+            dec_dist = gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2],
+                            raDec_1[idx1, 1], raDec_2[idx2, 2]) * 
+                            sign(raDec_2[idx2, 2] - raDec_1[idx1, 2])
+            push!(closest_matches, (idx1, idx2, dist, ra_dist, dec_dist))
         else
-            # Multiple matches - find closest
             distances = [gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2],
                              raDec_2[idx2, 1], raDec_2[idx2, 2]) for idx2 in idx2s]
             _, best_idx = findmin(distances)
-            push!(closest_matches, (idx1, idx2s[best_idx], distances[best_idx]))
+            best_idx2 = idx2s[best_idx]
+            ra_dist = gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2],
+                           raDec_2[best_idx2, 1], raDec_1[idx1, 2]) * 
+                           sign(raDec_2[best_idx2, 1] - raDec_1[idx1, 1])
+            dec_dist = gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2],
+                            raDec_1[idx1, 1], raDec_2[best_idx2, 2]) * 
+                            sign(raDec_2[best_idx2, 2] - raDec_1[idx1, 2])
+            push!(closest_matches, (idx1, best_idx2, distances[best_idx], ra_dist, dec_dist))
         end
     end
     

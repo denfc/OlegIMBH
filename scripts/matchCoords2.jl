@@ -4,7 +4,7 @@ dfc 27 November 2024 -- version 2 will do what we thought of originally, compari
 """
 
 
-const THRESHOLD_ARCSEC = 0.45 #0.35 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
+const THRESHOLD_ARCSEC = 0.5 #0.35 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
 # NIRCam's resolution is 0.031 arcseconds per pixel
 # but see email from Oleg (0.2 in Dec, less in RA)
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
@@ -119,9 +119,29 @@ B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
 # j = sortMergeMatch(A, B)
 j, nearM = sortMergeMatch(A, B)
 
-ds = map(x -> x[3], nearM)
-histogram(ds, xlabel = "closest distance in arcseconds", label = "$(length(ds)) matches out of $(length(selected_16_YvaluesMIRI)) MIRI points\nat threshold distance of $THRESHOLD_ARCSEC", legend = :topleft, title = "NIRCam 444 matched to MIRI 770", xlims = (0, THRESHOLD_ARCSEC))
+# Define the distance selection dictionary
+distanceBetween = Dict(
+    "overall" => 3,
+    "RA" => 4,
+    "Dec" => 5
+)
 
+# Choose which distance to plot
+distance_type = "overall"
+
+# Modify the histogram line to use the dictionary
+ds = map(x -> x[distanceBetween[distance_type]], nearM)
+
+# Create histogram with dynamic xlabel
+histogram(ds,
+	# bins = 20,  # or specify exact edges: bins = range(0, THRESHOLD_ARCSEC, length=51)
+	bins = range(0, THRESHOLD_ARCSEC, length=26), # 51),
+    xlabel = "$distance_type distance in arcseconds",
+    label = "$(length(ds)) matches out of $(length(selected_16_YvaluesMIRI)) MIRI points\nat threshold distance of $THRESHOLD_ARCSEC", 
+    legend = :topleft, 
+    title = "NIRCam 444 matched to MIRI 770", 
+    xlims = (0.0, THRESHOLD_ARCSEC),
+	)
 #=
 The lines marked with Input 1 and Input 2 report, respectively:
 
