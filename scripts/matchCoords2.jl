@@ -17,15 +17,19 @@ struct ChoiceParams
     nB::Int
     grossLim::Bool
 end
-paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 99377, false)
-paramsMIRI = ChoiceParams(1, 1, false, false, false, 6, 30, false)
-dump(paramsMIRI)
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
+
+paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, 10023, false) # under "stringent" limits, 10023 is all the good MIRI objects at "false, false, false"
+printstyled("`paramsMIRI`\n", color = :light_cyan)
+dump(paramsMIRI)
+println()
 dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
 # dfNIRCam = jldopen(joinpath(datadir("exp_pro/NIRCam_RADec.jld2")))["newColumnGroup"]
+# dfNIRCamLimited = dfNIRCam
+# paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 108588, false)
 dfNIRCamLimited = jldopen(joinpath(datadir("exp_pro/NIRCamLimited.jld2")))["dfNIRClimited"]
-
+paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 99377, false) # under "stringent" limits, 99377 is all the good NIRCam objects at "false, false, false"
 
 # # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
 # if !@isdefined(current_ds9_instrument)
@@ -73,10 +77,10 @@ nircam_col_map = Dict{Symbol,Symbol}(
 		println("$i (", objectType[i], "): ", length(findall(x -> x == i, dfNIRCamLimited.obType)))
 	end
 	
-	print("\nMIRI")
+	print("\nMIRI filtering")
 	filtered_data_MIRI = filter_objects(dfMIRI, paramsMIRI; col_map=miri_col_map)
 	# filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
-	print("\nNIRCamLimited")
+	print("\n`NIRCam filtering")
 	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, paramsAllNIRCLimited; col_map=nircam_col_map)
 	
 # Generate values using the filtered data
@@ -106,10 +110,11 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 # let's match just within MIRI and within NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
 # So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
-A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [ra dec]
+A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [dec ra]
 B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
-j = sortMergeMatch(A, B)
+# j = sortMergeMatch(A, B)
+j, nearM = sortMergeMatch(A, B)
 
 #=
 The lines marked with Input 1 and Input 2 report, respectively:

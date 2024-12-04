@@ -1,7 +1,7 @@
 """
 dfc 20 November 2024, taken from script `SortMerge.jl`
 	  
-    - called from matchCoords
+    - called from matchCoords and matchCoords2
 """
 #function sortMergeMatch(lat1, long1, lat2, long2)
 function sortMergeMatch(raDec_1, raDec_2)
@@ -28,5 +28,37 @@ function sortMergeMatch(raDec_1, raDec_2)
 	println()
 	# @time j = sortmerge([lat1 long1], [lat2 long2], lt1=lt, lt2=lt, sd=sd)
 	@time j = sortmerge(raDec_1, raDec_2, lt1=lt, lt2=lt, sd=sd)
-	return j
+	# return j
+
+    # j.matched[1] contains all first indices
+    # j.matched[2] contains all second indices
+    match_groups = Dict{Int, Vector{Int}}()
+    
+    # Zip the two vectors together to get matching pairs
+    for (idx1, idx2) in zip(j.matched[1], j.matched[2])
+        if haskey(match_groups, idx1)
+            push!(match_groups[idx1], idx2)
+        else
+            match_groups[idx1] = [idx2]
+        end
+    end
+
+    # Process each group to keep single matches or find closest
+    closest_matches = Vector{Tuple{Int,Int,Float64}}()
+    for (idx1, idx2s) in match_groups
+        if length(idx2s) == 1
+            # Single match - keep it
+            dist = gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2], 
+                        raDec_2[idx2s[1], 1], raDec_2[idx2s[1], 2])
+            push!(closest_matches, (idx1, idx2s[1], dist))
+        else
+            # Multiple matches - find closest
+            distances = [gcirc(2, raDec_1[idx1, 1], raDec_1[idx1, 2],
+                             raDec_2[idx2, 1], raDec_2[idx2, 2]) for idx2 in idx2s]
+            _, best_idx = findmin(distances)
+            push!(closest_matches, (idx1, idx2s[best_idx], distances[best_idx]))
+        end
+    end
+    
+    return j, closest_matches
 end

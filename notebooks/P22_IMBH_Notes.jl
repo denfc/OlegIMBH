@@ -594,7 +594,6 @@ md"""
 	- Depending on the "threshold" number (`const THRESHOLD_ARCSEC`), when all NIRCam coordinates are examined, a given MIRI coordinate can match to one or more NIRCam coordinates, and the resulting `j`s work as follows:
 	  - `j[1]` gives the indices of the "A" (i.e., the first, here MIRI) set of coordinates that have been matched. The number of indices, i.e., `length(j[1])` will match the "Output" number of matches, so if more than one NIRCam coordinate has been matched to a given MIRI coordinate, the length will be greater than the input number of MIRI objects. 
 	  - `j[2]` gives the indices of the matching NIRCam coordinates, which so far appear to be unique, i.e., although multiple NIRCams match to a given MIRI, no two NIRCams match to different MIRIs (so far).
-	- WHEN I GO TO THE SAME `params` set in NIRCamLimited, the extras should decrease and maybe even vanish.
 """
 
 # ╔═╡ Cell order:
