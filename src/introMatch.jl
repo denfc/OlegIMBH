@@ -1,6 +1,6 @@
 """
 	dfc 19 November 2024
-	- taken from introRegions.dl
+	- taken from introRegions.dl, but `using Plots` added
 """
 
 cd(joinpath(homedir(), "Gitted/OlegIMBH"))
@@ -12,6 +12,7 @@ using DataFrames
 using Random
 using SortMerge
 using AstroLib
+using Plots
 
 include(srcdir("choices.jl"))
 include(srcdir("filter_objects.jl"))

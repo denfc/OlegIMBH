@@ -2,7 +2,9 @@
 dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't have worked here as written because of column name changes, but we changed `filter_objects` cleverly to handle both, and now we can use this script to select objects for matching.
 dfc 27 November 2024 -- version 2 will do what we thought of originally, comparing MIRI to NIRCAM
 """
-const THRESHOLD_ARCSEC = 0.4 #0.35 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
+
+
+const THRESHOLD_ARCSEC = 0.45 #0.35 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
 # NIRCam's resolution is 0.031 arcseconds per pixel
 # but see email from Oleg (0.2 in Dec, less in RA)
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
@@ -18,6 +20,7 @@ struct ChoiceParams
     grossLim::Bool
 end
 
+# `choices.jl` needs the above struct
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 
 paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, 10023, false) # under "stringent" limits, 10023 is all the good MIRI objects at "false, false, false"
@@ -115,6 +118,9 @@ B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
 # j = sortMergeMatch(A, B)
 j, nearM = sortMergeMatch(A, B)
+
+ds = map(x -> x[3], nearM)
+histogram(ds, xlabel = "closest distance in arcseconds", label = "$(length(ds)) matches out of $(length(selected_16_YvaluesMIRI)) MIRI points\nat threshold distance of $THRESHOLD_ARCSEC", legend = :topleft, title = "NIRCam 444 matched to MIRI 770", xlims = (0, THRESHOLD_ARCSEC))
 
 #=
 The lines marked with Input 1 and Input 2 report, respectively:

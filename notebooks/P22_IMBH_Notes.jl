@@ -588,13 +588,22 @@ md"""
 
 # ╔═╡ d25077c7-78b2-4b72-bd18-6392857091f7
 md"""
-### 2 December 2024
+### 2--3 December 2024
 !!! note "`matchCoords2` matches NIRCAM to MIRI (but is more flexible than that)"
 	- Understanding `sortmerge` results: see [`sortmerge`](https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file)
 	- Depending on the "threshold" number (`const THRESHOLD_ARCSEC`), when all NIRCam coordinates are examined, a given MIRI coordinate can match to one or more NIRCam coordinates, and the resulting `j`s work as follows:
 	  - `j[1]` gives the indices of the "A" (i.e., the first, here MIRI) set of coordinates that have been matched. The number of indices, i.e., `length(j[1])` will match the "Output" number of matches, so if more than one NIRCam coordinate has been matched to a given MIRI coordinate, the length will be greater than the input number of MIRI objects. 
-	  - `j[2]` gives the indices of the matching NIRCam coordinates, which so far appear to be unique, i.e., although multiple NIRCams match to a given MIRI, no two NIRCams match to different MIRIs (so far).
+	  - `j[2]` gives the indices of the matching NIRCam coordinates.
+	- now have histogram of the closest distances chosen when multiple matches are found
+	  - next should plot a handful with DS9
 """
+
+# ╔═╡ 5ab6a194-3641-444d-abe3-f612083b88b0
+let
+	imageName = "N444_t0_M770.svg"
+	imagePath = joinpath(plotsdir(), imageName)
+	LocalResource(imagePath)
+end
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -640,3 +649,4 @@ md"""
 # ╠═4ac99015-fa97-4905-9abf-f680a5231c5e
 # ╟─ee6cf51b-c90e-486e-8234-b794838c75c0
 # ╠═d25077c7-78b2-4b72-bd18-6392857091f7
+# ╠═5ab6a194-3641-444d-abe3-f612083b88b0
