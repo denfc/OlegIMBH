@@ -3,8 +3,7 @@ dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't h
 dfc 27 November 2024 -- version 2 will do what we thought of originally, comparing MIRI to NIRCAM
 """
 
-
-const THRESHOLD_ARCSEC = 0.5 #0.35 # 0.2 # 0.06  # 0.018  # 0.011499064327948718 ? seemed to be the gcirc distance, but now it's 0.017? NOT UNDERSTANDING 'CAUSE NOW AGAIN FIDING 0.0114 ...!
+const THRESHOLD_ARCSEC = 0.5 #0.35 # 0.2 # 0.06  # 0.018 
 # NIRCam's resolution is 0.031 arcseconds per pixel
 # but see email from Oleg (0.2 in Dec, less in RA)
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
@@ -20,11 +19,12 @@ struct ChoiceParams
     grossLim::Bool
 end
 
-# `choices.jl` needs the above struct
+# `choices.jl`, called in intro, below, needs the above struct
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 
 paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, 10023, false) # under "stringent" limits, 10023 is all the good MIRI objects at "false, false, false"
 printstyled("`paramsMIRI`\n", color = :light_cyan)
+instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(paramsMIRI)
 dump(paramsMIRI)
 println()
 dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
@@ -34,12 +34,6 @@ dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
 dfNIRCamLimited = jldopen(joinpath(datadir("exp_pro/NIRCamLimited.jld2")))["dfNIRClimited"]
 paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 99377, false) # under "stringent" limits, 99377 is all the good NIRCam objects at "false, false, false"
 
-# # If not already defined, initialize the global variable to track the current DS9 instrument name to empty string
-# if !@isdefined(current_ds9_instrument)
-#     global current_ds9_instrument = ""
-# end
-
-instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(paramsMIRI)
 
 miri_col_map = Dict{Symbol,Symbol}(
 	:Column11 => :obType,
@@ -83,7 +77,7 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	print("\nMIRI filtering")
 	filtered_data_MIRI = filter_objects(dfMIRI, paramsMIRI; col_map=miri_col_map)
 	# filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
-	print("\n`NIRCam filtering")
+	print("\nNIRCam filtering")
 	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, paramsAllNIRCLimited; col_map=nircam_col_map)
 	
 # Generate values using the filtered data
@@ -95,6 +89,7 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	bright_good_indNIRC, bright16NIRC, bright29NIRC, bright_indNIRC = filtered_data_NIRCam
 	selected_16_XvaluesNIRC, selected_16_YvaluesNIRC, selected_29_XvaluesNIRC, selected_29_YvaluesNIRC = selected_XYvaluesNIRC
 
+#= `ds9String` created for printing to DS9 regions file, so not used here (yet?)
 ds9String = "$instrument\n"
 ds9String *= "$(objectType[objectTypeIndex])\n"
 if randBright ds9String *= "$nBrightest random\n" else ds9String *= "$nBrightest sorted\n" end
@@ -102,6 +97,7 @@ ds9String *= "includes 99s is $include99s\n"
 if include99s && only99s ds9String *= "only 99.999\n" end
 ds9String *= "$(length(bright_good_indMIRI)) good\n"
 if gross_limits ds9String *= "gross limits" else ds9String *= "stringent limits" end
+=#
 
 println()
 printstyled("\"$(objectType[objectTypeIndex])\" number= ", length(bright_indMIRI), "; ", color = :light_cyan)

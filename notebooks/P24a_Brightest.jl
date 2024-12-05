@@ -270,7 +270,7 @@ begin
 	# clamped_imgLoad = Array(clamped_imgLoad)
     clamped_imgLoad = map(clamp01nan, imgLoad)
 	clamped_imgLoad = Array(clamped_imgLoad)
-	save("clamped_imgLoad.png", clamped_imgLoad)
+	save("clamped_imgLoad.png", plotsdir("clamped_imgLoad"))
 	# save("clamped_img.png", clamped_imgLoad)
 end
 
@@ -280,7 +280,7 @@ imview(clamped_imgLoad)
 
 # ╔═╡ 0febb7c0-d295-4625-99ca-83f833558540
 begin
-		imgLoad_retrieved = AstroImages.load(joinpath(projectdir(), "notebooks/clamped_imgLoad.png"))
+		imgLoad_retrieved = AstroImages.load(plotsdir("clamped_imgLoad.png"))
 	# imgLoad_final = AstroImages.AstroImage(joinpath(projectdir(), "notebooks/clamped_img.png")) doesn't work
 		imgLoad_rotated = ImageTransformations.imrotate(imgLoad_retrieved, -π/2) # π)
 		imgLoad_final = OffsetArrays.no_offset_view(imgLoad_rotated)
