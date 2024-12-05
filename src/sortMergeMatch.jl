@@ -2,7 +2,7 @@
 dfc 20 November 2024, taken from script at bottom of README in https://github.com/gcalderone/SortMerge.jl
 	  
     - called from 'matchCoords` and `matchCoords2``
-	- modified to return closest matches and their distances along with (5 Dec) distances between RA and Dec separately (to `matchCoords2``)
+	- modified to return closest matches and their distances along with (4 Dec) distances between RA and Dec separately (to `matchCoords2``)
 	  - RA and Dec combined into a single Array
 """
 #function sortMergeMatch(lat1, long1, lat2, long2) # original
