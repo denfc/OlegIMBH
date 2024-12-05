@@ -108,7 +108,7 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 
 # let's match just within MIRI and within NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
-# So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
+# `A`, `B`, So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
 A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [dec ra]
 B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
