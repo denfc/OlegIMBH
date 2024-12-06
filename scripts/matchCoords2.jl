@@ -111,6 +111,10 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 # `A`, `B`, So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
 A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [dec ra]
 B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
+# A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
+# B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
+# A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
+# B = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI]
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
 # j = sortMergeMatch(A, B)
 j, nearM = sortMergeMatch(A, B)
@@ -135,7 +139,7 @@ histogram(ds,
     xlabel = "$distance_type distance in arcseconds",
     label = "$(length(ds)) matches out of $(length(selected_16_YvaluesMIRI)) MIRI points\nat threshold distance of $THRESHOLD_ARCSEC", 
     legend = :topleft, 
-    title = "NIRCam 444 matched to MIRI 770", 
+    title = "NIRCam 444 matched to MIRI 770", #"MIRI 770 matched to MIRI 1500", #"NIRCam 200 matched to MIRI 1500", #NIRCam 444 matched to MIRI 770", 
     xlims = (0.0, THRESHOLD_ARCSEC),
 	)
 #=
@@ -160,3 +164,16 @@ The lines marked with Input 1 and Input 2 report, respectively:
 # -47.46737490673237 is -47 deg 28' 02.54'
 # gcirc(2, selected_16_Xvalues[24], selected_16_Yvalues[24], selected_29_Xvalues[21], selected_29_Yvalues[21])
 # 0.01701020069639246 is the `gcirc` value with all the digits
+
+# histogram(dfMIRI[bright_good_indMIRI, :mag1500])
+# histogram!(dfNIRCamLimited[bright_good_indNIRC, :mag444])
+# histogram!(dfMIRI[bright_good_indMIRI, :mag770])
+# histogram!(dfNIRCamLimited[bright_good_indNIRC, :mag200])
+
+#= two histograms below generated and saved by handl
+
+titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
+labelMIRI = "10,023 'stringent'\nno 99s"
+histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
+histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI)
+=#
