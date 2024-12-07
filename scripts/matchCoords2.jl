@@ -3,7 +3,7 @@ dfc 19 November 2023 -- selection stuff taken from DS9Regions, but it wouldn't h
 dfc 27 November 2024 -- version 2 will do what we thought of originally, comparing MIRI to NIRCAM
 """
 
-const THRESHOLD_ARCSEC = 0.5 #0.35 # 0.2 # 0.06  # 0.018 
+const THRESHOLD_ARCSEC = 0.5 #0.5 # 0.2 # 0.06  # 0.018 
 # NIRCam's resolution is 0.031 arcseconds per pixel
 # but see email from Oleg (0.2 in Dec, less in RA)
 const THRESHOLD_DEG = THRESHOLD_ARCSEC/3600.0 
@@ -22,7 +22,10 @@ end
 # `choices.jl`, called in intro, below, needs the above struct
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 
-paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, 10023, false) # under "stringent" limits, 10023 is all the good MIRI objects at "false, false, false"
+nMIRI_STRINGENT = 11308  # numbers obtained by hand 
+nNIRCam_STRINGENT = 121080
+
+paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, nMIRI_STRINGENT, false) # under "stringent" limits, 10023 is all the good MIRI objects at "false, false, false"
 printstyled("`paramsMIRI`\n", color = :light_cyan)
 instrument, objectTypeIndex, include99s, only99s, randBright, nStart, nBrightest, gross_limits = choices(paramsMIRI)
 dump(paramsMIRI)
@@ -32,7 +35,7 @@ dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
 # dfNIRCamLimited = dfNIRCam
 # paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 108588, false)
 dfNIRCamLimited = jldopen(joinpath(datadir("exp_pro/NIRCamLimited.jld2")))["dfNIRClimited"]
-paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, 99377, false) # under "stringent" limits, 99377 is all the good NIRCam objects at "false, false, false"
+paramsAllNIRCLimited = ChoiceParams(1, 1, false, false, false, 1, nNIRCam_STRINGENT, false) # under "stringent" limits, 99377 is all the good NIRCam objects at "false, false, false"
 
 
 miri_col_map = Dict{Symbol,Symbol}(
@@ -115,6 +118,8 @@ B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
 # B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
 # A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
 # B = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI]
+# A = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC] # [dec ra]
+# B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
 # j = sortMergeMatch(A, B)
 j, nearM = sortMergeMatch(A, B)
@@ -127,7 +132,7 @@ distanceBetween = Dict(
 )
 
 # Choose which distance to plot
-distance_type = "overall"
+distance_type = "Dec"
 
 # Modify the histogram line to use the dictionary
 ds = map(x -> x[distanceBetween[distance_type]], nearM)
@@ -170,10 +175,15 @@ The lines marked with Input 1 and Input 2 report, respectively:
 # histogram!(dfMIRI[bright_good_indMIRI, :mag770])
 # histogram!(dfNIRCamLimited[bright_good_indNIRC, :mag200])
 
-#= two histograms below generated and saved by handl
+# two MAGNITUDE HISTOGRAMS below generated and saved by hand
+
 
 titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
-labelMIRI = "10,023 'stringent'\nno 99s"
+titleNIRC = "log brightness ratio = 2/5(NIRCam 444 - NIRCam 200)"
+labelMIRI = "$nMIRI_STRINGENT 'stringent'\nno 99s"
+labelNIRC = "$nNIRCam_STRINGENT 'stringent'\nno 99s"
+
+# histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10), xlims=(-3, 3))
 histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
-histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI)
-=#
+# histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC)
+# histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC, ylims=(0, 10))

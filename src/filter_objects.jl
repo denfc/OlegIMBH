@@ -75,11 +75,11 @@ function filter_objects(
 
     # Handle 99.999 values, i.e., filter out indices where the value in bright16 or bright29 is 99.999
     if !params.inc99s
-        bright_good_ind = filter(i -> bright16[i] != 99.999 && bright29[i] != 99.999, eachindex(bright_good_ind))
+		bright_good_ind = bright_good_ind[filter(i -> bright16[bright_good_ind[i]] != 99.999 || bright29[bright_good_ind[i]] != 99.999, eachindex(bright_good_ind))]
         printstyled("without 99.999: $(length(bright_good_ind))\n", color = :magenta)
     end
     if params.onl99s && params.inc99s
-        bright_good_ind = filter(i -> bright16[i] == 99.999 && bright29[i] == 99.999, eachindex(bright_good_ind))
+		bright_good_ind = bright_good_ind[filter(i -> bright16[bright_good_ind[i]] == 99.999 && bright29[bright_good_ind[i]] == 99.999, eachindex(bright_good_ind))]
         printstyled("only 99.999: $(length(bright_good_ind))\n", color = :cyan)
     end
 
