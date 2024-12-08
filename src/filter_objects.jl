@@ -34,14 +34,14 @@ function filter_objects(
     # Use mapped column names
     bright_ind = findall(x -> x == params.obTyn, df[!, cols[:Column11]])
 
-    bright16 = df[!, cols[:Column16]][bright_ind]
-    bright29 = df[!, cols[:Column29]][bright_ind] 
-    
-    bright_SNR = df[!, cols[:Column6]][bright_ind]
-    bright_Crowding = df[!, cols[:Column10]][bright_ind]
-    bright_SharpSq = df[!, cols[:Column7]][bright_ind].^2
-    bright_qWL1_flag = df[!, cols[:Column24]][bright_ind]
-    bright_qWL2_flag = df[!, cols[:Column37]][bright_ind]
+	bright16 = df[bright_ind, cols[:Column16]] 
+	bright29 = df[bright_ind, cols[:Column29]] 
+
+	bright_SNR = df[bright_ind, cols[:Column6]]
+	bright_Crowding = df[bright_ind, cols[:Column10]]
+	bright_SharpSq = df[bright_ind, cols[:Column7]].^2
+	bright_qWL1_flag = df[bright_ind, cols[:Column24]]
+	bright_qWL2_flag = df[bright_ind, cols[:Column37]]
 
     # Based on grossLim flag, define dictionaries with numerical limits for each parameter
 
@@ -75,7 +75,12 @@ function filter_objects(
 
     # Handle 99.999 values, i.e., filter out indices where the value in bright16 or bright29 is 99.999
     if !params.inc99s
-		bright_good_ind = bright_good_ind[filter(i -> bright16[bright_good_ind[i]] != 99.999 || bright29[bright_good_ind[i]] != 99.999, eachindex(bright_good_ind))]
+		# Before filtering
+		println("Before filter - 99.999 counts:")
+		println("bright16: ", count(x -> x == 99.999, bright16[bright_good_ind]))
+		println("bright29: ", count(x -> x == 99.999, bright29[bright_good_ind]))
+
+		bright_good_ind = bright_good_ind[filter(i -> !(df[bright_good_ind[i], cols[:Column16]] == 99.999 || df[bright_good_ind[i], cols[:Column29]] == 99.999), eachindex(bright_good_ind))]
         printstyled("without 99.999: $(length(bright_good_ind))\n", color = :magenta)
     end
     if params.onl99s && params.inc99s

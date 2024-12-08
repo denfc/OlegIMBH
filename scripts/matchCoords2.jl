@@ -22,8 +22,8 @@ end
 # `choices.jl`, called in intro, below, needs the above struct
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 
-nMIRI_STRINGENT = 11308  # numbers obtained by hand 
-nNIRCam_STRINGENT = 121080
+nMIRI_STRINGENT = 10877  # numbers obtained by hand 
+nNIRCam_STRINGENT = 100479
 
 paramsMIRI = ChoiceParams(1, 1, false, false, false, 1, nMIRI_STRINGENT, false) # under "stringent" limits, 10023 is all the good MIRI objects at "false, false, false"
 printstyled("`paramsMIRI`\n", color = :light_cyan)
@@ -82,13 +82,14 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	# filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
 	print("\nNIRCam filtering")
 	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, paramsAllNIRCLimited; col_map=nircam_col_map)
+
 	
 # Generate values using the filtered data
-	selected_XYvaluesMIRI = generate_XYvalues(filtered_data_MIRI, dfMIRI, paramsMIRI.randB, paramsMIRI.nB, paramsMIRI.nStrt, paramsMIRI.obTyn; col_map=XY_col_map)
+	selected_XYvaluesMIRI = generate_XYvalues(filtered_data_MIRI, dfMIRI; col_map=XY_col_map)
 	selected_16_XvaluesMIRI, selected_16_YvaluesMIRI, selected_29_XvaluesMIRI, selected_29_YvaluesMIRI = selected_XYvaluesMIRI
 	bright_good_indMIRI, bright16MIRI, bright29MIRI, bright_indMIRI = filtered_data_MIRI
 
-	selected_XYvaluesNIRC = generate_XYvalues(filtered_data_NIRCam, dfNIRCamLimited, paramsAllNIRCLimited.randB, paramsAllNIRCLimited.nB, paramsAllNIRCLimited.nStrt, paramsAllNIRCLimited.obTyn; col_map=XY_col_map) 
+	selected_XYvaluesNIRC = generate_XYvalues(filtered_data_NIRCam, dfNIRCamLimited; col_map=XY_col_map) 
 	bright_good_indNIRC, bright16NIRC, bright29NIRC, bright_indNIRC = filtered_data_NIRCam
 	selected_16_XvaluesNIRC, selected_16_YvaluesNIRC, selected_29_XvaluesNIRC, selected_29_YvaluesNIRC = selected_XYvaluesNIRC
 
@@ -183,7 +184,7 @@ titleNIRC = "log brightness ratio = 2/5(NIRCam 444 - NIRCam 200)"
 labelMIRI = "$nMIRI_STRINGENT 'stringent'\nno 99s"
 labelNIRC = "$nNIRCam_STRINGENT 'stringent'\nno 99s"
 
+# histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI)
 # histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10), xlims=(-3, 3))
-histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC)
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC, ylims=(0, 10))

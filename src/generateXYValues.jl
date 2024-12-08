@@ -1,9 +1,6 @@
-# Function to generate random or sorted values
-function generate_XYvalues(filtered_data, df::DataFrame, randBright::Bool, nBrightest::Int, nStart::Int, objectTypeIndex::Int;
-    col_map::AbstractDict{Symbol,Symbol}=Dict{Symbol,Symbol}()
-)
-# right now df is global, which might be silly; othrewise add `df::DataFrame``,  into above
-
+function generate_XYvalues(filtered_data, df::DataFrame;
+    col_map::AbstractDict{Symbol,Symbol}=Dict{Symbol,Symbol}())
+    
     # Define defaults inside function
     default_cols = Dict(
         :Column3 => :Column3,  # Object type
@@ -12,44 +9,33 @@ function generate_XYvalues(filtered_data, df::DataFrame, randBright::Bool, nBrig
 
     # Merge with any provided mappings
     cols = merge(default_cols, col_map)
-
-    # Destructure the tuple
-    bright_good_ind, bright16, bright29, bright_ind = filtered_data
-
-    # Get good values using the filtered indices directly
+    
+    params = (df === dfMIRI) ? paramsMIRI : paramsAllNIRCLimited
+    bright_good_ind, bright16, bright29, bright_ind = filtered_data # bright_ind is not used in this function
     bright16_good = bright16[bright_good_ind]
     bright29_good = bright29[bright_good_ind]
+    current_indices = bright_good_ind
 
-    if randBright
-        # Generate random indices
-        random_indices_16 = rand(1:length(bright16_good), nBrightest)
-        random_indices_29 = rand(1:length(bright29_good), nBrightest)
+    # Calculate safe bounds
+    available_length = min(length(bright16_good), length(bright29_good))
+    safe_nStart = min(params.nStrt, available_length)
+    safe_nFinish = min(params.nStrt - 1 + params.nB, available_length)
+    range_size = safe_nFinish - safe_nStart + 1
 
-        brightestN_16 = bright16_good[random_indices_16]
-        brightestN_29 = bright29_good[random_indices_29]
-        brightestN_16_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][random_indices_16]
-        brightestN_16_Yvalues = df[!, cols[:Column4]][bright_good_ind][random_indices_16]
-        brightestN_29_Xvalues = df[!, cols[:Column3]][bright_good_ind][random_indices_29]
-        brightestN_29_Yvalues = df[!, cols[:Column4]][bright_good_ind][random_indices_29]
+    # Calculate indices once for each column with clear parentheses
+    if params.randB
+        indices_16 = current_indices[rand(safe_nStart:safe_nFinish, range_size)]
+        indices_29 = current_indices[rand(safe_nStart:safe_nFinish, range_size)]
     else
-        # Sort by value
-		if objectTypeIndex == 2
-            sorted16_indices = sortperm(bright16_good, rev=true)
-            sorted29_indices = sortperm(bright29_good, rev=true)
-        else
-            sorted16_indices = sortperm(bright16_good)
-            sorted29_indices = sortperm(bright29_good)
-        end
-		nFinish = nStart - 1 + nBrightest
-        brightestN_16 = bright16_good[sorted16_indices][nStart: nFinish]
-		brightestN_16 = unique(brightestN_16)
-		brightestN_29 = bright29_good[sorted29_indices][nStart: nFinish]
-		brightestN_29 = unique(brightestN_29)
-		brightestN_16_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
-        brightestN_16_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestN_16, bright16_good)]
-        brightestN_29_Xvalues = df[!, cols[:Column3]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]
-        brightestN_29_Yvalues = df[!, cols[:Column4]][bright_ind][bright_good_ind][findall(x -> x in brightestN_29, bright29_good)]
+        reverse_sort = params.obTyn == 2
+        indices_16 = current_indices[sortperm(bright16_good, rev=reverse_sort)[safe_nStart:safe_nFinish]]
+        indices_29 = current_indices[sortperm(bright29_good, rev=reverse_sort)[safe_nStart:safe_nFinish]]
     end
+
+    brightestN_16_Xvalues = df[!, cols[:Column3]][indices_16]
+    brightestN_16_Yvalues = df[!, cols[:Column4]][indices_16]
+    brightestN_29_Xvalues = df[!, cols[:Column3]][indices_29]
+    brightestN_29_Yvalues = df[!, cols[:Column4]][indices_29]
 
     return brightestN_16_Xvalues, brightestN_16_Yvalues, brightestN_29_Xvalues, brightestN_29_Yvalues
 end
