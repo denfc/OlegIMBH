@@ -1,3 +1,4 @@
+# include(srcdir("introRegions.jl"))
 using JLD2
 df = jldopen(joinpath(datadir("exp_pro/NIRCamLimited.jld2")))["dfNIRClimited"]
 
@@ -27,7 +28,7 @@ filtered_data = filter_objects(df, params; col_map=nircam_col_map)
 bright_good_ind, bright16, bright29, bright_ind = filtered_data  # Destructure the tuple
 
 # Generate values using the filtered data
-selected_XYvalues = generate_XYvalues(filtered_data, df, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
+selected_XYvalues = generate_XYvalues(filtered_data, df; col_map=XY_col_map)
 selected_16_Xvalues, selected_16_Yvalues, selected_29_Xvalues, selected_29_Yvalues = selected_XYvalues
 
 regFile_1 = DS9_writeRegionFile(selected_16_Xvalues, selected_16_Yvalues, 19, "F200Lim"; color = "cyan")

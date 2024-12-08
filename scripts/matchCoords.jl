@@ -18,6 +18,9 @@ struct ChoiceParams
 end
 params = ChoiceParams(2, 1, false, false, false, 1, 30, false)
 dump(params)
+# Because of the way `matchCoords2`` caused modifications in `generate_XYvalues`
+paramsMIRI = params
+paramsAllNIRCLimited = params
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMatch.jl"))
 dfMIRI = jldopen(joinpath(datadir("exp_pro/MIRI_RADec.jld2")))["newColumnGroup"]
@@ -74,11 +77,11 @@ nircam_col_map = Dict{Symbol,Symbol}(
 
 # Generate values using the filtered data
 if instrument == "MIRI" 
-	selected_XYvalues = generate_XYvalues(filtered_data_MIRI, dfMIRI, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map)
+	selected_XYvalues = generate_XYvalues(filtered_data_MIRI, dfMIRI; col_map=XY_col_map)
 
 	bright_good_ind, bright16, bright29, bright_ind = filtered_data_MIRI
 else 
-	selected_XYvalues = generate_XYvalues(filtered_data_NIRCam, dfNIRCam, params.randB, params.nB, params.nStrt, params.obTyn; col_map=XY_col_map) 
+	selected_XYvalues = generate_XYvalues(filtered_data_NIRCam, dfNIRCam,; col_map=XY_col_map) 
 
 	bright_good_ind, bright16, bright29, bright_ind = filtered_data_NIRCam
 end
@@ -101,7 +104,12 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 
 # let's match just within MIRI and withing NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
-j = sortMergeMatch(selected_29_Yvalues, selected_29_Xvalues, selected_16_Yvalues, selected_16_Xvalues)
+
+A = [selected_29_Yvalues selected_29_Xvalues]
+B = [selected_16_Yvalues selected_16_Xvalues]
+
+# j = sortMergeMatch(selected_29_Yvalues, selected_29_Xvalues, selected_16_Yvalues, selected_16_Xvalues)
+j = sortMergeMatch(A, B)
 
 #=
 The lines marked with Input 1 and Input 2 report, respectively:
