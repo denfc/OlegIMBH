@@ -600,21 +600,21 @@ md"""
 
 # ╔═╡ 5ab6a194-3641-444d-abe3-f612083b88b0
 let
-	imageName = "N444_to_M770.svg"
+	imageName = "dist_N444_to_M770.svg"
 	imagePath = joinpath(plotsdir(), imageName)
 	LocalResource(imagePath)
 end
 
 # ╔═╡ ddcb397a-4c73-4a43-9efe-fb500789ef0a
 let
-	imageName = "N444_to_M770_RA.svg"
+	imageName = "dist_N444_to_M770_RA.svg"
 	imagePath = joinpath(plotsdir(), imageName)
 	LocalResource(imagePath)
 end
 
 # ╔═╡ 8d18a595-0db8-4f7d-8d3b-f81ab9dc77ac
 let
-	imageName = "N444_to_M770_Dec.svg"
+	imageName = "dist_N444_to_M770_Dec.svg"
 	imagePath = joinpath(plotsdir(), imageName)
 	LocalResource(imagePath)
 end
@@ -659,10 +659,10 @@ end
 # ╟─e9f4e8b9-6388-454f-9808-7abba0f1dcc1
 # ╠═b016d6af-ae80-4b69-8378-b3155e3051c0
 # ╟─ac029dc2-9601-4f7d-964f-3139ebf56214
-# ╠═a54f0123-9a04-495e-bd00-0b50dd721ea6
-# ╠═4ac99015-fa97-4905-9abf-f680a5231c5e
+# ╟─a54f0123-9a04-495e-bd00-0b50dd721ea6
+# ╟─4ac99015-fa97-4905-9abf-f680a5231c5e
 # ╟─ee6cf51b-c90e-486e-8234-b794838c75c0
-# ╠═d25077c7-78b2-4b72-bd18-6392857091f7
+# ╟─d25077c7-78b2-4b72-bd18-6392857091f7
 # ╠═5ab6a194-3641-444d-abe3-f612083b88b0
 # ╠═ddcb397a-4c73-4a43-9efe-fb500789ef0a
 # ╠═8d18a595-0db8-4f7d-8d3b-f81ab9dc77ac

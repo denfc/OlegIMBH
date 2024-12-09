@@ -112,15 +112,46 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 
 # let's match just within MIRI and within NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
+
+
+function get_coord_pair(selection::Int)
+    # Dictionary for pairing names
+    pair_names = Dict{Int, String}(
+        1 => "MIRI_770, NIRCam_444",
+        2 => "MIRI_1500, NIRCam_200", 
+        3 => "MIRI_1500, MIRI_770",
+        4 => "NIRCam_444, NIRCam_200"
+    )
+
+    pairs = Dict{Int, Tuple{Matrix{Float64}, Matrix{Float64}}}(
+        1 => ([selected_16_YvaluesMIRI selected_16_XvaluesMIRI],
+              [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]),
+        2 => ([selected_29_YvaluesMIRI selected_29_XvaluesMIRI],
+              [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]),
+        3 => ([selected_29_YvaluesMIRI selected_29_XvaluesMIRI],
+              [selected_16_YvaluesMIRI selected_16_XvaluesMIRI]),
+        4 => ([selected_29_YvaluesNIRC selected_29_XvaluesNIRC],
+              [selected_16_YvaluesNIRC selected_16_XvaluesNIRC])
+    )
+    
+    @assert 1 <= selection <= 4 "Selection must be between 1 and 4"
+    println("\nSelected pair: $(pair_names[selection])")
+    return pairs[selection], pair_names[selection]
+end
+
 # `A`, `B`, So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
-A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [dec ra]
-B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
+(A, B), pairNames = get_coord_pair(1)  # Will print "Selected pair: MIRI16_NIRC29"
+
+
+# A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [dec ra]
+# B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
 # A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
 # B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
 # A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
 # B = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI]
 # A = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC] # [dec ra]
 # B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
+
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
 # j = sortMergeMatch(A, B)
 j, nearM = sortMergeMatch(A, B)
@@ -138,6 +169,7 @@ distance_type = "Dec"
 # Modify the histogram line to use the dictionary
 ds = map(x -> x[distanceBetween[distance_type]], nearM)
 
+twoWLs = split(pairNames, ", ")
 # Create histogram with dynamic xlabel
 histogram(ds,
 	# bins = 20,  # or specify exact edges: bins = range(0, THRESHOLD_ARCSEC, length=51)
@@ -145,7 +177,7 @@ histogram(ds,
     xlabel = "$distance_type distance in arcseconds",
     label = "$(length(ds)) matches out of $(length(selected_16_YvaluesMIRI)) MIRI points\nat threshold distance of $THRESHOLD_ARCSEC", 
     legend = :topleft, 
-    title = "NIRCam 444 matched to MIRI 770", #"MIRI 770 matched to MIRI 1500", #"NIRCam 200 matched to MIRI 1500", #NIRCam 444 matched to MIRI 770", 
+    title = "$(twoWLs[2]) matched to $(twoWLs[1])", #"MIRI 770 matched to MIRI 1500", #"NIRCam 200 matched to MIRI 1500", #NIRCam 444 matched to MIRI 770", 
     xlims = (0.0, THRESHOLD_ARCSEC),
 	)
 #=
@@ -178,13 +210,13 @@ The lines marked with Input 1 and Input 2 report, respectively:
 
 # two MAGNITUDE HISTOGRAMS below generated and saved by hand
 
-
 titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
 titleNIRC = "log brightness ratio = 2/5(NIRCam 444 - NIRCam 200)"
 labelMIRI = "$nMIRI_STRINGENT 'stringent'\nno 99s"
 labelNIRC = "$nNIRCam_STRINGENT 'stringent'\nno 99s"
 
+
 # histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI)
-# histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10), xlims=(-3, 3))
+histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC)
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC, ylims=(0, 10))
