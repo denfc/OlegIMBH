@@ -208,15 +208,15 @@ The lines marked with Input 1 and Input 2 report, respectively:
 # histogram!(dfMIRI[bright_good_indMIRI, :mag770])
 # histogram!(dfNIRCamLimited[bright_good_indNIRC, :mag200])
 
-# two MAGNITUDE HISTOGRAMS below generated and saved by hand
-
+# four MAGNITUDE HISTOGRAMS below generated and saved by hand
+#=
 titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
 titleNIRC = "log brightness ratio = 2/5(NIRCam 444 - NIRCam 200)"
 labelMIRI = "$nMIRI_STRINGENT 'stringent'\nno 99s"
 labelNIRC = "$nNIRCam_STRINGENT 'stringent'\nno 99s"
-
+=#
 
 # histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI)
-histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
+# histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC)
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC, ylims=(0, 10))
