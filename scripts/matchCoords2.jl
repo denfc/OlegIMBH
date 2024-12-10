@@ -140,17 +140,7 @@ function get_coord_pair(selection::Int)
 end
 
 # `A`, `B`, So can copy examples from https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file
-(A, B), pairNames = get_coord_pair(1)  # Will print "Selected pair: MIRI16_NIRC29"
-
-
-# A = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI] # [dec ra]
-# B = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC]
-# A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
-# B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
-# A = [selected_29_YvaluesMIRI selected_29_XvaluesMIRI] # [dec ra]
-# B = [selected_16_YvaluesMIRI selected_16_XvaluesMIRI]
-# A = [selected_29_YvaluesNIRC selected_29_XvaluesNIRC] # [dec ra]
-# B = [selected_16_YvaluesNIRC selected_16_XvaluesNIRC]
+(A, B), pairNames = get_coord_pair(1)  # Will print pair selected, e.g., "Selected pair: MIRI_770, NIRCam_444"
 
 # j = sortMergeMatch(selected_16_YvaluesMIRI, selected_16_XvaluesMIRI, selected_29_YvaluesNIRC, selected_29_XvaluesNIRC)
 # j = sortMergeMatch(A, B)
@@ -171,6 +161,7 @@ ds = map(x -> x[distanceBetween[distance_type]], nearM)
 
 twoWLs = split(pairNames, ", ")
 # Create histogram with dynamic xlabel
+#=
 histogram(ds,
 	# bins = 20,  # or specify exact edges: bins = range(0, THRESHOLD_ARCSEC, length=51)
 	bins = range(0, THRESHOLD_ARCSEC, length=26), # 51),
@@ -180,6 +171,7 @@ histogram(ds,
     title = "$(twoWLs[2]) matched to $(twoWLs[1])", #"MIRI 770 matched to MIRI 1500", #"NIRCam 200 matched to MIRI 1500", #NIRCam 444 matched to MIRI 770", 
     xlims = (0.0, THRESHOLD_ARCSEC),
 	)
+	=#
 #=
 The lines marked with Input 1 and Input 2 report, respectively:
 
@@ -220,3 +212,41 @@ labelNIRC = "$nNIRCam_STRINGENT 'stringent'\nno 99s"
 # histogram(0.4*(dfMIRI[bright_good_indMIRI, :mag1500] - dfMIRI[bright_good_indMIRI, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0, 10))
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC)
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC, ylims=(0, 10))
+
+
+function find_unmatched(j)
+    # For first array (A) - indices where no match exists (value = 0)
+    unmatched_A = setdiff(1:length(j.cmatch[1]), j.cmatch[1].nzind)
+    
+    # For second array (B) - indices where no match exists (value = 0)
+    unmatched_B = setdiff(1:length(j.cmatch[2]), j.cmatch[2].nzind)
+    
+    println("Unmatched entries in first array: $(length(unmatched_A)) out of $(length(j.cmatch[1]))")
+    println("Unmatched entries in second array: $(length(unmatched_B)) out of $(length(j.cmatch[2]))")
+    
+    return unmatched_A, unmatched_B
+end
+
+# j, nearM = sortMergeMatch(A, B)
+display(j) # Force evaluation of j or else for some reason it thinks j is not defined either when executing "active File in REPL" or diectly in REPL, $julia ./scripts/matchCoords2.jl
+unmatched_A_ind, unmatched_B_ind = find_unmatched(j)
+
+# Can get dec and RA coordinates of unmatched points:
+#= 
+unmatched_coords_A = isempty(unmatched_A) ? Array{Float64}(undef,0,2) : A[unmatched_A, :]
+unmatched_coords_B = isempty(unmatched_B) ? Array{Float64}(undef,0,2) : B[unmatched_B, :]
+=#
+
+# Original indices we used to create A
+# original_indices = bright_good_indMIRI
+
+# Map unmatched_A_ind back to original dfMIRI indices
+dfMIRI_unmatched_indices = bright_good_indMIRI[unmatched_A_ind]
+
+# Now we can access dfMIRI correctly
+df_unmatched_MIRI_data = dfMIRI[dfMIRI_unmatched_indices, :]
+
+labelMIRI = "$(length(dfMIRI_unmatched_indices)) 'stringent' UNMATCHED\n(no 99s)"
+titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
+# histogram(0.4*(df_unmatched_MIRI_data[!, :mag1500] - df_unmatched_MIRI_data[!, :mag770]), label=labelMIRI, title=titleMIRI)
+histogram(0.4*(df_unmatched_MIRI_data[!, :mag1500] - df_unmatched_MIRI_data[!, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0,10))

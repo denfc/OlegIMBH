@@ -590,6 +590,7 @@ md"""
 md"""
 ### 2--3 December 2024
 !!! note "`matchCoords2` matches NIRCAM to MIRI (but is more flexible than that)"
+    (code corrected 7--8 December
 	- Understanding `sortmerge` results: see [`sortmerge`](https://github.com/gcalderone/SortMerge.jl?tab=readme-ov-file)
 	- Depending on the "threshold" number (`const THRESHOLD_ARCSEC`), when all NIRCam coordinates are examined, a given MIRI coordinate can match to one or more NIRCam coordinates, and the resulting `j`s work as follows:
 	  - `j[1]` gives the indices of the "A" (i.e., the first, here MIRI) set of coordinates that have been matched. The number of indices, i.e., `length(j[1])` will match the "Output" number of matches, so if more than one NIRCam coordinate has been matched to a given MIRI coordinate, the length will be greater than the input number of MIRI objects. 
@@ -618,6 +619,22 @@ let
 	imagePath = joinpath(plotsdir(), imageName)
 	LocalResource(imagePath)
 end
+
+# ╔═╡ cd5517fc-1e3e-4f88-b78d-fd44db407b58
+md"""
+### 9 December 2024
+!!! note "j.cmatch[1] contains"
+	julia> j.cmatch[1]
+	- n
+	- nzind
+	- nzval
+	  - where `n` is the number, `nzind` are the indices, and `nzval` are the values
+      - from /home/dfc123/Gitted/OlegIMBH/src/sortMergeMatch.jl
+"""
+
+
+# ╔═╡ 09695d90-b6df-41a0-8689-404783f1b3a2
+
 
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
@@ -663,6 +680,8 @@ end
 # ╟─4ac99015-fa97-4905-9abf-f680a5231c5e
 # ╟─ee6cf51b-c90e-486e-8234-b794838c75c0
 # ╟─d25077c7-78b2-4b72-bd18-6392857091f7
-# ╠═5ab6a194-3641-444d-abe3-f612083b88b0
-# ╠═ddcb397a-4c73-4a43-9efe-fb500789ef0a
-# ╠═8d18a595-0db8-4f7d-8d3b-f81ab9dc77ac
+# ╟─5ab6a194-3641-444d-abe3-f612083b88b0
+# ╟─ddcb397a-4c73-4a43-9efe-fb500789ef0a
+# ╟─8d18a595-0db8-4f7d-8d3b-f81ab9dc77ac
+# ╠═cd5517fc-1e3e-4f88-b78d-fd44db407b58
+# ╠═09695d90-b6df-41a0-8689-404783f1b3a2
