@@ -13,6 +13,7 @@ using Random
 using SortMerge
 using AstroLib
 using Plots
+using SparseArrays # for `j.cmatch[1]` in `sortMergeMatch`
 
 include(srcdir("choices.jl"))
 include(srcdir("filter_objects.jl"))

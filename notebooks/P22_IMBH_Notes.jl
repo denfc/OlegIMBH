@@ -634,6 +634,12 @@ md"""
 
 
 # ╔═╡ 09695d90-b6df-41a0-8689-404783f1b3a2
+md"""
+### 10 December 2024
+!!! note "j.cmatch[1] contains, more"
+
+	- This confirms j.cmatch[1] values represent the count of matches for each index in j.matched[1].
+"""
 
 
 # ╔═╡ Cell order:
@@ -644,10 +650,10 @@ md"""
 # ╟─2016b7c9-df0f-4f48-95a7-96d31ed199e4
 # ╟─572dbcee-cb58-4b21-8993-5d159f02228b
 # ╟─ace018d2-003c-496f-b8aa-69eb71fb9057
-# ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
+# ╠═dce8dbce-c8b4-11ed-3263-65232dc16f8d
 # ╟─e0a42a3c-00de-4ff6-8862-46fcd0596315
 # ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
-# ╟─db3e8f5a-88a7-494a-9d50-640d91aac997
+# ╠═db3e8f5a-88a7-494a-9d50-640d91aac997
 # ╟─6008384b-131c-4930-81a6-fb680420df33
 # ╟─94062cd4-b278-444d-b93e-694d26d30b50
 # ╟─1afaf901-30f0-4b58-98a5-a8ae88f3fccb

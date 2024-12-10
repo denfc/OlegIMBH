@@ -1,0 +1,55 @@
+# Get a longer sample to verify j.cmatch values represent match counts
+function analyze_index_matches(idx)
+    # Find all occurrences in j.matched
+    matches = findall(x -> x == idx, j.matched[1])
+    match_count = length(matches)
+    match_values = j.matched[2][matches]
+    
+    println("\nIndex $idx:")
+    println("  Number of matches in j.matched: $match_count")
+    println("  Matches with: $match_values")
+    println("  Value in j.cmatch: $(j.cmatch[1][idx])")
+    
+    # Verify counts match
+    @assert j.cmatch[1][idx] == match_count "Mismatch between j.cmatch value and actual match count"
+end
+
+# Test first few indices that appear in matches
+indices_to_check = [8118, 9537, 9236]
+foreach(analyze_index_matches, indices_to_check)
+
+This confirms j.cmatch[1] values represent the count of matches for each index in j.matched[1].
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+This error typically occurs when there's an issue with Julia's task scheduling system in Pluto. Here's a step-by-step plan to fix it:
+
+First try clearing Julia's compiled cache
+If that doesn't work, reinstall Pluto
+└ schedule: Task not runnable Stacktrace: [
+
+# 1. Exit Julia REPL and delete compiled cache
+rm -rf ~/.julia/compiled
+
+# 2. Start Julia REPL and reinstall Pluto
+
+# In Julia REPL:
+import Pkg
+Pkg.update()  # Update all packages first
+Pkg.resolve()  # Resolve dependencies
+Pkg.precompile() # Force precompilation of all packages
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+This one finally worked:
+1)
+julia --compiled-modules=yes
+
+
+2) Or from within Julia REPL:
+# Clear package compiler cache
+using Pkg
+Pkg.rm(DEPOT_PATH[1], "compiled")
+
+# Force recompilation
+Pkg.instantiate()
+Pkg.precompile()
