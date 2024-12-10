@@ -241,12 +241,12 @@ unmatched_coords_B = isempty(unmatched_B) ? Array{Float64}(undef,0,2) : B[unmatc
 # original_indices = bright_good_indMIRI
 
 # Map unmatched_A_ind back to original dfMIRI indices
-dfMIRI_unmatched_indices = bright_good_indMIRI[unmatched_A_ind]
+MIRI_unmatched_ind = bright_good_indMIRI[unmatched_A_ind]
 
 # Now we can access dfMIRI correctly
-df_unmatched_MIRI_data = dfMIRI[dfMIRI_unmatched_indices, :]
+dfMIRI_unmatched_data = dfMIRI[MIRI_unmatched_ind, :]
 
-labelMIRI = "$(length(dfMIRI_unmatched_indices)) 'stringent' UNMATCHED\n(no 99s)"
+labelMIRI = "$(length(MIRI_unmatched_ind)) 'stringent' UNMATCHED\n(no 99s)"
 titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
-# histogram(0.4*(df_unmatched_MIRI_data[!, :mag1500] - df_unmatched_MIRI_data[!, :mag770]), label=labelMIRI, title=titleMIRI)
-histogram(0.4*(df_unmatched_MIRI_data[!, :mag1500] - df_unmatched_MIRI_data[!, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0,10))
+# histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI)
+histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0,10))
