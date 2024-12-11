@@ -251,3 +251,37 @@ titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
 # HISTOGRAM UNMATCHED DATA
 # histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI)
 # histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0,10))
+
+# Get matched indices from nearM tuples
+MIRI_matched_ind = bright_good_indMIRI[[m[1] for m in nearM]]
+NIRC_matched_ind = bright_good_indNIRC[[m[2] for m in nearM]]
+
+# Get matched data from appropriate dataframes
+dfMIRI_matched_data = dfMIRI[MIRI_matched_ind, :]
+dfNIRC_matched_data = dfNIRCamLimited[NIRC_matched_ind, :]
+
+# Add NIRCam magnitudes and their quality metrics
+dfMIRI_matched_data.mag200 = dfNIRC_matched_data.mag200
+
+# Add quality metrics for mag200
+dfMIRI_matched_data.SNR200 = dfNIRC_matched_data.SNR200
+dfMIRI_matched_data.sharp200 = dfNIRC_matched_data.sharp200
+dfMIRI_matched_data.round200 = dfNIRC_matched_data.round200
+dfMIRI_matched_data.crowd200 = dfNIRC_matched_data.crowd200
+dfMIRI_matched_data.Qual200 = dfNIRC_matched_data.Qual200
+
+dfMIRI_matched_data.mag444 = dfNIRC_matched_data.mag444
+# Add quality metrics for mag444
+dfMIRI_matched_data.SNR444 = dfNIRC_matched_data.SNR444
+dfMIRI_matched_data.sharp444 = dfNIRC_matched_data.sharp444
+dfMIRI_matched_data.round444 = dfNIRC_matched_data.round444
+dfMIRI_matched_data.crowd444 = dfNIRC_matched_data.crowd444
+dfMIRI_matched_data.Qual444 = dfNIRC_matched_data.Qual444
+
+# Now dfMIRI_matched_data has all 4 magnitudes: 
+# mag200, mag444 (from NIRCam) and mag770, mag1500 (original MIRI columns)
+
+
+# Save to JLD2 file (semicolon is key)
+output_file = datadir("sims/dfMIRI_matched_data.jld2")
+jldsave(output_file; dfMIRI_matched_data)
