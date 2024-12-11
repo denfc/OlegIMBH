@@ -1,9 +1,9 @@
 """
-	dfc 20 November 2024
+    dfc 20 November 2024
 	- taken from DS9Regions.jl
 		- added `col_map` parameter to allow for column name mapping so that it can be used both with its original script, `DS9Regions.jl`, and with MatchCoords.jl.  Note that the default parameter is set blank so that the longish dictionary can be assigned inside the function.
+	- DrWatson guide: "If upon include("file.jl") there is anything being produced, be it data files, plots or even output to the console, then it should be in scripts."
 """
-
 function filter_objects(
     df::DataFrame, 
     params::ChoiceParams;
