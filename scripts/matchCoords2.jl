@@ -248,5 +248,6 @@ dfMIRI_unmatched_data = dfMIRI[MIRI_unmatched_ind, :]
 
 labelMIRI = "$(length(MIRI_unmatched_ind)) 'stringent' UNMATCHED\n(no 99s)"
 titleMIRI = "log brightness ratio = 2/5(MIRI 1500 - MIRI 770)"
+# HISTOGRAM UNMATCHED DATA
 # histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI)
-histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0,10))
+# histogram(0.4*(dfMIRI_unmatched_data[!, :mag1500] - dfMIRI_unmatched_data[!, :mag770]), label=labelMIRI, title=titleMIRI, ylims=(0,10))
