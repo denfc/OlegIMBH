@@ -14,7 +14,8 @@ using DataFrames
 # using AstroLib
 # using Plots
 # using SparseArrays # for `j.cmatch[1]` in `sortMergeMatch`
-# include(srcdir("monotonicity.jl"))
+include(srcdir("check_mono.jl"))
+include(srcdir("brightnessRatios.jl"))
 
 println()
 println(
