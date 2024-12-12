@@ -1,6 +1,26 @@
 """
 	dfc 11 December 2024
 	- Although initial reference was key function was Stackoverflow, Copilot developed the version used
+
+    count_monotonicity_types(df::DataFrame, cols::Vector{Symbol})
+
+Categorize rows based on monotonicity of values across specified columns.
+
+# Arguments
+- `df::DataFrame`: Input data frame
+- `cols::Vector{Symbol}`: Column names to check for monotonicity
+
+# Returns
+Named tuple containing:
+- `decreasing`: Indices where values strictly decrease
+- `increasing`: Indices where values strictly increase
+- `not_monotonic`: Indices with non-monotonic patterns
+
+# Example
+```julia
+df = DataFrame(a=[1,2,1], b=[2,1,3], c=[3,0,2])
+results = count_monotonicity_types(df, [:a, :b, :c])
+# results.decreasing contains rows with decreasing values
 """
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMonotonicity.jl"))
