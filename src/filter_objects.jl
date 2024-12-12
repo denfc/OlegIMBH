@@ -3,6 +3,26 @@
 	- taken from DS9Regions.jl
 		- added `col_map` parameter to allow for column name mapping so that it can be used both with its original script, `DS9Regions.jl`, and with MatchCoords.jl.  Note that the default parameter is set blank so that the longish dictionary can be assigned inside the function.
 	- DrWatson guide: "If upon include("file.jl") there is anything being produced, be it data files, plots or even output to the console, then it should be in scripts."
+	CoPilot version:
+	
+Select coordinate pairs for matching between MIRI and NIRCam observations.
+
+Available pairs:
+1. MIRI_770 vs NIRCam_444
+2. MIRI_1500 vs NIRCam_200
+3. MIRI_1500 vs MIRI_770
+4. NIRCam_444 vs NIRCam_200
+
+Args:
+    selection::Int: Index (1-4) of desired coordinate pair
+
+Returns:
+    Tuple(Matrix{Float64}, Matrix{Float64}): Selected coordinate pairs
+    String: Description of selected pair
+
+Example:
+    (coords_A, coords_B), pair_desc = get_coord_pair(1)
+    # Output: "Selected pair: MIRI_770, NIRCam_444"
 """
 function filter_objects(
     df::DataFrame, 

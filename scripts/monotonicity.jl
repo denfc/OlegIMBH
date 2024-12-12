@@ -1,6 +1,6 @@
 """
 	dfc 11 December 2024
-	- Although initial reference was https://stackoverflow.com/questions/71376803/efficient-method-for-checking-monotonicity-in-array-julia, Copilot developed the function
+	- Although initial reference was key function was Stackoverflow, Copilot developed the version used
 """
 
 include(joinpath(homedir(), "Gitted/OlegIMBH/src/introMonotonicity.jl"))

@@ -82,7 +82,6 @@ nircam_col_map = Dict{Symbol,Symbol}(
 	# filtered_data_NIRCam = filter_objects(dfNIRCam, params; col_map=nircam_col_map)
 	print("\nNIRCam filtering")
 	filtered_data_NIRCam = filter_objects(dfNIRCamLimited, paramsAllNIRCLimited; col_map=nircam_col_map)
-
 	
 # Generate values using the filtered data
 	selected_XYvaluesMIRI = generate_XYvalues(filtered_data_MIRI, dfMIRI; col_map=XY_col_map)
@@ -113,7 +112,28 @@ if randBright printstyled("random selection of ", nBrightest, ".", color = :ligh
 # let's match just within MIRI and within NIRCam to start
 # this is Dec RA, as desired; may want to switch XY for production run (Y is indeed declination, X is RA)
 
+"""
+    get_coord_pair(selection::Int)
 
+Select coordinate pairs for matching between MIRI and NIRCam observations.
+
+Available pairs:
+1. MIRI_770 vs NIRCam_444
+2. MIRI_1500 vs NIRCam_200
+3. MIRI_1500 vs MIRI_770
+4. NIRCam_444 vs NIRCam_200
+
+Args:
+    selection::Int: Index (1-4) of desired coordinate pair
+
+Returns:
+    Tuple(Matrix{Float64}, Matrix{Float64}): Selected coordinate pairs
+    String: Description of selected pair
+
+Example:
+    (coords_A, coords_B), pair_desc = get_coord_pair(1)
+    # Output: "Selected pair: MIRI_770, NIRCam_444"
+"""
 function get_coord_pair(selection::Int)
     # Dictionary for pairing names
     pair_names = Dict{Int, String}(
@@ -213,7 +233,28 @@ labelNIRC = "$nNIRCam_STRINGENT 'stringent'\nno 99s"
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC)
 # histogram(0.4*(dfNIRCamLimited[bright_good_indNIRC, :mag444] - dfNIRCamLimited[bright_good_indNIRC, :mag200]), label=labelNIRC, title=titleNIRC, ylims=(0, 10))
 
+"""
+    find_unmatched(j)
 
+Find indices of unmatched entries from two arrays after running SortMerge.
+
+Args:
+    j: SortMerge results object containing match information for two arrays
+
+Returns:
+    Tuple(Vector{Int}, Vector{Int}): Two vectors containing indices of unmatched entries
+        - First vector: indices of unmatched entries in first array (A)
+        - Second vector: indices of unmatched entries in second array (B)
+
+Example:
+    j = sortmerge(array1, array2, lt1=lt, lt2=lt, sd=sd)
+    unmatched_A, unmatched_B = find_unmatched(j)
+    # Output: "Unmatched entries in first array: 50 out of 1000"
+    #         "Unmatched entries in second array: 30 out of 800"
+"""
+function find_unmatched(j)
+    # ...existing code...
+end
 function find_unmatched(j)
     # For first array (A) - indices where no match exists (value = 0)
     unmatched_A = setdiff(1:length(j.cmatch[1]), j.cmatch[1].nzind)
@@ -281,7 +322,34 @@ dfMIRI_matched_data.Qual444 = dfNIRC_matched_data.Qual444
 # Now dfMIRI_matched_data has all 4 magnitudes: 
 # mag200, mag444 (from NIRCam) and mag770, mag1500 (original MIRI columns)
 
-
 # Save to JLD2 file (semicolon is key)
 output_file = datadir("sims/dfMIRI_matched_data.jld2")
 jldsave(output_file; dfMIRI_matched_data)
+
+# I am clearly trying to make spaghetti ...
+"""
+Maps a row number from dfMIRI_matched_data back to its original row number in dfMIRI.
+
+Args:
+    matched_row_number (Int): Row number in dfMIRI_matched_data
+
+Returns:
+    Int: Original row number in dfMIRI
+
+Example:
+    original_index = get_original_miri_row(5)
+    original_data = dfMIRI[original_index, :]
+"""
+function get_original_miri_row(matched_row_number)
+    # Get the index in the filtered/matched dataset
+    original_miri_row = MIRI_matched_ind[matched_row_number]
+    return original_miri_row
+end
+
+#=
+# Example usage:
+# If you have row 5 in dfMIRI_matched_data and want to find its original index in dfMIRI:
+original_index = get_original_miri_row(5)
+# Now you can access the same object in the original MIRI data:
+original_row = dfMIRI[original_index, :]
+=#
