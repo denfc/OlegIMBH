@@ -1,6 +1,6 @@
 function readSourceCats()
 	# Read Source Catalog Files
-		oneDataDir = joinpath(datadir(), "exp_raw")
+		oneDataDir = joinpath(datadir(), "exp_raw/MAST")
 		threeDataDirs = readdir(oneDataDir)
 		threeDataDirs = [joinpath(oneDataDir, threeDataDirs[i]) for i in 1:3]
 		threeSourceCats = []

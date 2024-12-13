@@ -236,6 +236,7 @@ md"""
 ### Two Weeks Later ...  (16 October)
 !!! note "4) .../OlegIMBH/scripts/sixCrossMatches3.jl"
 !!! warning "Here's the problem I did not solve: Matching Catalog A's coordinates to Catalog B's coordinates, and vice versa (Matching Catalog B to A)"
+	- all above was using nearest-neighbor algorithm in /home/dfc123/Gitted/OlegIMBH/src/preDOLPHOT/crossmatches.jl, which was found [here](https://github.com/hbouy/JuliaAstroToolBox/blob/master/Crossmatch.jl).
 
 | index| label | match 1| match 2 | index| label | match 1| match 2 |
 |:----------:|:---------:|:---------:|:----------:|:----------:|:---------:|:----------:|:----------:|
@@ -256,7 +257,7 @@ md"""
 #### DOLPHOT
 !!! note ""
     - Yesterday, Oleg and I looked at Jeremy's [DOLPHOT](http://americano.dolphinsim.com/dolphot/) (manual [here](http://americano.dolphinsim.com/dolphot/dolphot.pdf); [JWST specifics when running](https://dolphot-jwst.readthedocs.io/en/latest/search.html?q=FITS&check_keywords=yes&area=default)) production of Omega Cen data.  Previous data and code moved into:
-    `MAST` directory created in `OlegIMBH/data/exp_raw` and `MASTr`s in `scripts` and `src` directories.
+    `MAST` directory created in `OlegIMBH/data/exp_raw` and `preDOLPHOT`s in `scripts` and `src` directories.
 !!! warning "Where (and how) to back up the original data, i.e., those stored in \data\exp_raw?"
 !!! tip ""
     - Google Drive: G:\My Drive\Articles\Astrophysics\_New\IMBH\_Data_Backup
@@ -427,7 +428,7 @@ md"""
 	1) Column 37: Photometry quality flag, NIRCAM_F444W
 
 	[Culling](https://dolphot-jwst.readthedocs.io/en/latest/post-processing/catalogs.html) to yield "A loose, completeness-oriented, selection to reject obvious outliers but preserve as many stars as possible can be done using the following parameters:"
-!!! warning "  delineate use below"
+!!! note "  Criteria delineated below"
 | Criterion | "gross" limit | "stringent" limit|
 |:----------:|:---------:|:---------:|
 |SNR   |     >=4|        >= 5|
@@ -436,11 +437,21 @@ md"""
 |Flag| <= 3  |            <= 3|
 |Type| <= 2 |            <= 2|
 
-Julia code: `bright\_good\_ind = findall(i -> bright\_SNR[i] >= 4 && bright\_Crowding[i] <= 2.25 && bright\_SharpSq[i] <= 2.25 && bright_Q200_flag[i] <= 3 && bright\_Q444\_flag[i] <= 3, 1:length(bright\_ind) )`
+!!! note ""
+    For Julia code see lines 82--97, below.
 
 !!! note "Part 2: "bright" stars"
     When the brightest (object type 1) 31 stars at F200 (green circles) and at F440 (red circles) are place on the image (below), a strange picture results.  All the red circles are on the left side and all but four of the green circles are on the right side.  When the number of stars is increased to 32, a red circle appears on the right-hand side (not shown).
 """
+
+# ╔═╡ 15494fca-84ff-44dd-a292-5f2413d4a3d7
+let
+	filepath = "/home/dfc123/Gitted/OlegIMBH/src/filter_objects.jl"
+	display(md"""code above is "$filepath" """)
+	code_content = read(filepath, String)
+	lines = split(code_content, "\n")
+	numbered_lines = ["$i  $(lines[i])" for i in 1:length(lines)]
+end
 
 # ╔═╡ 9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
 begin
@@ -642,18 +653,24 @@ md"""
 """
 
 
+# ╔═╡ 46bffc64-bd0e-4f87-a55f-eb961655df3a
+md"""
+### 12 December 2024
+!!! note "monotonicity: only two mags rising"
+"""
+
 # ╔═╡ Cell order:
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
 # ╟─754dbb34-631a-4aea-8660-443f70f11ea9
 # ╟─e85f9903-c869-416a-bf86-cb85a80b065b
-# ╠═4d9eb5bd-0759-4499-bd42-621834ae7f67
+# ╟─4d9eb5bd-0759-4499-bd42-621834ae7f67
 # ╟─2016b7c9-df0f-4f48-95a7-96d31ed199e4
 # ╟─572dbcee-cb58-4b21-8993-5d159f02228b
 # ╟─ace018d2-003c-496f-b8aa-69eb71fb9057
-# ╠═dce8dbce-c8b4-11ed-3263-65232dc16f8d
+# ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
 # ╟─e0a42a3c-00de-4ff6-8862-46fcd0596315
 # ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
-# ╠═db3e8f5a-88a7-494a-9d50-640d91aac997
+# ╟─db3e8f5a-88a7-494a-9d50-640d91aac997
 # ╟─6008384b-131c-4930-81a6-fb680420df33
 # ╟─94062cd4-b278-444d-b93e-694d26d30b50
 # ╟─1afaf901-30f0-4b58-98a5-a8ae88f3fccb
@@ -666,10 +683,11 @@ md"""
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
-# ╠═8e6c876b-5a59-43e8-9661-c16c467b834e
+# ╟─8e6c876b-5a59-43e8-9661-c16c467b834e
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
 # ╠═5a22ed1e-a50f-40c6-857a-d85675385890
+# ╟─15494fca-84ff-44dd-a292-5f2413d4a3d7
 # ╟─9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
 # ╟─6cdb1f4a-b5c4-4fd5-be8c-88dcbd755d57
 # ╟─7aca6436-c98c-4212-b6ee-77c6235ff110
@@ -691,3 +709,4 @@ md"""
 # ╟─8d18a595-0db8-4f7d-8d3b-f81ab9dc77ac
 # ╠═cd5517fc-1e3e-4f88-b78d-fd44db407b58
 # ╠═09695d90-b6df-41a0-8689-404783f1b3a2
+# ╠═46bffc64-bd0e-4f87-a55f-eb961655df3a
