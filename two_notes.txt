@@ -50,6 +50,8 @@ julia --compiled-modules=yes
 using Pkg
 Pkg.rm(DEPOT_PATH[1], "compiled")
 
+rm("$(DEPOT_PATH[1])/compiled", recursive=true, force=true) 
+
 # Force recompilation
 Pkg.instantiate()
 Pkg.precompile()

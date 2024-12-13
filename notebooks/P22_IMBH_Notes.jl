@@ -139,6 +139,29 @@ begin
 =#
 end
 
+# ╔═╡ db3e8f5a-88a7-494a-9d50-640d91aac997
+begin
+	@bind screenWidth @htl("""
+<div>
+    <script>
+        var div = currentScript.parentElement
+        div.value = screen.width
+    </script>
+</div>
+""")
+    # cellWidth = min(1000, screenWidth * 0.50)
+    @htl("""
+    <style>
+    pluto-notebook {
+		margin-left: 10px;
+        # margin: auto;
+        width: $(cellWidth)px;
+    }
+    </style>
+	Widening cell.
+    """)
+end
+
 # ╔═╡ 6008384b-131c-4930-81a6-fb680420df33
 	md"""
 	###### Dark Theme Plot Choice
@@ -185,29 +208,6 @@ end
 
 # ╔═╡ 87fd42a3-0a6c-41ae-a040-503403eabe07
 @bind cellWidth Slider(500:25:1100, show_value=true, default=775)
-
-# ╔═╡ db3e8f5a-88a7-494a-9d50-640d91aac997
-begin
-	@bind screenWidth @htl("""
-<div>
-    <script>
-        var div = currentScript.parentElement
-        div.value = screen.width
-    </script>
-</div>
-""")
-    # cellWidth = min(1000, screenWidth * 0.50)
-    @htl("""
-    <style>
-    pluto-notebook {
-		margin-left: 10px;
-        # margin: auto;
-        width: $(cellWidth)px;
-    }
-    </style>
-	Widening cell.
-    """)
-end
 
 # ╔═╡ 9a46221b-68f7-4101-b30a-13cc6d87f213
 md" ###### Begin New Coding Here."
