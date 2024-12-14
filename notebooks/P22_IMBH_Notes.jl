@@ -38,7 +38,7 @@ begin
 	using Plots
 	using PlotThemes  # PlotThemes needs Plots to work.
 	theme(:default) # :dark)
-	using HypertextLiteral
+	# using HypertextLiteral
 	# using Printf
 	
     # AstroIO
@@ -80,6 +80,38 @@ begin
 	# using Unitful # ditto
 	md" ###### `using` packages"
 end	
+
+# ╔═╡ 0ef442a6-5881-4071-8f7c-e372b6301abc
+begin
+	using HypertextLiteral
+	md"###### Cell Width Slider here"
+end
+
+# ╔═╡ 25a92ab2-7bc8-4ad4-bc5c-322eb29ae4ee
+@bind cellWidth Slider(500:25:1100, show_value=true, default=775)
+
+# ╔═╡ 50b6e91a-a887-48f6-8308-c06b22161514
+begin
+	@bind screenWidth @htl("""
+<div>
+    <script>
+        var div = currentScript.parentElement
+        div.value = screen.width
+    </script>
+</div>
+""")
+    # cellWidth = min(1000, screenWidth * 0.50)
+    @htl("""
+    <style>
+    pluto-notebook {
+		margin-left: 15px;
+        # margin: auto;
+        width: $(cellWidth)px;
+    }
+    </style>
+	Widening cell.
+    """)
+end
 
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
@@ -139,29 +171,6 @@ begin
 =#
 end
 
-# ╔═╡ db3e8f5a-88a7-494a-9d50-640d91aac997
-begin
-	@bind screenWidth @htl("""
-<div>
-    <script>
-        var div = currentScript.parentElement
-        div.value = screen.width
-    </script>
-</div>
-""")
-    # cellWidth = min(1000, screenWidth * 0.50)
-    @htl("""
-    <style>
-    pluto-notebook {
-		margin-left: 10px;
-        # margin: auto;
-        width: $(cellWidth)px;
-    }
-    </style>
-	Widening cell.
-    """)
-end
-
 # ╔═╡ 6008384b-131c-4930-81a6-fb680420df33
 	md"""
 	###### Dark Theme Plot Choice
@@ -170,10 +179,12 @@ end
 	"""
 
 # ╔═╡ 94062cd4-b278-444d-b93e-694d26d30b50
+#=╠═╡
 begin
 	if darkTH theme(:dark) else theme(:default) end
 	md"dark theme execution cell"
 end
+  ╠═╡ =#
 
 # ╔═╡ 1afaf901-30f0-4b58-98a5-a8ae88f3fccb
 md"""
@@ -205,9 +216,6 @@ begin
 	  "
 end
   ╠═╡ =#
-
-# ╔═╡ 87fd42a3-0a6c-41ae-a040-503403eabe07
-@bind cellWidth Slider(500:25:1100, show_value=true, default=775)
 
 # ╔═╡ 9a46221b-68f7-4101-b30a-13cc6d87f213
 md" ###### Begin New Coding Here."
@@ -445,6 +453,8 @@ md"""
 """
 
 # ╔═╡ 15494fca-84ff-44dd-a292-5f2413d4a3d7
+# ╠═╡ disabled = true
+#=╠═╡
 let
 	filepath = "/home/dfc123/Gitted/OlegIMBH/src/filter_objects.jl"
 	display(md"""code above is "$filepath" """)
@@ -452,9 +462,10 @@ let
 	lines = split(code_content, "\n")
 	numbered_lines = ["$i  $(lines[i])" for i in 1:length(lines)]
 end
+  ╠═╡ =#
 
 # ╔═╡ 9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
-begin
+let
 	imageFolder = "/home/dfc123/Gitted/OlegIMBH/data/sims/"
 	imageName = "bright_31_sorted_inc99_stringent_NIRCAM.png"
 	imagePath = joinpath(imageFolder, imageName)
@@ -660,26 +671,27 @@ md"""
 """
 
 # ╔═╡ Cell order:
+# ╠═50b6e91a-a887-48f6-8308-c06b22161514
+# ╠═0ef442a6-5881-4071-8f7c-e372b6301abc
+# ╠═25a92ab2-7bc8-4ad4-bc5c-322eb29ae4ee
 # ╟─581708d0-3df5-4160-8b3c-b3cc870efb16
 # ╟─754dbb34-631a-4aea-8660-443f70f11ea9
-# ╟─e85f9903-c869-416a-bf86-cb85a80b065b
-# ╟─4d9eb5bd-0759-4499-bd42-621834ae7f67
-# ╟─2016b7c9-df0f-4f48-95a7-96d31ed199e4
-# ╟─572dbcee-cb58-4b21-8993-5d159f02228b
-# ╟─ace018d2-003c-496f-b8aa-69eb71fb9057
+# ╠═e85f9903-c869-416a-bf86-cb85a80b065b
+# ╠═4d9eb5bd-0759-4499-bd42-621834ae7f67
+# ╠═2016b7c9-df0f-4f48-95a7-96d31ed199e4
+# ╠═572dbcee-cb58-4b21-8993-5d159f02228b
+# ╠═ace018d2-003c-496f-b8aa-69eb71fb9057
 # ╟─dce8dbce-c8b4-11ed-3263-65232dc16f8d
-# ╟─e0a42a3c-00de-4ff6-8862-46fcd0596315
+# ╠═e0a42a3c-00de-4ff6-8862-46fcd0596315
 # ╟─0e55ef3f-a3d3-4f3b-832a-a5d3766e7b09
-# ╟─db3e8f5a-88a7-494a-9d50-640d91aac997
-# ╟─6008384b-131c-4930-81a6-fb680420df33
+# ╠═6008384b-131c-4930-81a6-fb680420df33
 # ╟─94062cd4-b278-444d-b93e-694d26d30b50
 # ╟─1afaf901-30f0-4b58-98a5-a8ae88f3fccb
 # ╟─f22ea8e5-e458-47bc-950a-3c8e0de06df3
 # ╟─d68c548a-71a3-45e6-9ec5-a6d9358a716a
-# ╠═87fd42a3-0a6c-41ae-a040-503403eabe07
 # ╠═9a46221b-68f7-4101-b30a-13cc6d87f213
 # ╟─15899cbb-53e1-4160-b24c-40fa959aa926
-# ╟─c3b4a98c-4025-43bf-96dc-2b3c9b376c59
+# ╠═c3b4a98c-4025-43bf-96dc-2b3c9b376c59
 # ╟─1ad03ec0-6451-49ca-a8ec-f5fcf7cdd725
 # ╟─4d9abf6c-4385-41c5-9361-463d5549ac44
 # ╟─ad919d5a-e732-4a87-80a8-4e7023558a45
@@ -687,10 +699,10 @@ md"""
 # ╟─a8c24b20-da05-404f-8ac6-47086782d604
 # ╟─f654239b-14d5-4eec-bf65-0d237ff32746
 # ╠═5a22ed1e-a50f-40c6-857a-d85675385890
-# ╟─15494fca-84ff-44dd-a292-5f2413d4a3d7
+# ╠═15494fca-84ff-44dd-a292-5f2413d4a3d7
 # ╟─9e98f8f0-69dd-4eb5-a11e-c0f6564ec31e
-# ╟─6cdb1f4a-b5c4-4fd5-be8c-88dcbd755d57
-# ╟─7aca6436-c98c-4212-b6ee-77c6235ff110
+# ╠═6cdb1f4a-b5c4-4fd5-be8c-88dcbd755d57
+# ╠═7aca6436-c98c-4212-b6ee-77c6235ff110
 # ╟─35bdb6da-6ca6-43cd-b1be-dd9fdacf1ee6
 # ╟─e831f3ec-2a23-44b3-a5cc-c036aac608a7
 # ╟─0dc469c0-466d-49f7-81dd-56df3af96943
