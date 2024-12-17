@@ -179,12 +179,10 @@ end
 	"""
 
 # ╔═╡ 94062cd4-b278-444d-b93e-694d26d30b50
-#=╠═╡
 begin
 	if darkTH theme(:dark) else theme(:default) end
 	md"dark theme execution cell"
 end
-  ╠═╡ =#
 
 # ╔═╡ 1afaf901-30f0-4b58-98a5-a8ae88f3fccb
 md"""
@@ -670,6 +668,15 @@ md"""
 !!! note "monotonicity: only two mags rising"
 """
 
+# ╔═╡ be7a994f-aff1-4711-b683-4fe0d48501ca
+md"""
+### Dec offset; dark matter in dwarfs (16 December 2024)
+!!! danger "Because there's an offset that I did not take into account, the ..."
+!!! tip "Dark Matter in small galaxies"
+	"Only approximately 1000 stars are present in the entirety of the smallest dwarf galaxies such as Segue 1, 2, and 3. Gravitationally, the masses of these galaxies can be estimated at around 550,000–600,000 Suns. The stars making up the dwarf satellite Segue 1 are circled here. These galaxies have the largest dark matter-to-normal matter ratios known."
+	- [Science article](https://bigthink.com/starts-with-a-bang/how-large-biggest-galaxy-universe/?utm_medium=email&utm_source=pocket_hits&utm_campaign=POCKET_HITS-EN-DAILY-SPONSORED&QUINSTREET-WINDOWS-2024_12_16=&sponsored=0&position=8&category=fascinating_stories&scheduled_corpus_item_id=74827c80-f480-45b1-b1fe-3c1117d29206&url=https://bigthink.com/starts-with-a-bang/how-large-biggest-galaxy-universe/)
+"""
+
 # ╔═╡ Cell order:
 # ╠═50b6e91a-a887-48f6-8308-c06b22161514
 # ╠═0ef442a6-5881-4071-8f7c-e372b6301abc
@@ -719,6 +726,7 @@ md"""
 # ╟─5ab6a194-3641-444d-abe3-f612083b88b0
 # ╟─ddcb397a-4c73-4a43-9efe-fb500789ef0a
 # ╟─8d18a595-0db8-4f7d-8d3b-f81ab9dc77ac
-# ╠═cd5517fc-1e3e-4f88-b78d-fd44db407b58
-# ╠═09695d90-b6df-41a0-8689-404783f1b3a2
-# ╠═46bffc64-bd0e-4f87-a55f-eb961655df3a
+# ╟─cd5517fc-1e3e-4f88-b78d-fd44db407b58
+# ╟─09695d90-b6df-41a0-8689-404783f1b3a2
+# ╟─46bffc64-bd0e-4f87-a55f-eb961655df3a
+# ╠═be7a994f-aff1-4711-b683-4fe0d48501ca
