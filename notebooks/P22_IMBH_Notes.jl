@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.3
+# v0.20.4
 
 using Markdown
 using InteractiveUtils
@@ -87,6 +87,9 @@ begin
 	md"###### Cell Width Slider here"
 end
 
+# ╔═╡ 25a92ab2-7bc8-4ad4-bc5c-322eb29ae4ee
+@bind cellWidth Slider(400:25:1700, show_value=true, default=775)
+
 # ╔═╡ 50b6e91a-a887-48f6-8308-c06b22161514
 begin
 	@bind screenWidth @htl("""
@@ -101,17 +104,13 @@ begin
     @htl("""
     <style>
     pluto-notebook {
-		margin-left: 15px;
-        # margin: auto;
+		# margin-left: -500px;
         width: $(cellWidth)px;
     }
     </style>
 	Widening cell.
     """)
 end
-
-# ╔═╡ 25a92ab2-7bc8-4ad4-bc5c-322eb29ae4ee
-@bind cellWidth Slider(500:25:1100, show_value=true, default=775)
 
 # ╔═╡ 581708d0-3df5-4160-8b3c-b3cc870efb16
 md" [Julia Markdown Doc](https://docs.julialang.org/en/v1/stdlib/Markdown/#Bold)"
