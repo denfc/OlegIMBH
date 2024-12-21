@@ -672,7 +672,7 @@ md"""
 ### Dec offset; dark matter in dwarfs (16 December 2024)
 !!! danger "Because there's an offset that I did not take into account, the ..."
 !!! tip "Dark Matter in small galaxies"
-	"Only approximately 1000 stars are present in the entirety of the smallest dwarf galaxies such as Segue 1, 2, and 3. Gravitationally, the masses of these galaxies can be estimated at around 550,000–600,000 Suns. The stars making up the dwarf satellite Segue 1 are circled here. These galaxies have the largest dark matter-to-normal matter ratios known."
+	"Only approximately 1000 stars are present in the entirety of the smallest dwarf galaxies such as Segue 1, 2, and 3. Gravitationally, the masses of these galaxies can be estimated at around 550,000–600,000 Suns. ... These galaxies have the largest dark matter-to-normal matter ratios known."
 	- [Science article](https://bigthink.com/starts-with-a-bang/how-large-biggest-galaxy-universe/?utm_medium=email&utm_source=pocket_hits&utm_campaign=POCKET_HITS-EN-DAILY-SPONSORED&QUINSTREET-WINDOWS-2024_12_16=&sponsored=0&position=8&category=fascinating_stories&scheduled_corpus_item_id=74827c80-f480-45b1-b1fe-3c1117d29206&url=https://bigthink.com/starts-with-a-bang/how-large-biggest-galaxy-universe/)
 """
 
